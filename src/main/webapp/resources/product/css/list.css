@@ -1,0 +1,56 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+    background: url(../images/bjt_238.png) #F5E4DC;
+}
+
+.topline {
+    width: 220px;
+    height: 5px;
+    border-bottom: 1px red solid;
+    margin: 0 auto;
+}
+
+.top {
+    width: 620px;
+    letter-spacing: 35px;
+    margin: 0 auto;
+    height: 30px;
+    font: 500 22px/30px "Microsoft Yahei";
+    text-align: center;
+    padding-top: 25px;
+}
+
+.top span {
+    padding-left: 35px;
+}
+
+.menu {
+    width: 620px;
+    text-align: center;
+    margin: 1px auto;
+}
+
+.menu a {
+    margin: 0 12px;
+}
+
+.padtop3 {
+    padding-top: 3px;
+}
+
+.tdbg {
+    background: #F0EEE4;
+}
+
+.toptdbg {
+    background: #C7F0D2;
+    text-align: center;
+}
+
+#product-list input[type=text]{
+    width: 100%;
+    height: 20px;
+    background: transparent;
+    text-align: center;
+}
