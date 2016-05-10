@@ -8,6 +8,8 @@ import com.as.erp.trade.micro.factory.service.FactoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * Created by yrx on 2016/4/29.
  */
@@ -20,5 +22,11 @@ public class FactoryServcieImpl extends GenericServiceImpl<Factory, String> impl
     @Override
     protected GenericDao<Factory, String> getDao() {
         return factoryDao;
+    }
+
+    @Override
+    public void save(Factory entity) {
+        entity.setCreatedDate(new Date());
+        super.save(entity);
     }
 }

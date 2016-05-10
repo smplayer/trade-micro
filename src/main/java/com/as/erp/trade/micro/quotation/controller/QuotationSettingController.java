@@ -1,5 +1,8 @@
 package com.as.erp.trade.micro.quotation.controller;
 
+import com.as.common.query.PageHandler;
+import com.as.common.query.hibernate.Conditions;
+import com.as.common.query.hibernate.Query;
 import com.as.erp.trade.micro.quotation.entity.Quotation;
 import com.as.erp.trade.micro.quotation.entity.QuotationModuleConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -17,9 +20,8 @@ public class QuotationSettingController extends BaseQuotationController {
 
     @RequestMapping(value = "quotation/operating/setting", method = RequestMethod.GET)
     public String setting(ModelMap modelMap) {
-        QuotationModuleConfig quotationModuleConfig = quotationModuleConfigService.getUnique();
-        if(StringUtils.isNotBlank(quotationModuleConfig.getOperatingQuotationId())){
-            Quotation quotation = quotationService.getById(quotationModuleConfig.getOperatingQuotationId());
+        Quotation quotation = quotationService.getUniqueOperatingQuotation();
+        if (quotation != null) {
             modelMap.put("quotation", quotation);
         }
         return "quotation/operating-setting";
@@ -49,9 +51,8 @@ public class QuotationSettingController extends BaseQuotationController {
             ModelMap modelMap
     ) {
         Quotation quotation = null;
-        QuotationModuleConfig quotationModuleConfig = quotationModuleConfigService.getUnique();
-        if(StringUtils.isNotBlank(quotationModuleConfig.getOperatingQuotationId())){
-            quotation = quotationService.getById(quotationModuleConfig.getOperatingQuotationId());
+        if (StringUtils.isNotBlank(id)) {
+            quotation = quotationService.getById(id);
         } else {
             quotation = new Quotation();
         }
@@ -70,13 +71,13 @@ public class QuotationSettingController extends BaseQuotationController {
 
         String tradeClauseType = null;
         String tradeClause = null;
-        if(StringUtils.isNotBlank(FOB)){
+        if (StringUtils.isNotBlank(FOB)) {
             tradeClauseType = "FOB";
             tradeClause = FOB;
-        } else if (StringUtils.isNotBlank(CNF)){
+        } else if (StringUtils.isNotBlank(CNF)) {
             tradeClauseType = "CNF";
             tradeClause = CNF;
-        } else if (StringUtils.isNotBlank(GIF)){
+        } else if (StringUtils.isNotBlank(GIF)) {
             tradeClauseType = "GIF";
             tradeClause = GIF;
         }
@@ -85,10 +86,28 @@ public class QuotationSettingController extends BaseQuotationController {
 
         quotationService.saveOrUpdate(quotation);
 
-        //改为事件机制
-        if(StringUtils.isBlank(quotationModuleConfig.getOperatingQuotationId())){
-            quotationModuleConfig.setOperatingQuotationId(quotation.getId());
-            quotationModuleConfigService.saveOrUpdate(quotationModuleConfig);
+        return "redirect:/quotation/operating";
+    }
+
+    @RequestMapping("/quotation/operating")
+    public String operating(
+            @RequestParam(value = "pageIndex", required = false) Long pageIndex,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            ModelMap modelMap
+    ) {
+        Quotation quotation = quotationService.getUniqueOperatingQuotation();
+        if (quotation != null) {
+            PageHandler page = quotationProductItemService.getQuotationProductItemVOPage(
+                    new Query().setPageIndex(pageIndex)
+                            .setPageSize(pageSize)
+                            .setConditions(
+                            Conditions.newInstance()
+                            .eq("quotationId", quotation.getId())
+                    )
+            );
+
+            modelMap.put("quotation", quotation);
+            modelMap.put("page", page);
         }
 
         return "quotation/operating";

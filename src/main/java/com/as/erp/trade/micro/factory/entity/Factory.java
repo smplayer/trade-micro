@@ -4,6 +4,7 @@ import com.as.common.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * Created by Administrator on 16-4-25.
@@ -18,6 +19,7 @@ public class Factory extends BaseEntity {
     private String contactNumber;
     private String address;
     private String remark;
+    private Date createdDate;
 
     public String getName() {
         return name;
@@ -73,5 +75,13 @@ public class Factory extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 }

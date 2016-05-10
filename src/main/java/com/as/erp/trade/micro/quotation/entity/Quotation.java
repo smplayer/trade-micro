@@ -11,6 +11,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "as_tb_quotation")
 public class Quotation extends BaseEntity {
+    public final static String FLAG_OPERATING = "operating";
+    public final static String FLAG_ARCHIVED = "archived";
 
     private String customerName;
     private String region;
@@ -26,6 +28,7 @@ public class Quotation extends BaseEntity {
     private Integer decimalPlaces;
     private String editor;
     private String tel;
+    private String operationFlag = FLAG_OPERATING;
 
     public String getCustomerName() {
         return customerName;
@@ -137,5 +140,13 @@ public class Quotation extends BaseEntity {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    public String getOperationFlag() {
+        return operationFlag;
+    }
+
+    public void setOperationFlag(String operationFlag) {
+        this.operationFlag = operationFlag;
     }
 }

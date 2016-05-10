@@ -9,7 +9,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>产品编辑</title>
-    <link href="<c:url value="/resources/product/css/style.css"/>" rel="stylesheet" type="text/css"/>
+    <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .template{
             display: none;
@@ -65,7 +65,7 @@
         $("#findExistingFactory").click(function (e) {
             e.preventDefault();
             var factoryName = $("#factoryName").val();
-            $.get( "<c:url value="/factory/search"/>", {"name": factoryName}, function( data ) {
+            $.get( "<c:url value="/ajax/factory/search"/>", {"name": factoryName}, function( data ) {
                 $("#dialog-factorySelector .content").empty();
                 $(data).each(function (i, factory) {
                     $("#dialog-factorySelector .content").append(

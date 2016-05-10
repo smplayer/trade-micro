@@ -1,6 +1,8 @@
 package com.as.erp.trade.micro.factory.controller;
 
+import com.as.common.query.PageHandler;
 import com.as.common.query.hibernate.Conditions;
+import com.as.common.query.hibernate.Query;
 import com.as.erp.trade.micro.factory.entity.Factory;
 import com.as.erp.trade.micro.factory.service.FactoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,8 @@ public class FactorySearchingController {
     private FactoryService factoryService;
 
     @ResponseBody
-    @RequestMapping("factory/search")
-    public Object search(
+    @RequestMapping("ajax/factory/search")
+    public Object ajaxSearch(
             @RequestParam("name") String name,
             ModelMap modelMap
     ) {

@@ -1,0 +1,58 @@
+body {
+    background: url(../images/bgjk.png) #EFE9C7;
+}
+
+.top2w {
+    width: 1330px;
+}
+
+.topfl {
+    margin-left: 70px;
+    width: 150px;
+    text-align: left;
+}
+
+.topf2 {
+    width: 130px;
+    text-align: left;
+}
+
+.topr2 {
+    width: 250px;
+    text-align: center;
+}
+
+.tdbg {
+    background: #F5F0DF;
+}
+
+.toptdbg {
+    background: #F5CAF5;
+    text-align: center;
+}
+
+input[type=text] {
+    border: 0px solid #333;
+    color: #333;
+    background: transparent;
+    height: 20px;
+    line-height: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.input2 {
+    border: 0;
+    background: #F6D6FB;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+.btn {
+    height: 23px;
+    width: 42px;
+    cursor: pointer;
+    border: 0;
+    background: none;
+}

@@ -65,11 +65,14 @@
 
 <div id="container">
 
-    <c:import url="/WEB-INF/views/jsp/quotation/common/page-header.jsp" >
-        <c:param name="curPage" value="quotation"/>
+    <c:import url="/WEB-INF/views/jsp/quotation/common/setting-header.jsp" >
+        <c:param name="title" value="见客设置"/>
+        <c:param name="curPage" value="setting"/>
+        <c:param name="hideNav" value="true"/>
     </c:import>
 
     <form id="form" name="form" method="post" action="<c:url value="/quotation/operating/setting"/>">
+        <input type="hidden" name="id" value="${quotation.id}" />
         <div class="main">
             <table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
                 <tr>

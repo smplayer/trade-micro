@@ -1,5 +1,6 @@
 package com.as.erp.trade.micro.quotation.service;
 
+import com.as.common.query.hibernate.Query;
 import com.as.common.service.GenericService;
 import com.as.erp.trade.micro.quotation.entity.Quotation;
 
@@ -8,6 +9,6 @@ import com.as.erp.trade.micro.quotation.entity.Quotation;
  */
 public interface QuotationService extends GenericService<Quotation, String> {
 
-
+    Quotation getUniqueOperatingQuotation();
 
 }

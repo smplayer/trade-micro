@@ -1,16 +1,19 @@
 package com.as.erp.trade.micro.factory.controller;
 
 import com.as.common.query.PageHandler;
+import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.hibernate.Query;
 import com.as.erp.trade.micro.factory.entity.Factory;
 import com.as.erp.trade.micro.factory.service.FactoryService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Administrator on 16-4-26.
@@ -57,8 +60,13 @@ public class FactoryController {
         return "";
     }
 
-    @RequestMapping(value = "factory/modify", method = RequestMethod.GET)
-    public String modifyFactory(){
+    @RequestMapping(value = "factory/modify/{id}", method = RequestMethod.GET)
+    public String modifyFactory(
+            @PathVariable String id,
+            ModelMap modelMap
+    ){
+        Factory factory = factoryService.getById(id);
+        modelMap.put("factory", factory);
         return "factory/modify";
     }
 
@@ -82,22 +90,42 @@ public class FactoryController {
         factory.setAddress(address);
         factory.setRemark(remark);
         factoryService.update(factory);
-
         return "";
     }
 
-    @RequestMapping("factory/{id}")
+    @ResponseBody
+    @RequestMapping(value = "ajax/factory/modify", method = RequestMethod.POST)
+    public Object modifyFactory(
+            @RequestBody Map<String, Object> req
+    ){
+        Factory factory = factoryService.getById((String) req.get("id"));
+        factory.setName((String) req.get("name"));
+        factory.setMainProduct((String) req.get("mainProduct"));
+        factory.setProductQuantity(Integer.valueOf((String) req.get("productQuantity")));
+        factory.setLinkman((String) req.get("linkman"));
+        factory.setContactNumber((String) req.get("contactNumber"));
+        factory.setAddress((String) req.get("address"));
+        factory.setRemark((String) req.get("remark"));
+        factoryService.update(factory);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        return result;
+    }
+
+    @RequestMapping("factory/view/{id}")
     public String get(
             @PathVariable("id") String id,
             ModelMap modelMap
     ){
        Factory factory = factoryService.getById(id);
         modelMap.put("factory", factory);
-        return "factory/factory-details";
+        return "factory/details";
     }
 
     @RequestMapping("factory/list")
     public String list(
+            @RequestParam(value = "keywords", required = false) String keywords,
             @RequestParam(value = "pageIndex", defaultValue = "1") Long pageIndex,
             @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
             ModelMap modelMap
@@ -107,9 +135,13 @@ public class FactoryController {
         query.setPageIndex(pageIndex)
                 .setPageSize(pageSize);
 
+        if(StringUtils.isNotBlank(keywords)) {
+            query.setConditions(Conditions.newInstance().like("name", "%" + keywords + "%"));
+        }
+
         PageHandler factoryPage = factoryService.getPage(query);
-        modelMap.put("factoryPage", factoryPage);
-        return "factory/factory-list";
+        modelMap.put("page", factoryPage);
+        return "factory/list";
     }
 
 }

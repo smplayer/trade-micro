@@ -39,7 +39,8 @@ public class Query {
     }
 
     public Query setPageIndex(Long pageIndex) {
-        this.pageIndex = pageIndex;
+        if (pageIndex != null)
+            this.pageIndex = pageIndex;
         return this;
     }
 
@@ -48,7 +49,8 @@ public class Query {
     }
 
     public Query setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+        if(pageSize != null)
+            this.pageSize = pageSize;
         return this;
     }
 

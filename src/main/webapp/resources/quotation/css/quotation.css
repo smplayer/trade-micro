@@ -22,7 +22,7 @@ div, ul, input {
     border: 0;
 }
 
-.nav a.active{
+.menu a.active{
     color: red;
 }
 
