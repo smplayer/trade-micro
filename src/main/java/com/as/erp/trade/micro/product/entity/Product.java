@@ -28,6 +28,7 @@ public class Product extends BaseEntity {
     //引用工厂信息
     private String factoryId;
     private String factoryName;
+    private String linkman;
     private String factoryContactNumber;
 
     //以下信息来源可能改为引用
@@ -146,6 +147,14 @@ public class Product extends BaseEntity {
 
     public void setFactoryName(String factoryName) {
         this.factoryName = factoryName;
+    }
+
+    public String getLinkman() {
+        return linkman;
+    }
+
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
     }
 
     public String getFactoryContactNumber() {

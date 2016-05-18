@@ -31,4 +31,10 @@ var sm = {};
             $dialog.hide();
         }
     }
+    
+    $sm.queue = {
+        node : {
+        }
+    };
+    
 })(sm, $);

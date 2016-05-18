@@ -1,0 +1,63 @@
+.toptt {
+    letter-spacing: 12px;
+}
+
+.toplw {
+    width: 190px;
+}
+
+.topw {
+    width: 620px;
+    padding-top: 45px;
+}
+
+.top div {
+    margin-left: 12px;
+}
+
+.tdbg {
+    background: #fff;
+}
+
+.top3 {
+    width: 735px;
+    height: 20px;
+    line-height: 20px;
+    margin: 15px auto 5px auto;
+}
+
+.topfl {
+    margin-left: 40px;
+    width: 120px;
+    text-align: left;
+}
+
+.topf2 {
+    width: 90px;
+    text-align: left;
+}
+
+.topr2 {
+    width: 100px;
+    text-align: right;
+    margin-right: 40px;
+}
+
+.toptdbg {
+    background: #fff;
+    text-align: center;
+}
+
+.main {
+    margin: 0 auto;
+    width: 845px;
+    padding-bottom: 45px;
+}
+
+.ddtd {
+    word-ddtd: ddtd-all;
+    word-wrap: ddtd-word; /*支持IE，chrome，FF*/
+    text-align: center;
+    line-height: 26px;
+    padding: 2px 0;
+}

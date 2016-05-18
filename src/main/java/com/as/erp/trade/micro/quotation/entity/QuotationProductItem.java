@@ -14,15 +14,19 @@ public class QuotationProductItem extends BaseEntity {
 
     private String quotationId;
     private String productId;
+//    private String factoryProductName;
+//    private String factoryProductNo;
+//    private String companyProductName;
     private Double quotedPrice;
     private Integer orderedCartonQuantity;
     private Integer orderedProductQuantity;
     private Double totalVolume;
     private Double totalAmount;
 
-    private String factoryName;
-    private String linkman;
-    private String contactNumber;
+    private String factoryId;
+//    private String factoryName;
+//    private String linkman;
+//    private String contactNumber;
     private String remark;
 
     public String getQuotationId() {
@@ -40,6 +44,30 @@ public class QuotationProductItem extends BaseEntity {
     public void setProductId(String productId) {
         this.productId = productId;
     }
+
+//    public String getFactoryProductName() {
+//        return factoryProductName;
+//    }
+//
+//    public void setFactoryProductName(String factoryProductName) {
+//        this.factoryProductName = factoryProductName;
+//    }
+//
+//    public String getCompanyProductName() {
+//        return companyProductName;
+//    }
+//
+//    public void setCompanyProductName(String companyProductName) {
+//        this.companyProductName = companyProductName;
+//    }
+//
+//    public String getFactoryProductNo() {
+//        return factoryProductNo;
+//    }
+//
+//    public void setFactoryProductNo(String factoryProductNo) {
+//        this.factoryProductNo = factoryProductNo;
+//    }
 
     public Double getQuotedPrice() {
         return quotedPrice;
@@ -81,28 +109,12 @@ public class QuotationProductItem extends BaseEntity {
         this.totalAmount = totalAmount;
     }
 
-    public String getFactoryName() {
-        return factoryName;
+    public String getFactoryId() {
+        return factoryId;
     }
 
-    public void setFactoryName(String factoryName) {
-        this.factoryName = factoryName;
-    }
-
-    public String getLinkman() {
-        return linkman;
-    }
-
-    public void setLinkman(String linkman) {
-        this.linkman = linkman;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
+    public void setFactoryId(String factoryId) {
+        this.factoryId = factoryId;
     }
 
     public String getRemark() {

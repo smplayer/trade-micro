@@ -41,10 +41,10 @@
 <div class="topline toplw"></div>
 <div class="menu menutop">
     <a href="<c:url value="/quotation/operating"/>" class="${param.curPage == "operating" ? "active" : ""}">操作版</a>
-    <a href="<c:url value="/quotation/confirm"/>" target="_blank" class="${param.curPage == "confirm" ? "active" : ""}">确认版</a>
+    <a href="<c:url value="/quotation/confirming/order?id=${quotation.id}"/>" target="_blank" class="${param.curPage == "confirm" ? "active" : ""}">确认版</a>
 
-    <a href="<c:url value="/quotation/saveAsArc"/>" style="margin: 20px 0 0 0" class="${param.curPage == "saveAsArc" ? "active" : ""}">存档</a>/<a
+    <a href="<c:url value="/quotation/saveToArchive?id=${quotation.id}"/>" style="margin: 20px 0 0 0" class="${param.curPage == "saveAsArc" ? "active" : ""}">存档</a>/<a
         href="<c:url value="/quotation/arc"/>" style="margin: 0 20px 0 0" class="${param.curPage == "arc" ? "active" : ""}">档案</a>
 
-    <a href="<c:url value="/quotation/operating/setting"/>" class="${param.curPage == "setting" ? "active" : ""}" style="margin-left: 0">返回</a>
+    <a href="<c:url value="/quotation/operating/setting?id=${quotation.id}"/>" class="${param.curPage == "setting" ? "active" : ""}" style="margin-left: 0">返回</a>
 </div>

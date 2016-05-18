@@ -4,6 +4,7 @@ import com.as.common.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * Created by Administrator on 16-4-27.
@@ -11,15 +12,18 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "as_tb_quotation")
 public class Quotation extends BaseEntity {
-    public final static String FLAG_OPERATING = "operating";
-    public final static String FLAG_ARCHIVED = "archived";
+    public final static Integer FLAG_OPERATING_DRAFT = 0;
+    public final static Integer FLAG_OPERATING = 1;
+    public final static Integer FLAG_ARCHIVED = 10;
 
+    private String serialNumber;
     private String customerName;
     private String region;
     private String tradeClauseType;
     private String tradeClause;
     private String shipmentPort;
     private String containerType;
+    private Double containerVolume;
     private Double profitPercent;
     private Double profitAmount;
     private Double customsClearanceFee;
@@ -28,7 +32,17 @@ public class Quotation extends BaseEntity {
     private Integer decimalPlaces;
     private String editor;
     private String tel;
-    private String operationFlag = FLAG_OPERATING;
+    private Integer operationFlag = FLAG_OPERATING;
+    private Date startedDate;
+    private Date lastQuotedDate;
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
 
     public String getCustomerName() {
         return customerName;
@@ -76,6 +90,14 @@ public class Quotation extends BaseEntity {
 
     public void setContainerType(String containerType) {
         this.containerType = containerType;
+    }
+
+    public Double getContainerVolume() {
+        return containerVolume;
+    }
+
+    public void setContainerVolume(Double containerVolume) {
+        this.containerVolume = containerVolume;
     }
 
     public Double getProfitPercent() {
@@ -142,11 +164,27 @@ public class Quotation extends BaseEntity {
         this.tel = tel;
     }
 
-    public String getOperationFlag() {
+    public Integer getOperationFlag() {
         return operationFlag;
     }
 
-    public void setOperationFlag(String operationFlag) {
+    public void setOperationFlag(Integer operationFlag) {
         this.operationFlag = operationFlag;
+    }
+
+    public Date getStartedDate() {
+        return startedDate;
+    }
+
+    public void setStartedDate(Date startedDate) {
+        this.startedDate = startedDate;
+    }
+
+    public Date getLastQuotedDate() {
+        return lastQuotedDate;
+    }
+
+    public void setLastQuotedDate(Date lastQuotedDate) {
+        this.lastQuotedDate = lastQuotedDate;
     }
 }

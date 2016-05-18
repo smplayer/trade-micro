@@ -19,10 +19,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class QuotationSettingController extends BaseQuotationController {
 
     @RequestMapping(value = "quotation/operating/setting", method = RequestMethod.GET)
-    public String setting(ModelMap modelMap) {
-        Quotation quotation = quotationService.getUniqueOperatingQuotation();
-        if (quotation != null) {
-            modelMap.put("quotation", quotation);
+    public String setting(
+            @RequestParam(value = "id", required = false) String id,
+            ModelMap modelMap
+    ) {
+        if(StringUtils.isNotBlank(id)){
+            Quotation quotation = quotationService.getById(id);
+            if (quotation != null) {
+                modelMap.put("quotation", quotation);
+            }
         }
         return "quotation/operating-setting";
     }
@@ -60,6 +65,15 @@ public class QuotationSettingController extends BaseQuotationController {
         quotation.setRegion(region);
         quotation.setShipmentPort(shipmentPort);
         quotation.setContainerType(containerType);
+
+        if("1".equals(containerType)){
+            quotation.setContainerVolume(27D);
+        } else if ("2".equals(containerType)){
+            quotation.setContainerVolume(57D);
+        } else if ("3".equals(containerType)){
+            quotation.setContainerVolume(67D);
+        }
+
         quotation.setProfitPercent(profitPercent);
         quotation.setProfitAmount(profitAmount);
         quotation.setCustomsClearanceFee(customsClearanceFee);
@@ -86,31 +100,8 @@ public class QuotationSettingController extends BaseQuotationController {
 
         quotationService.saveOrUpdate(quotation);
 
+        modelMap.put("id", quotation.getId());
         return "redirect:/quotation/operating";
-    }
-
-    @RequestMapping("/quotation/operating")
-    public String operating(
-            @RequestParam(value = "pageIndex", required = false) Long pageIndex,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize,
-            ModelMap modelMap
-    ) {
-        Quotation quotation = quotationService.getUniqueOperatingQuotation();
-        if (quotation != null) {
-            PageHandler page = quotationProductItemService.getQuotationProductItemVOPage(
-                    new Query().setPageIndex(pageIndex)
-                            .setPageSize(pageSize)
-                            .setConditions(
-                            Conditions.newInstance()
-                            .eq("quotationId", quotation.getId())
-                    )
-            );
-
-            modelMap.put("quotation", quotation);
-            modelMap.put("page", page);
-        }
-
-        return "quotation/operating";
     }
 
 

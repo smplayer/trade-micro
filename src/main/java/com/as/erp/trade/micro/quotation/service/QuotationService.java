@@ -11,4 +11,7 @@ public interface QuotationService extends GenericService<Quotation, String> {
 
     Quotation getUniqueOperatingQuotation();
 
+    Quotation saveToArchive(String id);
+    Quotation reloadFromArchive(String id);
+
 }

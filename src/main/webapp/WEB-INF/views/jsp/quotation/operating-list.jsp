@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>报价表操作</title>
+    <title>报价表操作列表</title>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/operating.css"/>"/>
@@ -42,9 +42,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="fr">
-                <a href="javascript:findFactory();" id="find-factory">厂名查新</a>
-            </div>
+            <div class="fr">厂名查新</div>
         </div>
         <table style="width: 1330px;" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
             <tr>
