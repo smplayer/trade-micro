@@ -14,11 +14,14 @@ import java.util.Date;
 public class Factory extends BaseEntity {
     private String name;
     private String mainProduct;
-    private Integer productQuantity;
     private String linkman;
-    private String contactNumber;
+    private String mobileNumber;
+    private String phoneNumber;
+    private String fax;
+    private String qq;
     private String address;
     private String remark;
+    private Integer productQuantity;
     private Date createdDate;
 
     public String getName() {
@@ -37,14 +40,6 @@ public class Factory extends BaseEntity {
         this.mainProduct = mainProduct;
     }
 
-    public Integer getProductQuantity() {
-        return productQuantity;
-    }
-
-    public void setProductQuantity(Integer productQuantity) {
-        this.productQuantity = productQuantity;
-    }
-
     public String getLinkman() {
         return linkman;
     }
@@ -53,12 +48,36 @@ public class Factory extends BaseEntity {
         this.linkman = linkman;
     }
 
-    public String getContactNumber() {
-        return contactNumber;
+    public String getMobileNumber() {
+        return mobileNumber;
     }
 
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 
     public String getAddress() {
@@ -75,6 +94,14 @@ public class Factory extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 
     public Date getCreatedDate() {

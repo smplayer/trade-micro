@@ -5,7 +5,10 @@ import com.as.user.service.impl.UserServiceImpl;
 import com.as.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -15,19 +18,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserController extends Base {
 
 
-//    @Resource(name = "userDao")
     @Autowired
     private UserServiceImpl userService;
 
-    @ResponseBody
-    @RequestMapping("user/test")
-    public String userTest(){
-        User user = new User();
-        user.setUsername("username1");
-        user.setPassword("password1");
-        userService.save(user);
+    @RequestMapping(value = "user/login", method = RequestMethod.POST)
+    public String login(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            ModelMap modelMap
+    ){
 
-        return "test";
+        return "redirect:/quotation/operating/list";
     }
 
 }

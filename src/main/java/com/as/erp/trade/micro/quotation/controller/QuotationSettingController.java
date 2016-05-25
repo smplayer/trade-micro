@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
+
 /**
  * Created by yrx on 2016/5/4.
  */
@@ -60,6 +62,7 @@ public class QuotationSettingController extends BaseQuotationController {
             quotation = quotationService.getById(id);
         } else {
             quotation = new Quotation();
+            quotation.setLastQuotedDate(new Date());
         }
         quotation.setCustomerName(customerName);
         quotation.setRegion(region);

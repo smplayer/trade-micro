@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
+
 /**
  * Created by Administrator on 16-4-26.
  */
@@ -20,7 +22,7 @@ public class ProductCreationController {
     private ProductService productService;
 
     @RequestMapping(value = "product/create", method = RequestMethod.GET)
-    public String create(){
+    public String create() {
         return "product/edit";
     }
 
@@ -41,7 +43,6 @@ public class ProductCreationController {
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "sub-category", required = false) String subCategory
     ){
-
         Product p = new Product();
         p.setName(name);
         p.setFactoryProductNo(factoryProductNo);
@@ -57,6 +58,7 @@ public class ProductCreationController {
         p.setFunctionDescription(functionDescription);
         p.setCategory(category);
         p.setSubCategory(subCategory);
+        p.setAddedDate(new Date());
         productService.save(p);
 
         return "redirect:/product/create";

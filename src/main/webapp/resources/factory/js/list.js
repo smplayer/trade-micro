@@ -2,6 +2,11 @@
  * Created by yrx on 2016/5/9.
  */
 $(function () {
+    $("#create-factory").click(function (e) {
+        e.preventDefault();
+        open($(this).attr("href"),'_blank');
+    });
+    
     $(".modify-factory").click(function (e) {
         e.preventDefault();
         open($(this).data("url"),'_blank');

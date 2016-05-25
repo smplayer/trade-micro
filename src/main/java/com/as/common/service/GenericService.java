@@ -3,6 +3,7 @@ package com.as.common.service;
 import com.as.common.query.PageHandler;
 import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.hibernate.Query;
+import org.hibernate.criterion.Projection;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,4 +28,5 @@ public interface GenericService<E, PK extends Serializable> {
     List<E> getList(Conditions conditions);
     List<E> getList(Query query);
     PageHandler getPage(Query query);
+    public <T> T get(Projection projection, Class<T> type);
 }

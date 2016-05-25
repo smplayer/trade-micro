@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 
 import javax.annotation.Resource;
@@ -117,7 +118,10 @@ public class HibernateGenericDaoImpl<E extends BaseEntity, PK extends Serializab
 
     @Override
     public List<E> getList(Query query) {
-        Criteria criteria = getSession().createCriteria(getEntityClass());
+        Criteria criteria = getSession().createCriteria(getEntityClass())
+                .setFirstResult(query.getDataIndex().intValue())
+                .setMaxResults(query.getPageSize());
+
         Conditions conditions = query.getConditions();
         for (Criterion criterion : conditions.getCriterionList()){
             criteria.add(criterion);
@@ -155,6 +159,14 @@ public class HibernateGenericDaoImpl<E extends BaseEntity, PK extends Serializab
         page.setDataList(criteria.list());
 
         return page;
+    }
+
+    @Override
+    public <T> T get(Projection projection, Class<T> type) {
+        Object value = getSession().createCriteria(getEntityClass())
+                .setProjection(projection)
+                .uniqueResult();
+        return (T) value;
     }
 
     protected Session getSession() {

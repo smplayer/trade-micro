@@ -99,25 +99,25 @@
             <td class="td40 toptdbg">全选</td>
         </tr>
         <c:forEach items="${page.dataList}" var="f" varStatus="status">
-            <tr>
-                <td height="24" class="break tdbg">
-                        ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
-                </td>
-                <td class="break tdbg">${f.name}</td>
-                <td class="break tdbg">${f.mainProduct}</td>
-                <td class="break tdbg">${f.productQuantity}</td>
-                <td class="break tdbg">${f.linkman}</td>
-                <td class="break tdbg">${f.contactNumber}</td>
-                <td class="break tdbg">${f.address}</td>
-                <td class="break tdbg"><a href="javascript:void(0)" data-url="<c:url value="/factory/modify/${f.id}"/>"
-                                          target="_blank" class="modify-factory">查看</a></td>
-                <td class="break tdbg"><fmt:formatDate value="${f.createdDate}" pattern="MM-dd"/></td>
-                <td class="break tdbg">${f.remark}</td>
-                <td class="break tdbg">
-                    <input name="id" class="factory-id-checkbox" type="checkbox" value="${f.id}" id="${f.id}"/>
-                </td>
-            </tr>
-        </c:forEach>
+        <tr>
+            <td height="24" class="break tdbg">
+                    ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
+            </td>
+            <td class="break tdbg">${f.name}</td>
+            <td class="break tdbg">${f.mainProduct}</td>
+            <td class="break tdbg">${f.productQuantity}</td>
+            <td class="break tdbg">${f.linkman}</td>
+            <td class="break tdbg">${f.mobileNumber}${empty f.mobileNumber || empty f.phoneNumber ? "" : "/"}${f.phoneNumber}</td>
+            <td class="break tdbg">${f.address}</td>
+            <td class="break tdbg"><a href="javascript:void(0)" data-url="<c:url value="/factory/modify/${f.id}"/>"
+                                      target="_blank" class="modify-factory">查看</a></td>
+            <td class="break tdbg"><fmt:formatDate value="${f.createdDate}" pattern="MM-dd"/></td>
+            <td class="break tdbg">${f.remark}</td>
+            <td class="break tdbg">
+                <input name="id" class="factory-id-checkbox" type="checkbox" value="${f.id}" id="${f.id}"/>
+            </td>
+        </tr>
+    </c:forEach>
 
         <c:forEach begin="${fn:length(page.dataList)}" end="19" step="1">
             <tr>
@@ -156,7 +156,6 @@
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/search.js"/>"></script>
 <script>
-    var searchUrl = '<c:url value="/factory/search" />';
     var quotationProductItemDraftId = '${quotationProductItemDraftId}';
     var selectFactoryForProductItemDraftUrl = '<c:url value="/quotation/selectFactoryForProductItemDraft" />';
 </script>

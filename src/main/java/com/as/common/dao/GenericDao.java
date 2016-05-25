@@ -4,6 +4,7 @@ import com.as.common.entity.BaseEntity;
 import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.PageHandler;
 import com.as.common.query.hibernate.Query;
+import org.hibernate.criterion.Projection;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -49,4 +50,6 @@ public interface GenericDao<E extends BaseEntity, PK extends Serializable> {
     public List<E> getList(Conditions conditions);
     public List<E> getList(Query query);
     public PageHandler getPage(Query query);
+    public <T> T get(Projection projection, Class<T> type);
+
 }

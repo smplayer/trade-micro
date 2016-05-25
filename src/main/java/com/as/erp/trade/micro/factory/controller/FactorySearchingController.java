@@ -24,7 +24,7 @@ public class FactorySearchingController {
     private FactoryService factoryService;
 
     @ResponseBody
-    @RequestMapping("factory/search")
+    @RequestMapping("ajax/factory/search")
     public Object ajaxSearch(
             @RequestParam("name") String name,
             ModelMap modelMap

@@ -3,12 +3,14 @@ package com.as.erp.trade.micro.quotation.entity;
 import com.as.common.entity.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * Created by yrx on 2016/5/12.
  */
 @Entity
+@Table(name = "as_tb_quotation_product_item_draft")
 public class QuotationProductItemDraft extends BaseEntity {
 
     private String quotationId;
@@ -19,6 +21,7 @@ public class QuotationProductItemDraft extends BaseEntity {
     private String factoryProductNo;
     private String companyProductName;
     private String companyProductNo;
+    private String functionDescription;
     private String packageForm;
     private String unit;
     private Double factoryPrice;
@@ -95,6 +98,14 @@ public class QuotationProductItemDraft extends BaseEntity {
 
     public void setCompanyProductNo(String companyProductNo) {
         this.companyProductNo = companyProductNo;
+    }
+
+    public String getFunctionDescription() {
+        return functionDescription;
+    }
+
+    public void setFunctionDescription(String functionDescription) {
+        this.functionDescription = functionDescription;
     }
 
     public String getPackageForm() {

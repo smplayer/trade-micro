@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
+    font-family: "微软雅黑", "宋体", Verdana, Arial, Verdana, Geneva, sans-serif;
+    color: #000;
+}
+
+img {
+    border: 0;
+}
+
+div, ul, input {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 0;
+}
+
+body {
+    background: url(../images/indexbg.jpg) top center no-repeat #006DB8;
+}
+
+.main {
+    width: 508px;
+    padding-top: 276px;
+    margin: 0 auto;
+}
+
+.btn {
+    height: 23px;
+    width: 43px;
+    cursor: pointer;
+}
+
+.username, .password {
+    border: 0;
+    background: #fff;
+    height: 29px;
+    line-height: 29px;
+    vertical-align: middle;
+    width: 150px;
+    margin-left: 10px;
+}

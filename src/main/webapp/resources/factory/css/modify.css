@@ -1,24 +1,91 @@
 
-body{background:url(../images/gongchangbg.png) #F0E6C7;}
-#main-table{
-    margin-top: 20px;
-}
-input[type=text]{
-    width: 100%;
+.toptt {
+    letter-spacing: 16px;
+    color: #053188;
 }
 
-#bottom-actions{
-    margin-top: 20px;
+.top div {
+    margin-left: 16px;
 }
 
-.toptt{letter-spacing:18px;}
-.top div{margin-left:18px;}
-.toplw{width:190px;}
-.topw{width:620px;padding-top:41px;}
-.top2w{width:1230px;padding-top:20px;}
-.top span{margin-right:23px;}
-.topfl{margin-left:70px;text-align:left;}
-.topr2{margin-right:70px;width:190px;}
-.tdbg{background:#F0EBE1;}
-.toptdbg{background:#F0C77D;text-align:center;}
-.jkmenu{width:320px;margin:0 auto 7px auto;height:20px;line-height:20px;}
+.toplw {
+    width: 160px;
+    margin-bottom: 25px;
+}
+
+.topw {
+    width: 620px;
+    padding-top: 38px;
+}
+
+.main {
+    width: 638px;
+    height: 418px;
+    margin: 0 auto;
+    background: #E4DFFD;
+}
+
+.w102, .w148, .w404, .w90 {
+    vertical-align: middle;
+    height: 26px;
+    border: 1px solid #000;
+    line-height: 26px;
+    background: #fff;
+}
+
+.w102 {
+    width: 100px;
+    text-align: center;
+}
+
+.w148 {
+    width: 146px;
+}
+
+.w404 {
+    width: 402px;
+}
+
+.w90 {
+    width: 88px;
+    text-align: center;
+}
+
+.w102h {
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+    height: 52px;
+    border: 1px solid #000;
+    line-height: 54px;
+    background: #fff;
+}
+
+.w404h {
+    width: 402px;
+    height: 52px;
+    border: 1px solid #000;
+    background: #fff;
+}
+
+.txt522 {
+    width: 518px;
+    height: 90px;
+    background: #fff;
+    border: 1px solid #000;
+}
+
+table {
+    font-size: 12px;
+    font-family: "宋体";
+}
+
+.bottom {
+    width: 638px;
+    margin-top: 25px;
+}
+
+.btmbtn {
+    margin-right: 114px;
+    float: right;
+}

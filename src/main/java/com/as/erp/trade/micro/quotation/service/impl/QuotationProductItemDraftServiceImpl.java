@@ -1,7 +1,9 @@
 package com.as.erp.trade.micro.quotation.service.impl;
 
 import com.as.common.dao.GenericDao;
+import com.as.common.query.PageHandler;
 import com.as.common.query.hibernate.Conditions;
+import com.as.common.query.hibernate.Query;
 import com.as.common.service.impl.GenericServiceImpl;
 import com.as.erp.trade.micro.factory.entity.Factory;
 import com.as.erp.trade.micro.factory.service.FactoryService;
@@ -11,7 +13,9 @@ import com.as.erp.trade.micro.quotation.QuotationProductItemDraftPropModifiedEve
 import com.as.erp.trade.micro.quotation.dao.QuotationProductItemDraftDao;
 import com.as.erp.trade.micro.quotation.entity.QuotationProductItemDraft;
 import com.as.erp.trade.micro.quotation.service.QuotationProductItemDraftService;
+import com.as.erp.trade.micro.quotation.vo.QuotationAccumulativeTotal;
 import com.as.erp.trade.micro.quotation.vo.QuotationProductItemDraftPropModifiedVO;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -45,7 +49,7 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
 
     @Override
     public void generateProducts(List<String> quotationProductItemDraftIds) {
-        List<QuotationProductItemDraft> list = quotationProductItemDraftDao.getList(Conditions.newInstance().in("id", quotationProductItemDraftIds));
+        List<QuotationProductItemDraft> list = getList(Conditions.newInstance().in("id", quotationProductItemDraftIds));
         List<Product> productList = new ArrayList<>();
         for(QuotationProductItemDraft draft : list) {
             Product product = new Product();
@@ -68,9 +72,10 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
             product.setLinkman(draft.getLinkman());
             product.setFactoryContactNumber(draft.getContactNumber());
 
-            productList.add(product);
+            productService.save(product);
+            draft.setProductId(product.getId());
+            update(draft);
         }
-        productService.save(productList);
     }
 
     @Override
@@ -80,6 +85,32 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
         draft.setFactoryId(factory.getId());
         draft.setFactoryName(factory.getName());
         update(draft);
+    }
+
+    @Override
+    public QuotationAccumulativeTotal getQuotationAccumulativeTotal(String quotationId, Long pageIndex, Integer pageSize) {
+        List<QuotationProductItemDraft> draftList = getList(
+                new Query().setPageIndex(1L)
+                .setPageSize(pageSize * pageIndex.intValue())
+                .setConditions(
+                        Conditions.newInstance()
+                        .eq("quotationId", quotationId)
+                )
+                .addOrder(Order.desc("addedDate"))
+        );
+
+        QuotationAccumulativeTotal accumulativeTotal = new QuotationAccumulativeTotal();
+        accumulativeTotal.setCartonQuantity(0);
+        accumulativeTotal.setProductQuantity(0);
+        accumulativeTotal.setVolume(0D);
+        accumulativeTotal.setAmount(0D);
+        for (QuotationProductItemDraft draft : draftList) {
+            accumulativeTotal.setCartonQuantity(accumulativeTotal.getCartonQuantity() + (draft.getOrderedCartonQuantity() != null ? draft.getOrderedCartonQuantity() : 0));
+            accumulativeTotal.setProductQuantity(accumulativeTotal.getProductQuantity() + (draft.getOrderedProductQuantity() != null ? draft.getOrderedProductQuantity() : 0));
+            accumulativeTotal.setVolume(accumulativeTotal.getVolume() + (draft.getTotalVolume() != null ? draft.getTotalVolume() : 0D));
+            accumulativeTotal.setAmount(accumulativeTotal.getAmount() + (draft.getTotalAmount() != null ? draft.getTotalAmount() : 0D));
+        }
+        return accumulativeTotal;
     }
 
     @Override

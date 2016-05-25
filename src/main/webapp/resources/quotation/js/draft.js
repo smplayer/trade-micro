@@ -7,17 +7,9 @@
 //         console.log($(this).data("line-id"));
 //     });
 // }
-var plan;
-var sync = true;
-function startSync() {
-    // setTimeout(function () {
-    //     sync = true;
-    // }, 1000);
-    sync = true;
-}
-function stopSync() {
-    sync = false;
-}
+var planning = [];
+var synchronizing = [];
+var timerIds = [];
 
 function createNewItem(quotationId, callback) {
     $.ajax({
@@ -30,22 +22,15 @@ function createNewItem(quotationId, callback) {
             {"quotationId": quotationId}
         ),
         success: function (data) {
-            // newId = data.item.id;
-            // console.log(lineId + ":" + data.item.id);
-            // $("input[data-line-id='" + lineId + "']").attr("id", data.item.id);
-            // $n.val(data.item.id);
             callback(data.item.id);
-            startSync();
         },
         error: function (xhr, type) {
             alert('数据加载失败' + type);
-            // console.log(xhr);
-            startSync();
         }
     });
 }
 
-function modifyItemProp(id, propName, propValue) {
+function modifyItemProp(id, propName, propValue, lineNumber) {
 
     $.ajax({
         type: 'POST',
@@ -56,39 +41,56 @@ function modifyItemProp(id, propName, propValue) {
         data: JSON.stringify({
             "id": id,
             "propName": propName,
-            "propValue": propValue
+            "propValue": propValue,
+            "lineNumber": lineNumber
         }),
         success: function (data) {
-            startSync();
-            
-            var context = $("#" + data.item.id).parents('.item').first();
-            
-            for ( var propName in data.item) {
-                $("input[name=" + propName + "]", context).val(data.item[propName]);
+            if(synchronizing[data['lineNumber'] + data['modifiedPropName']] === false) {
+                var context = $("#" + data.item.id).parents('.item').first();
+                for ( var pName in data.item) {
+                    if(
+                        pName == "orderedProductQuantity" ||
+                        pName == "totalVolume" ||
+                        pName == "totalAmount"
+                    ) {
+                        $("input[name=" + pName + "]", context).val(data.item[pName]);
+                    } else {
+                        if(data.item[pName] != 0)
+                            $("input[name=" + pName + "]", context).val(data.item[pName]);
+                        else
+                            $("input[name=" + pName + "]", context).val("");
+                    }
+                }
+
+                getAccumulativeTotal();
             }
-            
         },
         error: function (xhr, type) {
             alert('数据加载失败' + type);
-            // console.log(xhr);
-            startSync();
         }
     });
 }
 
 function syncItem(n) {
     // stopSync();
-    if(plan){
-        clearTimeout(plan);
+    var context = $(n).parents(".item").first();
+    var lineNumber = $(".line-number", context).data('line-number');
+    var fieldId = lineNumber+$(n).attr("name");
+    synchronizing[fieldId] = true;
+    if(planning[fieldId]){
+        //避免重复操作
+        clearTimeout(planning[fieldId]);
     }
-    plan = setTimeout(function () {
+    timerIds[fieldId] = timerIds[fieldId] ? ++timerIds[fieldId] : 1;
+    planning[fieldId] = setTimeout(function () {
+        var curTimerId = timerIds[fieldId];
+        
         var quotationId = $("#quotation-id").val();
 
         var context = $(n).parents('.item').first();
         var id = $("input[name=id]", context).attr("id");
 
         if (!id || id == "") {
-            //TO-DO 在创建成功之前避免重复创建
             createNewItem(quotationId, function (newId) {
                 $("input[name=id]", context).attr("id", newId);
                 syncItem(n);
@@ -97,9 +99,41 @@ function syncItem(n) {
         } else {
             var propName = $(n).attr("name");
             var propValue = $(n).val();
-            modifyItemProp(id, propName, propValue)
+
+            if(propName == "cartonSize") {
+                var reg = /^[1-9]+[0-9]*[Xx\*][1-9]+[0-9]*[Xx\*][1-9]+[0-9]*$/;
+                if(!reg.test(propValue)) {
+                    return false;
+                }
+            } else if (
+                propName == "packingQuantity" ||
+                propName == "orderedCartonQuantity" ||
+                propName == "orderedProductQuantity"
+            ) {
+                if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$/.test($.trim(propValue))) ) {
+                    propValue = "0";
+                }
+            } else if (
+                propName == "factoryPrice" ||
+                propName == "grossWeight" ||
+                propName == "netWeight" ||
+                propName == "quotedPrice" ||
+                propName == "totalVolume" ||
+                propName == "totalAmount"
+            ) {
+                if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$|^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($.trim(propValue))) ) {
+                    propValue = "0";
+                }
+            }
+            
+            modifyItemProp(id, propName, propValue,lineNumber);
         }
-    }, 500);
+        if(curTimerId == timerIds[fieldId]){
+            synchronizing[fieldId] = false;
+        }
+        
+        //延迟提交, 避免重复操作
+    }, 400);
 }
 
 function findFactory() {
@@ -158,21 +192,78 @@ function extractAsProduct() {
     }
 }
 
-$(function () {
-    // initEmptyLine();
-
-    $("#main-table input[type=text]").keyup(function (e) {
-        if($(this).attr("name") == "cartonSize") {
-            var reg = /^[1-9]+[0-9]*X[1-9]+[0-9]*X[1-9]+[0-9]*$/;
-            if(reg.test($(this).val())) {
-                syncItem(this);
-            }
-        }else if ($(this).attr("name") == "factoryName") {
-            $(this).removeClass("found-factory");
-            syncItem(this);
-        } else {
-            syncItem(this);
+function getAccumulativeTotal() {
+    var quotationId = $("#quotation-id").val();
+    var accumulativeTotal = $.ajax({
+        type: 'POST',
+        url: ctx + "/quotation/accumulativeTotal",
+        dataType: 'json',
+        contentType: "application/json",
+        data: JSON.stringify({
+            "quotationId": quotationId,
+            "pageIndex": pageIndex,
+            "pageSize": pageSize
+        }),
+        success: function (data) {
+            $("#accumulativeTotal-orderedCartonQuantity").text(data.cartonQuantity);
+            $("#accumulativeTotal-orderedProductQuantity").text(data.productQuantity);
+            $("#accumulativeTotal-totalVolume").text(data.volume.toFixed(0));
+            $("#accumulativeTotal-totalAmount").text(data.amount.toFixed(0));
+        },
+        error: function (xhr, type) {
+            alert('数据加载失败' + type);
         }
     });
+}
+
+function initPage() {
+    // var emptyFactoryPriceItems = $("input[name=factoryPrice][value='0']");
+    // $(emptyFactoryPriceItems).each(function () {
+    //     var context = $(this).parents(".item").first();
+    //     $("input[value='0']", context).val("");
+    // });
+    $("#form .item input[value='0']").val("");
+}
+
+$(function () {
+    initPage();
+    
+    // initEmptyLine();
+    $("#main-table input[type=text]").bind("keyup", function (e) {
+        //TO-DO 考虑值为空的状况
+        syncItem(this);
+    });
+
+    $( "[name='factoryName']" ).bind("keyup", function (e) {
+        $(this).removeClass("found-factory");
+    });
+
+    $(
+        "[name='factoryProductName']," +
+        "[name='factoryProductNo']," +
+        "[name='packageForm']," +
+        "[name='unit']," +
+        "[name='factoryPrice']," +
+        "[name='cartonSize']," +
+        "[name='packingQuantity']," +
+        "[name='grossWeight']," +
+        "[name='netWeight']"
+    ).bind("keyup", function (e) {
+        var context = $(this).parents(".item").first();
+        $(".extracted-product", context).removeClass("extracted-product");
+    });
+
+    $(".line-number").each(function (i,n) {
+        $(this).data('line-number',i);
+    });
+    
+    $("#btn-save").click(function (e) {
+        e.preventDefault();
+        window.location.reload();
+    });
+
+    $("[name=factoryProductName]").first().focus();
+
+    getAccumulativeTotal();
 
 });

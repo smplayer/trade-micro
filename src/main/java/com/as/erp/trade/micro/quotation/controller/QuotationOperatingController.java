@@ -27,6 +27,18 @@ public class QuotationOperatingController extends BaseQuotationController {
     @Autowired
     private ProductService productService;
 
+    @RequestMapping("quotation/operating/list")
+    public String operatingList(
+            ModelMap modelMap
+    ){
+        List<Quotation> list = quotationService.getList(
+                Conditions.newInstance()
+                .eq("operationFlag", Quotation.FLAG_OPERATING)
+        );
+        modelMap.put("list", list);
+        return "quotation/operating-list";
+    }
+
     @RequestMapping("quotation/operating")
     public String operating(
             @RequestParam(value = "id", required = false) String id,
@@ -47,6 +59,7 @@ public class QuotationOperatingController extends BaseQuotationController {
                                 Conditions.newInstance()
                                         .eq("quotationId", quotation.getId())
                         )
+                        .addOrder(Order.desc("addedDate"))
         );
         modelMap.put("page", page);
 
@@ -104,6 +117,17 @@ public class QuotationOperatingController extends BaseQuotationController {
         modelMap.put("quotation", quotation);
         modelMap.put("page", page);
         return "quotation/confirming-order";
+    }
+
+    @ResponseBody
+    @RequestMapping("quotation/accumulativeTotal")
+    public Object accumulativeTotal(
+            @RequestBody Map<String, Object> req
+    ) {
+        String quotationId = (String) req.get("quotationId");
+        Long pageIndex = Long.valueOf((String) req.get("pageIndex"));
+        Integer pageSize = Integer.valueOf((String) req.get("pageSize"));
+        return quotationProductItemDraftService.getQuotationAccumulativeTotal(quotationId, pageIndex, pageSize);
     }
 
     @RequestMapping("quotation/saveToArchive")

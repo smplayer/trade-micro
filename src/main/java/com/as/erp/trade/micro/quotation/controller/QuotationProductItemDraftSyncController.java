@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class QuotationProductItemDraftSyncController {
 
         QuotationProductItemDraft draft = new QuotationProductItemDraft();
         draft.setQuotationId((String) req.get("quotationId"));
+        draft.setAddedDate(new Date());
 //        draft.setFactoryProductName((String) req.get("factoryProductName"));
 //        draft.setFactoryProductNo((String) req.get("factoryProductNo"));
 //        draft.setFactoryProductNo((String) req.get("packageForm"));
@@ -58,10 +60,13 @@ public class QuotationProductItemDraftSyncController {
         String id = (String) req.get("id");
         String propName = (String) req.get("propName");
         Object propValue = req.get("propValue");
+        Integer lineNumber = (Integer) req.get("lineNumber");
 
         QuotationProductItemDraft item = quotationProductItemDraftService.modify(id, propName, propValue);
 
         Map<String, Object> map = new HashMap<>();
+        map.put("lineNumber", lineNumber);
+        map.put("modifiedPropName", propName);
         map.put("item", item);
         map.put("result", "success");
 

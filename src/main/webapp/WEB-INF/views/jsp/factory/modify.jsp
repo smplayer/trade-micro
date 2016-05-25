@@ -15,61 +15,60 @@
 </head>
 
 <body>
-<form id="form1" name="form1" method="post" action="<c:url value="/factory/modify"/>">
-    <div class="top topw">
-        <div class="toptt">工厂资料</div>
+<form id="form1" name="form1" method="post" action="<c:url value="/factory/create"/>">
+    <input type="hidden" name="id" id="factory-id" value="${factory.id}" />
+    <div class="main border">
+        <div class="top topw">
+            <div class="toptt">工厂资料</div>
+        </div>
+        <div class="topline toplw"></div>
+        <table width="519" border="0" align="center" cellpadding="4" cellspacing="0">
+            <tr>
+                <td width="102"><input name="textfield" type="text" class="w102" id="textfield" value="工厂/公司名称"
+                                       readonly="readonly"/></td>
+                <td colspan="3"><input type="text" name="name" id="name" class="w404" value="${factory.name}"/></td>
+            </tr>
+            <tr>
+                <td><input name="textfield2" type="text" class="w102" id="textfield2" value="主营" readonly="readonly"/></td>
+                <td width="148"><input type="text" name="mainProduct" id="mainProduct" class="w148" value="${factory.mainProduct}"/></td>
+                <td width="90"><input name="textfield14" type="text" class="w90" id="textfield14" value="联系人" readonly="readonly"/></td>
+                <td width="148"><input type="text" name="linkman" id="linkman" class="w148" value="${factory.linkman}"/></td>
+            </tr>
+            <tr>
+                <td><input name="textfield3" type="text" class="w102" id="textfield3" value="手机" readonly="readonly"/></td>
+                <td><input type="text" name="mobileNumber" id="mobileNumber" class="w148" value="${factory.mobileNumber}"/></td>
+                <td><input name="textfield15" type="text" class="w90" id="textfield15" value="电话" readonly="readonly"/></td>
+                <td><input type="text" name="phoneNumber" id="phoneNumber" class="w148"  value="${factory.phoneNumber}"/></td>
+            </tr>
+            <tr>
+                <td><input name="textfield4" type="text" class="w102" id="textfield4" value="传真" readonly="readonly"/></td>
+                <td><input type="text" name="fax" id="fax" class="w148"  value="${factory.fax}"/></td>
+                <td><input name="textfield16" type="text" class="w90" id="textfield16" value="QQ" readonly="readonly"/></td>
+                <td><input type="text" name="qq" id="qq" class="w148"  value="${factory.qq}"/></td>
+            </tr>
+            <tr>
+                <td><input name="textfield5" type="text" class="w102" id="textfield5" value="地址" readonly="readonly"/></td>
+                <td colspan="3"><input type="text" name="address" id="address" class="w404" value="${factory.address}"/></td>
+            </tr>
+            <tr>
+                <td><input name="textfield17" type="text" class="w102h" id="textfield17" value="备注" readonly="readonly"/></td>
+                <td colspan="3"><textarea name="remark" id="remark" cols="45" rows="5" class="w404h" value="${factory.remark}">${factory.remark}</textarea>
+                </td>
+            </tr>
+        </table>
+
+        <div class="bottom">
+            <div class="btmbtn"><input id="btn-confirm" type="image" src="<c:url value="/resources/quotation/images/tijiao2.png"/>" class="btn"/></div>
+        </div>
     </div>
-    <div class="topline toplw"></div>
-    <table id="main-table" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
-        <tr>
-            <td height="40" class="td100 toptdbg">字段名</td>
-            <td class="td220 toptdbg">内容</td>
-        </tr>
-
-        <tr>
-            <td height="24" class="break tdbg">厂名</td>
-            <td class="break tdbg"><input type="text" name="name" value="${factory.name}" /></td>
-        </tr>
-        <tr>
-            <td height="24" class="break tdbg">主营产品</td>
-            <td class="break tdbg"><input type="text" name="mainProduct" value="${factory.mainProduct}" /></td>
-        </tr>
-        <tr>
-            <td height="24" class="break tdbg">产品数量</td>
-            <td class="break tdbg"><input type="text" name="productQuantity" value="${factory.productQuantity}" /></td>
-        </tr>
-        <tr>
-            <td height="24" class="break tdbg">联系人</td>
-            <td class="break tdbg"><input type="text" name="linkman" value="${factory.linkman}" /></td>
-        </tr>
-        <tr>
-            <td height="24" class="break tdbg">手机/电话</td>
-            <td class="break tdbg"><input type="text" name="contactNumber" value="${factory.contactNumber}" /></td>
-        </tr>
-        <tr>
-            <td height="24" class="break tdbg">地址</td>
-            <td class="break tdbg"><input type="text" name="address" value="${factory.address}" /></td>
-        </tr>
-        <tr>
-            <td height="24" class="break tdbg">备注</td>
-            <td class="break tdbg"><input type="text" name="remark" value="${factory.remark}" /></td>
-        </tr>
-
-
-    </table>
-
-    <div id="bottom-actions" style="">
-        <input id="btn-confirm" type="submit" value="提交"/>
-    </div>
-
-    <input id="factory-id" type="hidden" value="${factory.id}" />
 </form>
 
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/factory/js/modify.js"/>"></script>
 <script>
     var confirmUrl = '<c:url value="/ajax/factory/modify" />';
 </script>
+<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/factory/js/modify.js"/>"></script>
+
 
 </body>
 </html>

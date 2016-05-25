@@ -90,7 +90,7 @@
                 <td class="editable break tdbg"><input name="subCategory" type="text" value="${p.subCategory}"/></td>
                 <td class="break tdbg">${p.factoryName}</td>
                 <td class="break tdbg">${p.factoryContactNumber}</td>
-                <td class="break tdbg">${p.createdTime}</td>
+                <td class="break tdbg">${p.addedDate}</td>
                 <td class="break tdbg"><input name="remark" type="text" value="${p.remark}"/></td>
                 <td class="break tdbg">
                     <input name="id" class="product-checkbox" type="checkbox" value="${p.id}" />

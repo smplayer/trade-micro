@@ -1,0 +1,46 @@
+* {
+    font-family: "微软雅黑";
+    font-size: 13px
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff
+}
+
+a {
+    color: #36F;
+    text-decoration: none
+}
+
+.page, .extrow {
+    position: relative;
+    z-index: 2;
+}
+
+.redLine {
+    display: none;
+}
+
+.v-title, .t-er-cont {
+    margin: 0 auto;
+    border-width: 0 !important
+}
+
+.t-er-cont {
+    position: relative;
+}
+
+.v-column {
+    text-align: center;
+}
+
+.v-parts {
+    float: left;
+    margin: 0 15px
+}
+
+.t-p-txt {
+    margin: 0 15px
+}

@@ -4,6 +4,7 @@ import com.as.common.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * Created by Administrator on 16-4-25.
@@ -36,6 +37,8 @@ public class Product extends BaseEntity {
     private String functionDescription;
     private String category;
     private String subCategory;
+
+    private Date addedDate;
 
     public String getName() {
         return name;
@@ -195,5 +198,13 @@ public class Product extends BaseEntity {
 
     public void setSubCategory(String subCategory) {
         this.subCategory = subCategory;
+    }
+
+    public Date getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Date addedDate) {
+        this.addedDate = addedDate;
     }
 }

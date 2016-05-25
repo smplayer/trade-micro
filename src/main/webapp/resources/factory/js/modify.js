@@ -25,7 +25,8 @@ $(function () {
         e.preventDefault();
         
         var factory = {
-            "id" : $("#factory-id").val()
+            "id" : $("#factory-id").val(),
+            "remark": $("#remark").val()
         };
         $("#form1 input[type=text]").each(function () {
             factory[$(this).attr("name")] = $(this).val();

@@ -29,27 +29,46 @@ public class FactoryController {
         return "factory/create";
     }
 
-    @RequestMapping(value = "factory/create", method = RequestMethod.POST)
-    public String createFactory(
-            @RequestParam String name,
-            @RequestParam String mainProduct,
-            @RequestParam Integer productQuantity,
-            @RequestParam String linkman,
-            @RequestParam String contactNumber,
-            @RequestParam String address,
-            @RequestParam String remark
+    @ResponseBody
+    @RequestMapping(value = "ajax/factory/create", method = RequestMethod.POST)
+    public Object createFactory(
+//            @RequestParam String name,
+//            @RequestParam String mainProduct,
+//            @RequestParam String linkman,
+//            @RequestParam String mobileNumber,
+//            @RequestParam String phoneNumber,
+//            @RequestParam String fax,
+//            @RequestParam String qq,
+//            @RequestParam String address,
+//            @RequestParam String remark
+
+            @RequestBody Map<String, Object> req
     ){
         Factory factory = new Factory();
-        factory.setName(name);
-        factory.setMainProduct(mainProduct);
-        factory.setProductQuantity(productQuantity);
-        factory.setLinkman(linkman);
-        factory.setContactNumber(contactNumber);
-        factory.setAddress(address);
-        factory.setRemark(remark);
+//        factory.setName(name);
+//        factory.setMainProduct(mainProduct);
+//        factory.setMobileNumber(mobileNumber);
+//        factory.setPhoneNumber(phoneNumber);
+//        factory.setFax(fax);
+//        factory.setQq(qq);
+//        factory.setLinkman(linkman);
+//        factory.setAddress(address);
+//        factory.setRemark(remark);
+        factory.setName((String) req.get("name"));
+        factory.setMainProduct((String) req.get("mainProduct"));
+        factory.setLinkman((String) req.get("linkman"));
+        factory.setMobileNumber((String) req.get("mobileNumber"));
+        factory.setPhoneNumber((String) req.get("phoneNumber"));
+        factory.setFax((String) req.get("fax"));
+        factory.setQq((String) req.get("qq"));
+        factory.setAddress((String) req.get("address"));
+        factory.setRemark((String) req.get("remark"));
+        factory.setCreatedDate(new Date());
         factoryService.save(factory);
 
-        return "redirect:/factory/create";
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        return result;
     }
 
     @RequestMapping(value = "factory/delete/{id}", method = RequestMethod.GET)
@@ -75,18 +94,22 @@ public class FactoryController {
             @RequestParam String id,
             @RequestParam String name,
             @RequestParam String mainProduct,
-            @RequestParam Integer productQuantity,
             @RequestParam String linkman,
-            @RequestParam String contactNumber,
+            @RequestParam String mobileNumber,
+            @RequestParam String phoneNumber,
+            @RequestParam String fax,
+            @RequestParam String qq,
             @RequestParam String address,
             @RequestParam String remark
     ){
         Factory factory = factoryService.getById(id);
         factory.setName(name);
         factory.setMainProduct(mainProduct);
-        factory.setProductQuantity(productQuantity);
+        factory.setMobileNumber(mobileNumber);
+        factory.setPhoneNumber(phoneNumber);
+        factory.setFax(fax);
+        factory.setQq(qq);
         factory.setLinkman(linkman);
-        factory.setContactNumber(contactNumber);
         factory.setAddress(address);
         factory.setRemark(remark);
         factoryService.update(factory);
@@ -101,9 +124,11 @@ public class FactoryController {
         Factory factory = factoryService.getById((String) req.get("id"));
         factory.setName((String) req.get("name"));
         factory.setMainProduct((String) req.get("mainProduct"));
-        factory.setProductQuantity(Integer.valueOf((String) req.get("productQuantity")));
         factory.setLinkman((String) req.get("linkman"));
-        factory.setContactNumber((String) req.get("contactNumber"));
+        factory.setMobileNumber((String) req.get("mobileNumber"));
+        factory.setPhoneNumber((String) req.get("phoneNumber"));
+        factory.setFax((String) req.get("fax"));
+        factory.setQq((String) req.get("qq"));
         factory.setAddress((String) req.get("address"));
         factory.setRemark((String) req.get("remark"));
         factoryService.update(factory);

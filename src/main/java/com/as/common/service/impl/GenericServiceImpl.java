@@ -6,6 +6,7 @@ import com.as.common.query.PageHandler;
 import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.hibernate.Query;
 import com.as.common.service.GenericService;
+import org.hibernate.criterion.Projection;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -127,5 +128,10 @@ public abstract class GenericServiceImpl<E extends BaseEntity, PK extends Serial
     @Override
     public PageHandler getPage(Query query) {
         return getDao().getPage(query);
+    }
+
+    @Override
+    public <T> T get(Projection projection, Class<T> type) {
+        return getDao().get(projection, type);
     }
 }

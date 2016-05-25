@@ -16,7 +16,7 @@ public class Quotation extends BaseEntity {
     public final static Integer FLAG_OPERATING = 1;
     public final static Integer FLAG_ARCHIVED = 10;
 
-    private String serialNumber;
+    private Integer serialNumber;
     private String customerName;
     private String region;
     private String tradeClauseType;
@@ -35,12 +35,13 @@ public class Quotation extends BaseEntity {
     private Integer operationFlag = FLAG_OPERATING;
     private Date startedDate;
     private Date lastQuotedDate;
+    private Date archivedDate;
 
-    public String getSerialNumber() {
+    public Integer getSerialNumber() {
         return serialNumber;
     }
 
-    public void setSerialNumber(String serialNumber) {
+    public void setSerialNumber(Integer serialNumber) {
         this.serialNumber = serialNumber;
     }
 
@@ -186,5 +187,13 @@ public class Quotation extends BaseEntity {
 
     public void setLastQuotedDate(Date lastQuotedDate) {
         this.lastQuotedDate = lastQuotedDate;
+    }
+
+    public Date getArchivedDate() {
+        return archivedDate;
+    }
+
+    public void setArchivedDate(Date archivedDate) {
+        this.archivedDate = archivedDate;
     }
 }

@@ -79,7 +79,7 @@
         </table>
     </div>
     <div class="fr">
-        <a href="<c:url value="/factory/create"/>" target="_blank">录入资料</a>
+        <a href="<c:url value="/factory/create"/>" id="create-factory" target="_blank">录入资料</a>
     </div>
 </div>
 
@@ -107,7 +107,7 @@
                 <td class="break tdbg">${f.mainProduct}</td>
                 <td class="break tdbg">${f.productQuantity}</td>
                 <td class="break tdbg">${f.linkman}</td>
-                <td class="break tdbg">${f.contactNumber}</td>
+                <td class="break tdbg">${f.mobileNumber}${empty f.mobileNumber || empty f.phoneNumber ? "" : "/"}${f.phoneNumber}</td>
                 <td class="break tdbg">${f.address}</td>
                 <td class="break tdbg"><a href="javascript:void(0)" data-url="<c:url value="/factory/modify/${f.id}"/>"
                                           target="_blank" class="modify-factory">查看</a></td>
@@ -151,11 +151,13 @@
         </tr>
     </table>
 </form>
-
+<script>
+    var ctx = '${ctx}';
+    var searchUrl = '<c:url value="/factory/search" />';
+</script>
 <script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
 <script>
-    var searchUrl = '<c:url value="/factory/search" />';
 </script>
 
 </body>

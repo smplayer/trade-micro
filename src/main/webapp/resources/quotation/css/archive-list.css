@@ -1,0 +1,51 @@
+body {
+    background: url(../images/archive-list-bg.png) #F0EBC7;
+}
+
+.toptt {
+    letter-spacing: 25px;
+}
+
+.top div {
+    margin-left: 25px;
+}
+
+.toplw {
+    width: 320px;
+}
+
+.topw {
+    width: 620px;
+    padding-top: 41px;
+}
+
+.top2w {
+    width: 1010px;
+}
+
+.top span {
+    margin-right: 23px;
+}
+
+.topr2 {
+    margin-right: 60px;
+}
+
+.tdbg {
+    background: #fff;
+}
+
+.toptdbg {
+    background: #C4F5C9;
+    text-align: center;
+}
+
+.jkmenu {
+    width: 320px;
+    margin: 0 auto 7px auto;
+    height: 20px;
+    line-height: 20px;
+}
+
+.jkmenu a {
+}

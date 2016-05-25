@@ -52,7 +52,7 @@
                 <td class="ddtd tdbg"></td>
                 <td class="ddtd tdbg">${p.cartonSize}</td>
                 <td class="ddtd tdbg">${p.packingQuantity}</td>
-                <td class="ddtd tdbg">${p.packingQuantity}</td>
+                <td class="ddtd tdbg">${p.orderedCartonQuantity}</td>
                 <td class="ddtd tdbg">${p.totalVolume}</td>
                 <td class="ddtd tdbg">${p.totalAmount}</td>
             </tr>
@@ -107,7 +107,9 @@
     <tr>
         <td width="157" align="center">中文/英文</td>
         <td width="199" align="center">公司/工厂货号</td>
-        <td width="66" align="center">累计</td>
+        <td width="66" align="center">
+            <a id="show-accumulative-total" href="javascript:void(0)">累计</a>
+        </td>
         <td width="150" align="center">转订单管理</td>
         <td width="88" align="center">打印</td>
         <td width="185" align="center">
@@ -123,5 +125,16 @@
 </table>
 
 <p>&nbsp;</p>
+
+<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/quotation/js/confirming-order.js"/>"></script>
+<script>
+    var ctx = '${pageContext.request.contextPath}';
+    var pageIndex = '${page.pageIndex}';
+    var pageSize = '${page.pageSize}';
+    var quotationId = '${quotation.id}';
+
+</script>
+
 </body>
 </html>
