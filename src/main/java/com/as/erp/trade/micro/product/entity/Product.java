@@ -13,8 +13,13 @@ import java.util.Date;
 @Table(name = "as_tb_product")
 public class Product extends BaseEntity {
 
+    public final static String PRODUCT_STATUS_COMPLETE = "complete";
+    public final static String PRODUCT_STATUS_IMCOMPLETE = "incomplete";
+
     private String name;
     private String imageURL;
+    private String factoryProductName;
+    private String companyProductName;
     private String factoryProductNo;
     private String companyProductNo;
     private Double factoryPrice;
@@ -39,6 +44,7 @@ public class Product extends BaseEntity {
     private String subCategory;
 
     private Date addedDate;
+    private String productStatus;
 
     public String getName() {
         return name;
@@ -54,6 +60,22 @@ public class Product extends BaseEntity {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public String getFactoryProductName() {
+        return factoryProductName;
+    }
+
+    public void setFactoryProductName(String factoryProductName) {
+        this.factoryProductName = factoryProductName;
+    }
+
+    public String getCompanyProductName() {
+        return companyProductName;
+    }
+
+    public void setCompanyProductName(String companyProductName) {
+        this.companyProductName = companyProductName;
     }
 
     public String getFactoryProductNo() {
@@ -206,5 +228,13 @@ public class Product extends BaseEntity {
 
     public void setAddedDate(Date addedDate) {
         this.addedDate = addedDate;
+    }
+
+    public String getProductStatus() {
+        return productStatus;
+    }
+
+    public void setProductStatus(String productStatus) {
+        this.productStatus = productStatus;
     }
 }

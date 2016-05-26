@@ -23,21 +23,22 @@
 </head>
 
 <body>
-<form action="<c:url value="/product/create"/>" method="post">
-    <input type="hidden" name="factory-id" id="factory-id"/>
-    厂名: <input type="text" value="" name="name" id="factoryName" />
+<form action="<c:url value="/ajax/product/saveOrUpdate"/>" method="post" id="form">
+    <input type="hidden" name="id" id="id" value="${product.id}"/>
+    <input type="hidden" name="factoryId" id="factoryId" value="${product.factoryId}"/>
+    厂名: <input type="text" value="" name="factoryName" id="factoryName" />
     <a href="javascript:void(0);" id="findExistingFactory">查新</a>
     <br/>
-    厂家品名: <input type="text" value="" name="factory-product-no" /><br/>
-    公司品名: <input type="text" value="" name="company-product-no" /><br/>
-    厂价: <input type="text" value="" name="factory-price" /><br/>
-    纸箱规格: <input type="text" value="" name="carton-size" /><br/>
+    公司品名: <input type="text" value="" name="companyProductName" /><br/>
+    厂家品名: <input type="text" value="" name="factoryProductName" /><br/>
+    厂价: <input type="text" value="" name="factoryPrice" /><br/>
+    纸箱规格: <input type="text" value="" name="cartonSize" /><br/>
 
-    <input id="confirm" type="submit" value="提交" />
+    <input id="btn-confirm" type="submit" value="提交" />
 </form>
 
 
-<div id="dialog-factorySelector" style="position: absolute; top: 50%; left: 50%; display: none;">
+<div id="dialog-factorySelector" style="display: none;">
     <div class="template">
         <div class="factory">
 
@@ -50,32 +51,13 @@
 </div>
 
 
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/common/sm/sm.js"/>"></script>
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
-    $(function () {
-        $("#dialog-factorySelector .close").click(function () {
-            $("#dialog-factorySelector").hide();
-        });
-        $(".factory").click(function () {
-            alert($(this).html());
-            $("#factory-id").val($(this).data("factory-id"));
-        });
+    var productId = "${product.id}";
+</script>
+<script type="text/javascript" src="<c:url value="/resources/product/js/edit.js"/>"></script>
+<script>
 
-        $("#findExistingFactory").click(function (e) {
-            e.preventDefault();
-            var factoryName = $("#factoryName").val();
-            $.get( "<c:url value="/ajax/factory/search"/>", {"name": factoryName}, function( data ) {
-                $("#dialog-factorySelector .content").empty();
-                $(data).each(function (i, factory) {
-                    $("#dialog-factorySelector .content").append(
-                            $("#dialog-factorySelector .template .factory").clone(true).data("factory-id", factory.id).html(factory.name)
-                    );
-                });
-                $("#dialog-factorySelector").show();
-            });
-        });
-    })
 </script>
 
 </body>

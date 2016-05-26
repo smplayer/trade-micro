@@ -3,6 +3,10 @@
  */
 
 $(function () {
+    $("#add-product").click(function (e) {
+        e.preventDefault();
+        open($(this).attr("href"),'_blank');
+    });
     $("#save").click(function (e) {
         e.preventDefault();
         var products = [];

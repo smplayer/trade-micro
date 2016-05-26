@@ -8,4 +8,6 @@ import com.as.erp.trade.micro.product.entity.Product;
  */
 public interface ProductService extends GenericService<Product, String> {
 
+    Product selectFactory(String id, String factoryId);
+
 }

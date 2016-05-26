@@ -15,7 +15,10 @@ function getAccumulativeTotal() {
             "pageSize": pageSize
         }),
         success: function (data) {
-            console.log(data);
+            $("#total-carton-quantity").text(data.cartonQuantity);
+            $("#total-volume").text(data.volume);
+            $("#total-amount").text(data.amount);
+            dialog("#dialog-accumulation");
         },
         error: function (xhr, type) {
             alert('数据加载失败' + type);

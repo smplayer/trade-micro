@@ -10,6 +10,10 @@
 <script src="<c:url value='/resources/js/respond/1.4.2/respond.min.js'/>"></script>
 --%>
 <![endif]-->
-<script src="<c:url value='/resources/jquery/2.1.4/jquery.min.js'/>"></script>
-<script src="<c:url value='/resources/js/common/common.js'/>"></script>
-<script src="<c:url value='/resources/js/common/form.js'/>"></script>
+
+<script>
+    var ctx = '${pageContext.request.contextPath}';
+</script>
+<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/common/sm/sm.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/common/project/js/project.js"/>"></script>

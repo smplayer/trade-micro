@@ -32,4 +32,12 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
         applicationContext.publishEvent(new ProductModifiedEvent(entity));
         super.update(entity);
     }
+
+    @Override
+    public Product selectFactory(String id, String factoryId) {
+        Product product = getById(id);
+        product.setFactoryId(factoryId);
+        update(product);
+        return product;
+    }
 }

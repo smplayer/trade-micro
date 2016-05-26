@@ -48,18 +48,19 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
             if(synchronizing[data['lineNumber'] + data['modifiedPropName']] === false) {
                 var context = $("#" + data.item.id).parents('.item').first();
                 for ( var pName in data.item) {
-                    if(
-                        pName == "orderedProductQuantity" ||
-                        pName == "totalVolume" ||
-                        pName == "totalAmount"
-                    ) {
-                        $("input[name=" + pName + "]", context).val(data.item[pName]);
-                    } else {
-                        if(data.item[pName] != 0)
+                    if(pName != data.modifiedPropName)
+                        if(
+                            pName == "orderedProductQuantity" ||
+                            pName == "totalVolume" ||
+                            pName == "totalAmount"
+                        ) {
                             $("input[name=" + pName + "]", context).val(data.item[pName]);
-                        else
-                            $("input[name=" + pName + "]", context).val("");
-                    }
+                        } else {
+                            if(data.item[pName] != 0)
+                                $("input[name=" + pName + "]", context).val(data.item[pName]);
+                            else
+                                $("input[name=" + pName + "]", context).val("");
+                        }
                 }
 
                 getAccumulativeTotal();
@@ -133,7 +134,7 @@ function syncItem(n) {
         }
         
         //延迟提交, 避免重复操作
-    }, 400);
+    }, 200);
 }
 
 function findFactory() {
@@ -259,6 +260,33 @@ $(function () {
     
     $("#btn-save").click(function (e) {
         e.preventDefault();
+        
+        var factoryProductName = $("#new-item [name=factoryProductName]").val();
+        var factoryProductNo = $("#new-item [name=factoryProductNo]").val();
+        var factoryPrice = $("#new-item [name=factoryPrice]").val();
+        var contactNumber = $("#new-item [name=contactNumber]").val();
+
+        if (factoryProductName == "" && factoryProductNo == "") {
+            alert("品名或货号不能全空");
+            $("#new-item [name=factoryProductName]").focus();
+            return false;
+        }
+        if ( $.trim(factoryPrice) == "" ) {
+            alert("厂价不能为空");
+            $("#new-item [name=factoryPrice]").focus();
+            return false;
+        }
+        if ( !(/^(0|[1-9][0-9]*)$|^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($.trim(factoryPrice))) ) {
+            alert("厂价格式错误");
+            $("#new-item [name=factoryPrice]").focus();
+            return false;
+        }
+        if ( $.trim(contactNumber) == "" ) {
+            alert("手机/电话不能为空");
+            $("#new-item [name=contactNumber]").focus();
+            return false;
+        }
+
         window.location.reload();
     });
 

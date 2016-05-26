@@ -154,7 +154,7 @@
 
 <script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/factory/js/search.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/factory/js/factory-search-for-draft.js"/>"></script>
 <script>
     var quotationProductItemDraftId = '${quotationProductItemDraftId}';
     var selectFactoryForProductItemDraftUrl = '<c:url value="/quotation/selectFactoryForProductItemDraft" />';

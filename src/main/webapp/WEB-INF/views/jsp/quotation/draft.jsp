@@ -116,7 +116,7 @@
                 <td class="td70 toptdbg">毛/净重</td>
             </tr>
 
-            <tr class="item">
+            <tr class="item" id="new-item">
                 <td height="24" class="break tdbg line-number">&nbsp;</td>
                 <td class="break tdbg">&nbsp;</td>
                 <td class="break tdbg"><input type="text" name="factoryProductName" /></td>
@@ -238,19 +238,19 @@
 </div>
 
 
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/common/project/js/top-bar.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/common/project/js/uuid.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/quotation/js/draft.js"/>"></script>
+
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
-    var ctx = '${ctx}';
     var pageIndex = '${page.pageIndex}';
     var pageSize = '${page.pageSize}';
     var createNewItemUrl = '<c:url value="/ajax/quotation/productItemDraft/create" />';
     var modifyItemPropUrl = '<c:url value="/ajax/quotation/productItemDraft/modifyProp" />';
-    var findFactoryUrl = '<c:url value="/quotation/findFactory" />';
+    var findFactoryUrl = '<c:url value="/quotation/findFactoryForDraft" />';
     var generateProductsUrl = '<c:url value="/quotation/generateProducts" />';
-
+</script>
+<script type="text/javascript" src="<c:url value="/resources/common/project/js/uuid.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/quotation/js/draft.js"/>"></script>
+<script>
 
 
     $("#pre-reset").click(function () {

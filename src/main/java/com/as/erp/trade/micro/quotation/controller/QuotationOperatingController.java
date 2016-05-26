@@ -99,6 +99,7 @@ public class QuotationOperatingController extends BaseQuotationController {
 
     @RequestMapping("quotation/confirming/order")
     public String confirmingOrder(
+            @RequestParam(required = false, defaultValue = "company") String productNoFrom,
             @RequestParam("id") String id,
             @RequestParam(value = "pageIndex", defaultValue = "1") Long pageIndex,
             @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
@@ -114,6 +115,7 @@ public class QuotationOperatingController extends BaseQuotationController {
                                         .eq("quotationId", id)
                         )
         );
+        modelMap.put("productNoFrom", productNoFrom);
         modelMap.put("quotation", quotation);
         modelMap.put("page", page);
         return "quotation/confirming-order";
@@ -148,7 +150,7 @@ public class QuotationOperatingController extends BaseQuotationController {
         return "redirect:/quotation/operating";
     }
 
-    @RequestMapping(value = "quotation/findFactory", method = RequestMethod.GET)
+    @RequestMapping(value = "quotation/findFactoryForDraft", method = RequestMethod.GET)
     public String findFactory(
             @RequestParam("quotationProductItemDraftId") String quotationProductItemDraftId,
             @RequestParam("keywords") String factoryName,
@@ -163,7 +165,7 @@ public class QuotationOperatingController extends BaseQuotationController {
 
         modelMap.put("page", page);
         modelMap.put("quotationProductItemDraftId", quotationProductItemDraftId);
-        return "factory/factory-search";
+        return "factory/factory-search-for-draft";
     }
 
     @ResponseBody

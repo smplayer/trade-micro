@@ -24,17 +24,17 @@
                                                             class="border"/> &nbsp;查询
             </td>
             <td width="761" align="left">&nbsp;</td>
-            <td width="128" align="right">产品录入</td>
+            <td width="128" align="right">
+                <a href="<c:url value="/product/create" />" id="add-product">产品录入</a>
+            </td>
             <td width="151">
-                <table width="120" border="0" align="right" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td><a href="#"><img src="<c:url value="/resources/product/images/left_03.png" />" width="13"
-                                             height="11"/></a></td>
-                        <td align="center">1-000/000</td>
-                        <td><a href="#"><img src="<c:url value="/resources/product/images/right_03.png" />" width="13"
-                                             height="11"/></a></td>
-                    </tr>
-                </table>
+                <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
+                    <c:param name="prePageImage" value="/resources/common/project/images/left_03.png"  />
+                    <c:param name="nextPageImage" value="/resources/common/project/images/right_03.png"  />
+                    <c:param name="pageIndex" value="${page.pageIndex}"  />
+                    <c:param name="pageQuantity" value="${page.pageQuantity}"  />
+                    <c:param name="url" value="/product/list"/>
+                </c:import>
             </td>
         </tr>
     </table>
@@ -73,7 +73,7 @@
                         ${(productPage.dataQuantity - (productPage.pageIndex - 1) * productPage.pageSize) - status.index}
                 </td>
                 <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">${p.name}</td>
+                <td class="break tdbg">${p.companyProductName}</td>
                 <td class="break tdbg"><input name="" type="text" value="${p.companyProductNo}"/></td>
                 <td class="editable break tdbg"><input name="factoryProductNo" type="text" value="${p.factoryProductNo}"/></td>
                 <td class="editable break tdbg"><input name="packageForm" type="text" value="${p.packageForm}"/></td>
@@ -90,7 +90,9 @@
                 <td class="editable break tdbg"><input name="subCategory" type="text" value="${p.subCategory}"/></td>
                 <td class="break tdbg">${p.factoryName}</td>
                 <td class="break tdbg">${p.factoryContactNumber}</td>
-                <td class="break tdbg">${p.addedDate}</td>
+                <td class="break tdbg">
+                    <fmt:formatDate value="${p.addedDate}" pattern="MM-dd" />
+                </td>
                 <td class="break tdbg"><input name="remark" type="text" value="${p.remark}"/></td>
                 <td class="break tdbg">
                     <input name="id" class="product-checkbox" type="checkbox" value="${p.id}" />

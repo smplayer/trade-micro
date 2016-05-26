@@ -47,6 +47,7 @@ public class SyncQuotationProductItemDraftPropFromProductListener implements Sma
         );
         for (QuotationProductItemDraft draft : draftList) {
             draft.setFunctionDescription(product.getFunctionDescription());
+            draft.setCompanyProductNo(product.getCompanyProductNo());
         }
         quotationProductItemDraftService.update(draftList);
     }

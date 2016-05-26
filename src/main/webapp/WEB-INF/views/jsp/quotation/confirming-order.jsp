@@ -13,6 +13,9 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/confirming-order.css"/>"/>
 
     <style type="text/css">
+        #dialog-accumulation table td {
+            background-color: #ffffff;
+        }
     </style>
 </head>
 
@@ -45,7 +48,7 @@
         <c:forEach items="${page.dataList}" var="p" varStatus="status">
             <tr>
                 <td height="26" class="ddtd tdbg">${p.companyProductName}</td>
-                <td class="ddtd tdbg">${p.companyProductNo}</td>
+                <td class="ddtd tdbg">${productNoFrom=='factory' ? p.factoryProductNo : p.companyProductNo}</td>
                 <td class="ddtd tdbg">${p.packageForm}</td>
                 <td class="ddtd tdbg">${p.unit}</td>
                 <td class="ddtd tdbg">${p.quotedPrice}</td>
@@ -106,30 +109,68 @@
     </tr>
     <tr>
         <td width="157" align="center">中文/英文</td>
-        <td width="199" align="center">公司/工厂货号</td>
+        <td width="199" align="center">
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}" />"/>公司</a>
+            /
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&productNoFrom=factory" />"/>工厂货号</a>
+        </td>
+        </td>
         <td width="66" align="center">
             <a id="show-accumulative-total" href="javascript:void(0)">累计</a>
         </td>
         <td width="150" align="center">转订单管理</td>
         <td width="88" align="center">打印</td>
         <td width="185" align="center">
-            <table width="84" border="0" align="center" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td width="9"><img src="<c:url value="/resources/common/project/images/left_03.png" />" width="9" height="8"/></td>
-                    <td width="66" align="center">1-00/00</td>
-                    <td width="9"><img src="<c:url value="/resources/common/project/images/right_03.png" />" width="9" height="8"/></td>
-                </tr>
-            </table>
+            <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
+                <c:param name="prePageImage" value="/resources/common/project/images/left_03.png"  />
+                <c:param name="nextPageImage" value="/resources/common/project/images/right_03.png"  />
+                <c:param name="pageIndex" value="${page.pageIndex}"  />
+                <c:param name="pageQuantity" value="${page.pageQuantity}"  />
+                <c:param name="url" value="/quotation/confirming/order?id=${param.id}"/>
+            </c:import>
         </td>
     </tr>
 </table>
 
 <p>&nbsp;</p>
 
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<div id="dialog-accumulation"
+     style="display: none; background-color: #fff; width: 300px; height: 220px; border: 2px solid #a839a8;">
+    <div style="text-align: right;">
+        <a href="javascript:void (0);" class="close">
+            <img src="<c:url value="/resources/common/project/images/close.png" />"
+                 style="width: 24px; height: 24px; margin: 10px 10px 0px 0px"/>
+        </a>
+    </div>
+    <div>
+        <h2 style="display: inline-block; font-weight: normal; letter-spacing: 24px; padding-left: 20px; margin: 0 0 0 0; border-bottom: 1px solid red; padding-bottom: 3px;">
+            累计</h2>
+    </div>
+    <table style="width: 200px; background-color: #000; margin: 20px auto 0 auto" border="0" cellpadding="0"
+           cellspacing="1">
+        <tr>
+            <td style="width: 100px; height: 30px; background-color: #f0c9f0">栏目</td>
+            <td style="width: 100px; height: 30px; background-color: #f0c9f0">数据</td>
+        </tr>
+        <tr>
+            <td style="width: 100px; height: 20px;">总箱数</td>
+            <td style="width: 100px; height: 20px;" id="total-carton-quantity"></td>
+        </tr>
+        <tr>
+            <td style="width: 100px; height: 20px;">总体积</td>
+            <td style="width: 100px; height: 20px;" id="total-volume"></td>
+        </tr>
+        <tr>
+            <td style="width: 100px; height: 20px;">总金额</td>
+            <td style="width: 100px; height: 20px;" id="total-amount"></td>
+        </tr>
+    </table>
+</div>
+
+
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/confirming-order.js"/>"></script>
 <script>
-    var ctx = '${pageContext.request.contextPath}';
     var pageIndex = '${page.pageIndex}';
     var pageSize = '${page.pageSize}';
     var quotationId = '${quotation.id}';
