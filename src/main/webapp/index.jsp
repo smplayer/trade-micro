@@ -1,3 +1,8 @@
+<%
+    response.sendRedirect(request.getContextPath() + "/user/login");
+%>
+
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -28,7 +33,7 @@
             </tr>
             <tr>
                 <td height="55" align="right">密码：</td>
-                <td align="left"><input type="text" name="password" id="password" class="password"/></td>
+                <td align="left"><input type="password" name="password" id="password" class="password"/></td>
             </tr>
             <tr>
                 <td height="55" align="right">&nbsp;</td>

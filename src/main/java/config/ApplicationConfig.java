@@ -2,6 +2,8 @@ package config;
 
 import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
  * Created by Newbody on 2016/3/1.
@@ -11,4 +13,6 @@ import org.springframework.stereotype.Controller;
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @Import({DaoConfig.class})
 public class ApplicationConfig {
+
+
 }

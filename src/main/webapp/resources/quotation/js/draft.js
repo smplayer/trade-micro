@@ -15,7 +15,7 @@ function createNewItem(quotationId, callback) {
     $.ajax({
         type: 'POST',
         // async: false,
-        url: createNewItemUrl,
+        url: ctx + "/ajax/quotation/productItemDraft/create",
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify(
@@ -25,7 +25,7 @@ function createNewItem(quotationId, callback) {
             callback(data.item.id);
         },
         error: function (xhr, type) {
-            alert('数据加载失败' + type);
+            //alert('数据加载失败' + type);
         }
     });
 }
@@ -35,7 +35,7 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
     $.ajax({
         type: 'POST',
         // async: false,
-        url: modifyItemPropUrl,
+        url: ctx + "/ajax/quotation/productItemDraft/modifyProp",
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify({
@@ -50,9 +50,10 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
                 for ( var pName in data.item) {
                     if(pName != data.modifiedPropName)
                         if(
-                            pName == "orderedProductQuantity" ||
-                            pName == "totalVolume" ||
-                            pName == "totalAmount"
+                            // pName == "orderedProductQuantity" ||
+                            // pName == "totalVolume" ||
+                            // pName == "totalAmount"
+                            false
                         ) {
                             $("input[name=" + pName + "]", context).val(data.item[pName]);
                         } else {
@@ -67,7 +68,7 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
             }
         },
         error: function (xhr, type) {
-            alert('数据加载失败' + type);
+            //alert('数据加载失败' + type);
         }
     });
 }
@@ -75,7 +76,7 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
 function syncItem(n) {
     // stopSync();
     var context = $(n).parents(".item").first();
-    var lineNumber = $(".line-number", context).data('line-number');
+    var lineNumber = Number($(".line-number", context).attr('data-line-number'));
     var fieldId = lineNumber+$(n).attr("name");
     synchronizing[fieldId] = true;
     if(planning[fieldId]){
@@ -101,33 +102,35 @@ function syncItem(n) {
             var propName = $(n).attr("name");
             var propValue = $(n).val();
 
-            if(propName == "cartonSize") {
-                var reg = /^[1-9]+[0-9]*[Xx\*][1-9]+[0-9]*[Xx\*][1-9]+[0-9]*$/;
-                if(!reg.test(propValue)) {
-                    return false;
+            if (propName != "remark") {
+                if(propName == "cartonSize") {
+                    var reg = /^[1-9]+[0-9]*[Xx\*][1-9]+[0-9]*[Xx\*][1-9]+[0-9]*$/;
+                    if(!reg.test(propValue)) {
+                        return false;
+                    }
+                } else if (
+                    propName == "packingQuantity" ||
+                    propName == "orderedCartonQuantity" ||
+                    propName == "orderedProductQuantity"
+                ) {
+                    if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$/.test($.trim(propValue))) ) {
+                        propValue = "0";
+                    }
+                } else if (
+                    propName == "factoryPrice" ||
+                    propName == "grossWeight" ||
+                    propName == "netWeight" ||
+                    propName == "quotedPrice" ||
+                    propName == "totalVolume" ||
+                    propName == "totalAmount"
+                ) {
+                    if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$|^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($.trim(propValue))) ) {
+                        propValue = "0";
+                    }
                 }
-            } else if (
-                propName == "packingQuantity" ||
-                propName == "orderedCartonQuantity" ||
-                propName == "orderedProductQuantity"
-            ) {
-                if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$/.test($.trim(propValue))) ) {
-                    propValue = "0";
-                }
-            } else if (
-                propName == "factoryPrice" ||
-                propName == "grossWeight" ||
-                propName == "netWeight" ||
-                propName == "quotedPrice" ||
-                propName == "totalVolume" ||
-                propName == "totalAmount"
-            ) {
-                if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$|^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($.trim(propValue))) ) {
-                    propValue = "0";
-                }
+
+                modifyItemProp(id, propName, propValue,lineNumber);
             }
-            
-            modifyItemProp(id, propName, propValue,lineNumber);
         }
         if(curTimerId == timerIds[fieldId]){
             synchronizing[fieldId] = false;
@@ -140,38 +143,69 @@ function syncItem(n) {
 function findFactory() {
     var checkedItems = $("#main-table input[name=id]:checked");
     if(checkedItems.length == 0){
-        alert("请选择一项");
+        dialogAlert("#dialog-alert", {
+            textContent: '请选择要查新的厂名打勾'
+        });
     } else if (checkedItems.length > 1) {
-        alert("只能选择一项");
+        dialogAlert("#dialog-alert", {
+            textContent: '查新只能选择一项'
+        });
     } else {
         var context = checkedItems.parents('.item').first();
         var factoryName = $("input[name=factoryName]", context).val();
-        open(findFactoryUrl + "?quotationProductItemDraftId=" + checkedItems.val() + "&keywords=" + factoryName, '_blank');
+        if (factoryName != '')
+            open(ctx + "/quotation/findFactoryForDraft" + "?quotationProductItemDraftId=" + checkedItems.val() + "&keywords=" + factoryName, '_blank');
+        else
+            dialogAlert("#dialog-alert", {
+                textContent: '请填写厂名之后再查新'
+            });
     }
 }
 
 function extractAsProduct() {
     var checkedItems = $("#main-table input[name=id]:checked");
     var ids = [];
-    var ok = true;
     checkedItems.each(function () {
+        var ok = true;
+
         var context = $(this).parents(".item").first();
         var draftId = $("input[name=id]", context).val();
         var $factoryProductName = $("input[name=factoryProductName]", context);
         var $factoryProductNo = $("input[name=factoryProductNo]", context);
         if($factoryProductName.val() == "" && $factoryProductNo.val() == "") {
-            alert("品名和货号不能全空");
-            $factoryProductName.focus();
+            // alert("品名和货号不能全空");
+            // $factoryProductName.focus();
             ok = false;
-            return false;
+            // return false;
         }
-        ids.push(draftId);
+        var $factoryPrice = $("[name=factoryPrice]", context);
+        if($factoryPrice.val() == "") {
+            // alert("厂价不能为空");
+            // $factoryPrice.focus();
+            ok = false;
+            // return false;
+        }
+        var $contactNumber = $("[name=contactNumber]", context);
+        if($contactNumber.val() == "") {
+            // alert("手机/电话不能为空");
+            // $contactNumber.focus();
+            ok = false;
+            // return false;
+        }
+        var $factoryName = $("[name=factoryName]", context);
+        if(!$factoryName.hasClass("found-factory")) {
+            // $factoryName.focus();
+            ok = false;
+            // return false;
+        }
+        if (ok === true)
+            ids.push(draftId);
     });
 
-    if(ok === true) {
+    if(ids.length > 0) {
         $.ajax({
             type: 'POST',
-            url: generateProductsUrl,
+            url: ctx + "/quotation/generateProducts",
             dataType: 'json',
             contentType: "application/json",
             data: JSON.stringify({
@@ -187,7 +221,7 @@ function extractAsProduct() {
                 });
             },
             error: function (xhr, type) {
-                alert('数据加载失败' + type);
+                //alert('数据加载失败' + type);
             }
         });
     }
@@ -195,24 +229,51 @@ function extractAsProduct() {
 
 function getAccumulativeTotal() {
     var quotationId = $("#quotation-id").val();
-    var accumulativeTotal = $.ajax({
+    if(quotationId != "") {
+        var accumulativeTotal = $.ajax({
+            type: 'POST',
+            url: ctx + "/quotation/accumulativeTotal",
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify({
+                "quotationId": quotationId,
+                "pageIndex": pageIndex,
+                "pageSize": pageSize
+            }),
+            success: function (data) {
+                $("#accumulativeTotal-orderedCartonQuantity").text(data.cartonQuantity);
+                $("#accumulativeTotal-orderedProductQuantity").text(data.productQuantity);
+                $("#accumulativeTotal-totalVolume").text(data.volume.toFixed(0));
+                $("#accumulativeTotal-totalAmount").text(data.amount.toFixed(0));
+            },
+            error: function (xhr, type) {
+                //alert('数据加载失败' + type);
+            }
+        });
+    }
+}
+
+
+function loadFavorQuotationList() {
+    $.ajax({
         type: 'POST',
-        url: ctx + "/quotation/accumulativeTotal",
+        url: ctx + "/quotation/favor/list",
         dataType: 'json',
         contentType: "application/json",
-        data: JSON.stringify({
-            "quotationId": quotationId,
-            "pageIndex": pageIndex,
-            "pageSize": pageSize
-        }),
         success: function (data) {
-            $("#accumulativeTotal-orderedCartonQuantity").text(data.cartonQuantity);
-            $("#accumulativeTotal-orderedProductQuantity").text(data.productQuantity);
-            $("#accumulativeTotal-totalVolume").text(data.volume.toFixed(0));
-            $("#accumulativeTotal-totalAmount").text(data.amount.toFixed(0));
+            var $favorCusNameList = $(".favor-cus-name");
+            $(data).each(function (i,n) {
+                if( i < $favorCusNameList.length) {
+                    var $a = $("a", $favorCusNameList[n.indexNumber - 1]);
+                    $a.text(n.customerName).attr("href", ctx + "/quotation/operating?id=" + n.quotationId);
+                    if(quotationId == n.quotationId) {
+                        $a.css("color", "red");
+                    }
+                }
+            });
         },
         error: function (xhr, type) {
-            alert('数据加载失败' + type);
+            //alert('数据加载失败' + type);
         }
     });
 }
@@ -224,15 +285,120 @@ function initPage() {
     //     $("input[value='0']", context).val("");
     // });
     $("#form .item input[value='0']").val("");
+    loadFavorQuotationList();
+}
+
+function uploadImage(id) {
+    $("#iframe-upload-image").attr("src", ctx + "/quotation/uploadImage?id=" + id);
+    dialog("#dialog-upload-image");
+}
+
+function uploadImageFinish() {
+    dialog("#dialog-upload-image", {close : true});
+}
+
+function setFavorQuotationList() {
+    $("#iframe-favor-setting").attr("src", ctx + "/quotation/favor/setting");
+    dialog("#dialog-favor-setting");
+}
+
+function setFavorQuotationListFinish() {
+    dialog("#dialog-favor-setting", {close : true});
+}
+
+function deleteItems() {
+    var ids = [];
+    $("[name=id]:checked").each(function () {
+        ids.push($(this).val())
+    });
+    
+    $.ajax({
+        type: 'POST',
+        url: ctx + "/quotation/deleteDraftItem",
+        data: JSON.stringify({
+            "ids": ids
+        }),
+        dataType: 'json',
+        contentType: "application/json",
+        success: function (data) {
+            document.location.reload();
+        },
+        error: function (xhr, type) {
+            //alert('数据加载失败' + type);
+        }
+    });
+    
+}
+
+function selectAll() {
+    var $ids = $("[type=checkbox][name=id]");
+    var $checked = $("[name=id]:checked");
+    var status;
+    if($ids.length > $checked.length && $checked.length >= 0) {
+        status = 0;
+    } else if ($ids.length == $checked.length) {
+        status = 1;
+    }
+    if( status == 0) {
+        $ids.each(function (e) {
+            this.checked = true;
+        });
+    } else {
+        $ids.each(function (e) {
+            this.checked = false;
+        });
+    }
+}
+
+function showBigProductImage($img) {
+    $("#big-img").attr("src", $img.attr("src"));
+    dialog("#dialog-big-image");
 }
 
 $(function () {
     initPage();
+
+    $(".product-image").click(function (e) {
+        showBigProductImage($(this));
+    });
+
+    $("#select-all").click(selectAll);
+
+    $("#set-favor-quotation-list").click(function (e) {
+        setFavorQuotationList();
+    });
+    
+    $(".upload-image").click(function () {
+        var id = $(this).attr("data-product-id");
+        uploadImage(id);
+    });
     
     // initEmptyLine();
     $("#main-table input[type=text]").bind("keyup", function (e) {
         //TO-DO 考虑值为空的状况
-        syncItem(this);
+        if (
+            e.keyCode != 9 &&
+            e.keyCode != 16 &&
+            e.keyCode != 17 &&
+            e.keyCode != 18 &&
+            e.keyCode != 20 &&
+            e.keyCode != 27 &&
+            e.keyCode != 37 &&
+            e.keyCode != 38 &&
+            e.keyCode != 39 &&
+            e.keyCode != 40
+        ){
+            if(quotationId == '') {
+                dialogAlert("#dialog-alert", {
+                    textContent: '请先进行设置',
+                    onClose: function () {
+                        $(this).val('');
+                    }.bind(this)
+                });
+            } else {
+                syncItem(this);
+            }
+        }
     });
 
     $( "[name='factoryName']" ).bind("keyup", function (e) {
@@ -255,40 +421,80 @@ $(function () {
     });
 
     $(".line-number").each(function (i,n) {
-        $(this).data('line-number',i);
+        $(this).attr('data-line-number',i);
     });
     
     $("#btn-save").click(function (e) {
         e.preventDefault();
         
-        var factoryProductName = $("#new-item [name=factoryProductName]").val();
-        var factoryProductNo = $("#new-item [name=factoryProductNo]").val();
-        var factoryPrice = $("#new-item [name=factoryPrice]").val();
-        var contactNumber = $("#new-item [name=contactNumber]").val();
+        // var factoryProductName = $("#new-item [name=factoryProductName]").val();
+        // var factoryProductNo = $("#new-item [name=factoryProductNo]").val();
+        // var factoryPrice = $("#new-item [name=factoryPrice]").val();
+        // var contactNumber = $("#new-item [name=contactNumber]").val();
+        //
+        // if (factoryProductName == "" && factoryProductNo == "") {
+        //     alert("品名或货号不能全空");
+        //     $("#new-item [name=factoryProductName]").focus();
+        //     return false;
+        // }
+        // if ( $.trim(factoryPrice) == "" ) {
+        //     alert("厂价不能为空");
+        //     $("#new-item [name=factoryPrice]").focus();
+        //     return false;
+        // }
+        // if ( !(/^(0|[1-9][0-9]*)$|^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($.trim(factoryPrice))) ) {
+        //     alert("厂价格式错误");
+        //     $("#new-item [name=factoryPrice]").focus();
+        //     return false;
+        // }
+        // if ( $.trim(contactNumber) == "" ) {
+        //     alert("手机/电话不能为空");
+        //     $("#new-item [name=contactNumber]").focus();
+        //     return false;
+        // }
+        var remarkData = [];
+        $("[name=id]:checked").each(function () {
+            var context = $(this).parents(".item").first();
+            var id = $(this).val();
+            var remark = $("[name=remark]", context).val();
+            remarkData.push({
+                "id": id,
+                "remark": remark
+            })
+        });
 
-        if (factoryProductName == "" && factoryProductNo == "") {
-            alert("品名或货号不能全空");
-            $("#new-item [name=factoryProductName]").focus();
-            return false;
+        if (remarkData.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: ctx + "/quotation/saveRemark",
+                data: JSON.stringify({
+                    "remarkData": remarkData
+                }),
+                dataType: 'json',
+                contentType: "application/json",
+                success: function (data) {
+                    document.location.reload();
+                },
+                error: function (xhr, type) {
+                    //alert('数据加载失败' + type);
+                }
+            });
         }
-        if ( $.trim(factoryPrice) == "" ) {
-            alert("厂价不能为空");
-            $("#new-item [name=factoryPrice]").focus();
-            return false;
-        }
-        if ( !(/^(0|[1-9][0-9]*)$|^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($.trim(factoryPrice))) ) {
-            alert("厂价格式错误");
-            $("#new-item [name=factoryPrice]").focus();
-            return false;
-        }
-        if ( $.trim(contactNumber) == "" ) {
-            alert("手机/电话不能为空");
-            $("#new-item [name=contactNumber]").focus();
-            return false;
-        }
-
-        window.location.reload();
+        
     });
+
+    $("#btn-delete").click(function (e) {
+        e.preventDefault();
+        deleteItems();
+    });
+
+    $("input").keypress(function (e) {
+        if(window.event.keyCode == 13) {
+            e.preventDefault();
+            document.location.reload();
+            return false;
+        }
+    })
 
     $("[name=factoryProductName]").first().focus();
 

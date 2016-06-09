@@ -14,6 +14,7 @@
 <script>
     var ctx = '${pageContext.request.contextPath}';
 </script>
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/common/jquery/jquery-1.12.4.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/sm/sm.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/project/js/project.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/common/project/js/top-bar.js"/>"></script>

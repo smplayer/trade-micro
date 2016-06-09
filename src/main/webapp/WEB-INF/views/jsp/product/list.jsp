@@ -15,9 +15,21 @@
 
 <body>
 <form id="form1" name="form1" method="post" action="">
-    <div class="top"><span>产品库</span></div>
-    <div class="topline"></div>
-    <div class="menu"><a href="#">产品库</a><a href="#">标准产品</a><a href="#">补料产品</a></div>
+
+    <c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
+        <c:param name="backgroundColor" value="#2ebc54"/>
+        <c:param name="currentModule" value="product"/>
+        <c:param name="title" value="${not empty title ? title : '操作版'}"/>
+    </c:import>
+
+    <%--<div class="top"><span>产品库</span></div>--%>
+    <%--<div class="topline"></div>--%>
+    <%--<div class="menu">--%>
+        <%--<a href="<c:url value="/product/list"/>">产品库</a>--%>
+        <%--<a href="<c:url value="/product/list/complete"/>">标准产品</a>--%>
+        <%--<a href="<c:url value="/product/list/incomplete"/>">补料产品</a>--%>
+    <%--</div>--%>
+
     <table width="1240" border="0" align="center" cellspacing="1">
         <tr>
             <td width="197" height="20" align="left"><input name="textfield" type="text" id="textfield" size="10"
@@ -31,8 +43,8 @@
                 <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
                     <c:param name="prePageImage" value="/resources/common/project/images/left_03.png"  />
                     <c:param name="nextPageImage" value="/resources/common/project/images/right_03.png"  />
-                    <c:param name="pageIndex" value="${page.pageIndex}"  />
-                    <c:param name="pageQuantity" value="${page.pageQuantity}"  />
+                    <c:param name="pageIndex" value="${productPage.pageIndex}"  />
+                    <c:param name="pageQuantity" value="${productPage.pageQuantity}"  />
                     <c:param name="url" value="/product/list"/>
                 </c:import>
             </td>
@@ -72,9 +84,29 @@
                 <td height="24" class="break tdbg">
                         ${(productPage.dataQuantity - (productPage.pageIndex - 1) * productPage.pageSize) - status.index}
                 </td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">${p.companyProductName}</td>
-                <td class="break tdbg"><input name="" type="text" value="${p.companyProductNo}"/></td>
+                <td class="break tdbg">
+                    <c:if test="${not empty p.imageURL}" var="hasImage">
+                        <div class="has-image">
+                            <input type="button" value="上传" class="upload-image" data-product-id="${p.id}"/>
+                            <a href="javascript:void (0);">
+                            <img class="product-image" src="<c:url value="/resources/upload/${p.imageURL}" />" alt="" data-product-id="${p.id}"
+                                 style=""/>
+                            </a>
+                        </div>
+                    </c:if>
+                    <c:if test="${not hasImage}" >
+                        <div class="not-has-image">
+                            <input type="button" value="上传" class="upload-image" data-product-id="${p.id}"/>
+                            <a href="javascript:void (0);">
+                            <img class="product-image" src="" alt="" data-product-id="${p.id}" style=""/>
+                            </a>
+                        </div>
+                    </c:if>
+                </td>
+                <td class="break tdbg">
+                    <input name="companyProductName" type="text" value="${p.companyProductName}"/>
+                </td>
+                <td class="break tdbg"><input name="companyProductNo" type="text" value="${p.companyProductNo}"/></td>
                 <td class="editable break tdbg"><input name="factoryProductNo" type="text" value="${p.factoryProductNo}"/></td>
                 <td class="editable break tdbg"><input name="packageForm" type="text" value="${p.packageForm}"/></td>
                 <td class="editable break tdbg"><input name="unit" type="text" value="${p.unit}"/></td>
@@ -83,7 +115,8 @@
                 <td class="editable break tdbg"><input name="cartonSize" type="text" value="${p.cartonSize}"/></td>
                 <td class="editable break tdbg"><input name="packingQuantity" type="text" value="${p.packingQuantity}"/></td>
                 <td class="editable break tdbg">
-                    <input name="" type="text" value="${p.grossWeight}/${p.netWeight}"/>
+                    <input type="text" name="grossWeight" value="<fmt:formatNumber value="${p.grossWeight}" maxFractionDigits="2"/>" style="width: 25px;"
+                    />/<input type="text" name="netWeight" value="<fmt:formatNumber value="${p.netWeight}" maxFractionDigits="2"/>" style="width: 25px;" />
                 </td>
                 <td class="editable break tdbg"><input name="functionDescription" type="text" value="${p.functionDescription}"/></td>
                 <td class="editable break tdbg"><input name="category" type="text" value="${p.category}"/></td>
@@ -139,7 +172,32 @@
 <div class="html-template" style="display: none;">
     <input id="editor-template" class="editor" type="text" />
 </div>
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+
+<div id="dialog-upload-image" style="display: none; background-color: #fff; width: 300px; height: 220px; border: 2px solid #a839a8;">
+
+    <div class="dialog-header">
+        <a href="javascript:void (0);" class="dialog-close">
+            <img src="<c:url value="/resources/common/project/images/close.png" />"/>
+        </a>
+    </div>
+
+    <iframe name="iframe-upload-image" id="iframe-upload-image" style="width: 300px; height: 220px; border: 0;" src=""></iframe>
+</div>
+
+<div id="dialog-big-image" style="display: none; background-color: #fff; width: 250px; height: 250px; border: 2px solid #a839a8;">
+    <div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">
+        <a href="javascript:void (0);" class="dialog-close">
+            <img src="<c:url value="/resources/common/project/images/close.png" />"/>
+        </a>
+    </div>
+    <img id="big-img" src="" style="width: 220px; height: 220px; margin-top: 15px" />
+</div>
+
+
+<script>
+    var currentModule = 'product';
+</script>
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/product/js/list.js"/>"></script>
 <script>
     var productModificationUrl = '<c:url value="/ajax/product/modify"/>';

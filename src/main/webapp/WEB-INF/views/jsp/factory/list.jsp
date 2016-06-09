@@ -15,10 +15,41 @@
 </head>
 
 <body>
-<div class="top topw">
-    <div class="toptt">工厂管理</div>
-</div>
-<div class="topline toplw"></div>
+<c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
+    <c:param name="backgroundColor" value="#eeb13f"/>
+    <c:param name="currentModule" value="factory"/>
+    <c:param name="title" value="工厂管理"/>
+</c:import>
+
+<%--<div class="top topw">--%>
+<%--<div class="toptt">工厂管理</div>--%>
+<%--</div>--%>
+<%--<div class="topline toplw"></div>--%>
+
+<%--<div id="cus-list">--%>
+    <%--<ul>--%>
+        <%--<li class="text key-factory-name">--%>
+            <%--厂名:--%>
+        <%--</li>--%>
+
+        <%--<c:forEach var="f" items="${favorPage.dataList}" varStatus="status">--%>
+            <%--<li class="favor-cus-name">--%>
+                <%--<a href="<c:url value="/factory/list?keyword=${f.name}"/>">${f.name}</a>--%>
+            <%--</li>--%>
+        <%--</c:forEach>--%>
+
+        <%--<c:forEach begin="${fn:length(favorPage.dataList)}" end="10" step="1">--%>
+            <%--<li class="favor-cus-name">--%>
+                <%--<a href="javascript:void(0)"></a>--%>
+            <%--</li>--%>
+        <%--</c:forEach>--%>
+
+        <%--<li class="text more" id="set-favor-quotation-list">--%>
+            <%--<a href="javascript:void(0);">更多</a>--%>
+        <%--</li>--%>
+    <%--</ul>--%>
+<%--</div>--%>
+
 <div class="top2 top2w">
     <div class="topfl fl">
         <form id="form-search" action="<c:url value="/factory/list" />" target="_self">
@@ -55,8 +86,11 @@
                                     <c:param name="keywords" value="${param.keywords}"/>
                                 </c:if>
                             </c:url>
-                    ">1</a><span style="width: 10px; text-align: right; display: inline-block;">-</span><input id="newPageIndex" type="text" value="${empty page ? 0 : page.pageIndex}" style="width: 20px; text-align: center; border: 0; background-color: transparent;"
-                />/<span style="width: 20px; text-align: center; display: inline-block;">${empty page ? 0 : page.pageQuantity}</span>
+                    ">1</a><span style="width: 10px; text-align: right; display: inline-block;">-</span><input
+                        id="newPageIndex" type="text" value="${empty page ? 0 : page.pageIndex}"
+                        style="width: 20px; text-align: center; border: 0; background-color: transparent;"
+                />/<span
+                        style="width: 20px; text-align: center; display: inline-block;">${empty page ? 0 : page.pageQuantity}</span>
                 </td>
                 <td width="9">
                     <c:if test="${page.pageIndex < page.pageQuantity}" var="notLastPage">
@@ -152,10 +186,9 @@
     </table>
 </form>
 <script>
-    var ctx = '${ctx}';
     var searchUrl = '<c:url value="/factory/search" />';
 </script>
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
 <script>
 </script>

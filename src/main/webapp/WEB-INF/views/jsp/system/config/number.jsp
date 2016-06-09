@@ -36,13 +36,28 @@
     <div class="extrow" oncontextmenu="return(false)"></div>
     <div class="bgimg" style="">
         <div class="v-bgimg t-er-cont x-auto4" style="top: 60px;">
-
-            <input type="text" class="" style="position: absolute; top: 263px; left: 265px; width: 175px; border: 1px solid red;" />
-            <input type="text" class="" style="position: absolute; top: 459px; left: 265px; width: 175px; border: 1px solid red;" />
+            <form id="form" action="<c:url value="/system/config/number"/>" method="post">
+                <input type="text" name="startProductNumber" class="" style="position: absolute; top: 263px; left: 265px; width: 175px; border: 0px solid red;" />
+                <input type="text" name="startQuotationSerialNumber" class="" style="position: absolute; top: 459px; left: 265px; width: 175px; border: 0px solid red;" />
+                <a href="javascript:void(0);" id="confirm" style="position: absolute; display: block; width: 50px; height: 30px; top: 515px; left: 593px; border: 0px solid red;">
+                    &nbsp;
+                </a>
+            </form>
         </div>
     </div>
     <div class="toolbar"></div>
 
+
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
+    <script>
+
+        $(function () {
+            $("#confirm").click(function () {
+                $("#form").submit();
+            });
+        })
+
+    </script>
 
 </body>
 </html>

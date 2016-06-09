@@ -15,6 +15,7 @@ import com.as.erp.trade.micro.quotation.entity.QuotationProductItemDraft;
 import com.as.erp.trade.micro.quotation.service.QuotationProductItemDraftService;
 import com.as.erp.trade.micro.quotation.vo.QuotationAccumulativeTotal;
 import com.as.erp.trade.micro.quotation.vo.QuotationProductItemDraftPropModifiedVO;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,29 +54,32 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
         List<QuotationProductItemDraft> list = getList(Conditions.newInstance().in("id", quotationProductItemDraftIds));
         List<Product> productList = new ArrayList<>();
         for(QuotationProductItemDraft draft : list) {
-            Product product = new Product();
-            product.setName(draft.getCompanyProductName());
-            product.setImageURL(draft.getImageURL());
-            product.setFactoryProductNo(draft.getFactoryProductNo());
-            product.setCompanyProductNo(draft.getCompanyProductNo());
-            product.setFactoryPrice(draft.getFactoryPrice());
-            product.setCartonSize(draft.getCartonSize());
-            product.setPackingQuantity(draft.getPackingQuantity());
-            product.setGrossWeight(draft.getGrossWeight());
-            product.setNetWeight(draft.getNetWeight());
-            product.setUnit(draft.getUnit());
-            product.setRemark(draft.getRemark());
-            product.setPackageForm(draft.getPackageForm());
+            if (StringUtils.isBlank(draft.getProductId())){
+                Product product = new Product();
+                product.setName(draft.getCompanyProductName());
+                product.setImageURL(draft.getImageURL());
+                product.setFactoryProductNo(draft.getFactoryProductNo());
+                product.setCompanyProductNo(draft.getCompanyProductNo());
+                product.setFactoryPrice(draft.getFactoryPrice());
+                product.setCartonSize(draft.getCartonSize());
+                product.setPackingQuantity(draft.getPackingQuantity());
+                product.setGrossWeight(draft.getGrossWeight());
+                product.setNetWeight(draft.getNetWeight());
+                product.setUnit(draft.getUnit());
+                product.setRemark(draft.getRemark());
+                product.setPackageForm(draft.getPackageForm());
 
-            //工厂信息
-            product.setFactoryId(draft.getFactoryId());
-            product.setFactoryName(draft.getFactoryName());
-            product.setLinkman(draft.getLinkman());
-            product.setFactoryContactNumber(draft.getContactNumber());
+                //工厂信息
+                product.setFactoryId(draft.getFactoryId());
+                product.setFactoryName(draft.getFactoryName());
+                product.setLinkman(draft.getLinkman());
+                product.setFactoryContactNumber(draft.getContactNumber());
 
-            productService.save(product);
-            draft.setProductId(product.getId());
-            update(draft);
+                productService.save(product);
+                draft.setProductId(product.getId());
+                draft.setCompanyProductNo(product.getCompanyProductNo());
+                update(draft);
+            }
         }
     }
 
@@ -111,6 +116,19 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
             accumulativeTotal.setAmount(accumulativeTotal.getAmount() + (draft.getTotalAmount() != null ? draft.getTotalAmount() : 0D));
         }
         return accumulativeTotal;
+    }
+
+    @Override
+    public void save(QuotationProductItemDraft entity) {
+        entity.setAddedDate(new Date());
+        entity.setLastQuotedDate(new Date());
+        super.save(entity);
+    }
+
+    @Override
+    public void saveOrUpdate(QuotationProductItemDraft entity) {
+        entity.setLastQuotedDate(new Date());
+        super.saveOrUpdate(entity);
     }
 
     @Override
@@ -186,6 +204,7 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
     private void modifyTotalVolume(String id, String propertyName, Object propertyValue) {
         Double doubleValue = Double.valueOf((String) propertyValue);
         modifyProp(id, propertyName, doubleValue);
+
     }
 
     private void modifyTotalAmount(String id, String propertyName, Object propertyValue) {
@@ -206,5 +225,7 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
             e.printStackTrace();
         }
     }
+
+
 
 }

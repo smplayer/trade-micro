@@ -84,11 +84,11 @@ public class ProductCreationController {
         p.setFactoryProductName((String) req.get("factoryProductName"));
         p.setFactoryProductNo((String) req.get("factoryProductNo"));
         p.setCompanyProductNo((String) req.get("companyProductNo"));
-        p.setFactoryPrice(Double.valueOf( StringUtils.isNotBlank((String)req.get("factoryPrice")) ? (String) req.get("factoryPrice") : "0") );
+        p.setFactoryPrice(StringUtils.isNotBlank((CharSequence) req.get("factoryPrice")) ? Double.valueOf((String) req.get("factoryPrice")) : null);
         p.setCartonSize((String) req.get("cartonSize"));
-        p.setPackingQuantity(Integer.valueOf( StringUtils.isNotBlank((String)req.get("packingQuantity")) ? (String) req.get("packingQuantity") : "0") );
-        p.setGrossWeight(Double.valueOf( StringUtils.isNotBlank((String)req.get("grossWeight")) ? (String) req.get("grossWeight") : "0") );
-        p.setNetWeight(Double.valueOf( StringUtils.isNotBlank((String)req.get("netWeight")) ? (String) req.get("netWeight") : "0") );
+        p.setPackingQuantity(StringUtils.isNotBlank((CharSequence) req.get("packingQuantity")) ? Integer.valueOf((String) req.get("packingQuantity")) : null);
+        p.setGrossWeight(StringUtils.isNotBlank((CharSequence) req.get("grossWeight")) ? Double.valueOf((String) req.get("grossWeight")) : null);
+        p.setNetWeight(StringUtils.isNotBlank((CharSequence) req.get("netWeight")) ? Double.valueOf((String) req.get("netWeight")) : null);
         p.setRemark((String) req.get("remark"));
         p.setFactoryId((String) req.get("factoryId"));
         p.setPackageForm((String) req.get("packageForm"));

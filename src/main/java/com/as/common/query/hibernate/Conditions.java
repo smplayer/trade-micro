@@ -42,6 +42,16 @@ public class Conditions {
         return this;
     }
 
+    public Conditions neOrIsNotNull(String propertyName, Object value) {
+        criterionList.add(Restrictions.neOrIsNotNull(propertyName, value));
+        return this;
+    }
+
+    public Conditions isNull(String propertyName) {
+        criterionList.add(Restrictions.isNull(propertyName));
+        return this;
+    }
+
     public Conditions like(String propertyName, Object value) {
         criterionList.add(Restrictions.like(propertyName, value));
         return this;

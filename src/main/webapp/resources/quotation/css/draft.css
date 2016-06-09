@@ -2,6 +2,10 @@ body {
     background: url(../images/bgjk.png) #EFE9C7;
 }
 
+.upload-image{
+    border: 1px solid #000;
+}
+
 .top2w {
     width: 1330px;
 }
@@ -62,4 +66,63 @@ input.extracted-product[type=text] {
     cursor: pointer;
     border: 0;
     background: none;
+}
+
+.product-image {
+    width: 20px;
+    height: 20px;
+}
+
+.not-has-image img {
+    display: none;
+}
+.has-image input {
+    display: none;
+}
+
+
+
+#cus-list .text{
+    width: 60px;
+}
+#cus-list .text.key-cus-name {
+}
+
+#cus-list {
+    margin-top: 18px;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+#cus-list ul {
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    width: 1120px;
+}
+#cus-list li {
+    background-color: #fff;
+    list-style: none;
+    float: left;
+    width: 80px;
+    margin-left: 5px;
+    border: 1px solid #B47BFE;
+    height: 18px;
+}
+
+
+
+.dialog-header {
+    text-align: right;
+}
+
+.dialog-close img {
+    width: 24px;
+    height: 24px;
+    margin: 10px 10px 0px 0px
+}
+
+.favor-cus-name a {
+    display: block;
+    width: 100%;
 }

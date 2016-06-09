@@ -23,27 +23,46 @@ function CloseWebPage(){
 function dialog(dialog, options) {
     var $dialog = $(dialog);
     
+    if (options && options.close === true) {
+        if(options && options.onClose) {
+            options.onClose();
+        }
+        $dialog.hide();
+        return;
+    }
+    $(dialog + " .dialog-close").click(function () {
+        if(options && options.onClose) {
+            options.onClose();
+        }
+        $dialog.hide();
+    });
+
     var windowHeight = $(window).height();
     var scrollTop = $(document).scrollTop();
     var dialogHeight = $dialog.height();
+    var top = scrollTop + (windowHeight - dialogHeight)/2;
+    if (options && options.topOffset) {
+        top += options.topOffset;
+    }
     
     var windowWidth = $(window).width();
     var scrollLeft = $(document).scrollLeft();
     var dialogWidth = $dialog.width();
-
-
-    var top = scrollTop + (windowHeight - dialogHeight)/2;
     var left = scrollLeft + (windowWidth - dialogWidth)/2;
+    if (options && options.leftOffset) {
+        left += options.leftOffset;
+    }
+
 
     $dialog.css("position", "absolute")
         .css("top", top)
         .css("left", left)
         .show();
     
-    $(dialog + " .close").click(function () {
-        if(options && options.onClose) {
-            options.onClose();
-        }
-        $dialog.hide();
-    });
+}
+
+function dialogAlert(dialogId, options) {
+    var $dialog = $(dialogId);
+    $(".dialog-alert-text-content", $dialog).html(options.textContent);
+    return dialog(dialogId, options);
 }

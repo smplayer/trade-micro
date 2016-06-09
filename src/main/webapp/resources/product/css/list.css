@@ -54,3 +54,30 @@ body {
     background: transparent;
     text-align: center;
 }
+
+.product-image {
+    width: 20px;
+    height: 20px;
+}
+
+.not-has-image img {
+    display: none;
+}
+
+.has-image input {
+    display: none;
+}
+
+.upload-image{
+    border: 1px solid #000;
+}
+
+.dialog-header {
+    text-align: right;
+}
+
+.dialog-close img {
+    width: 24px;
+    height: 24px;
+    margin: 10px 10px 0px 0px
+}

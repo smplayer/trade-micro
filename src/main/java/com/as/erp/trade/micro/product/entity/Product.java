@@ -14,7 +14,7 @@ import java.util.Date;
 public class Product extends BaseEntity {
 
     public final static String PRODUCT_STATUS_COMPLETE = "complete";
-    public final static String PRODUCT_STATUS_IMCOMPLETE = "incomplete";
+    public final static String PRODUCT_STATUS_INCOMPLETE = "incomplete";
 
     private String name;
     private String imageURL;
@@ -44,7 +44,7 @@ public class Product extends BaseEntity {
     private String subCategory;
 
     private Date addedDate;
-    private String productStatus;
+    private String productStatus = PRODUCT_STATUS_INCOMPLETE;
 
     public String getName() {
         return name;

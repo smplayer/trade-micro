@@ -2,6 +2,7 @@ package com.as.erp.trade.micro.product.controller;
 
 import com.as.erp.trade.micro.product.entity.Product;
 import com.as.erp.trade.micro.product.service.ProductService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -77,11 +78,15 @@ public class ProductModificationController {
         for (Map pMap : req){
             Product p = productService.getById((String) pMap.get("id"));
             p.setName((String) pMap.get("name"));
+            p.setCompanyProductName((String) pMap.get("companyProductName"));
+//            p.setFactoryName((String) pMap.get("factoryName"));
             p.setFactoryProductNo((String) pMap.get("factoryProductNo"));
             p.setCompanyProductNo((String) pMap.get("companyProductNo"));
-            p.setFactoryPrice(Double.valueOf((String) pMap.get("factoryPrice")));
+            p.setFactoryPrice(StringUtils.isNotBlank((CharSequence) pMap.get("factoryPrice")) ? Double.valueOf((String) pMap.get("factoryPrice")) : null);
             p.setCartonSize((String) pMap.get("cartonSize"));
-            p.setPackingQuantity(Integer.valueOf((String) pMap.get("packingQuantity")));
+            p.setPackingQuantity(StringUtils.isNotBlank((CharSequence) pMap.get("packingQuantity")) ? Integer.valueOf((String) pMap.get("packingQuantity")) : null);
+            p.setGrossWeight(StringUtils.isNotBlank((CharSequence) pMap.get("grossWeight")) ? Double.valueOf((String) pMap.get("grossWeight")) : null);
+            p.setNetWeight(StringUtils.isNotBlank((CharSequence) pMap.get("netWeight")) ? Double.valueOf((String) pMap.get("netWeight")) : null);
 //            p.setGrossWeight(Double.valueOf((String) pMap.get("grossWeight")));
 //            p.setNetWeight(Double.valueOf((String) pMap.get("netWeight")));
             p.setRemark((String) pMap.get("remark"));

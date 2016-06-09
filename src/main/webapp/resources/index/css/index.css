@@ -34,7 +34,7 @@ body {
 }
 
 .username, .password {
-    border: 0;
+    border: 1px solid #000;
     background: #fff;
     height: 29px;
     line-height: 29px;

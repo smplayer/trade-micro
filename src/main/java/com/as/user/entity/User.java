@@ -11,8 +11,23 @@ import javax.persistence.*;
 @Entity
 @Table(name = "as_tb_user")
 public class User extends BaseEntity {
+    public final static String ROLE_ADMIN = "admin";
+    public final static String ROLE_STANDARD = "standard";
+
+    private String role;
+
     private String username;
-    private String password;
+    private String adminPassword;
+    private String standardPassword;
+
+    @Transient
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getUsername() {
         return username;
@@ -22,11 +37,19 @@ public class User extends BaseEntity {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getAdminPassword() {
+        return adminPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    public String getStandardPassword() {
+        return standardPassword;
+    }
+
+    public void setStandardPassword(String standardPassword) {
+        this.standardPassword = standardPassword;
     }
 }

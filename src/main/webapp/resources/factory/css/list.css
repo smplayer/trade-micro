@@ -1,13 +1,57 @@
 
-body{background:url(../images/gongchangbg.png) #F0E6C7;}
-.toptt{letter-spacing:18px;}
-.top div{margin-left:18px;}
-.toplw{width:190px;}
-.topw{width:620px;padding-top:41px;}
-.top2w{width:1230px;padding-top:20px;}
-.top span{margin-right:23px;}
-.topfl{margin-left:70px;text-align:left;}
-.topr2{margin-right:70px;width:190px;}
-.tdbg{background:#F0EBE1;}
-.toptdbg{background:#F0C77D;text-align:center;}
-.jkmenu{width:320px;margin:0 auto 7px auto;height:20px;line-height:20px;}
+body {
+    background: url(../images/gongchangbg.png) #F0E6C7;
+}
+
+.toptt {
+    letter-spacing: 18px;
+}
+
+.top div {
+    margin-left: 18px;
+}
+
+.toplw {
+    width: 190px;
+}
+
+.topw {
+    width: 620px;
+    padding-top: 41px;
+}
+
+.top2w {
+    width: 1230px;
+    padding-top: 20px;
+}
+
+.top span {
+    margin-right: 23px;
+}
+
+.topfl {
+    margin-left: 70px;
+    text-align: left;
+}
+
+.topr2 {
+    margin-right: 70px;
+    width: 190px;
+}
+
+.tdbg {
+    background: #F0EBE1;
+}
+
+.toptdbg {
+    /*background: #F0C77D;*/
+    background: #faecd2;
+    text-align: center;
+}
+
+.jkmenu {
+    width: 320px;
+    margin: 0 auto 7px auto;
+    height: 20px;
+    line-height: 20px;
+}

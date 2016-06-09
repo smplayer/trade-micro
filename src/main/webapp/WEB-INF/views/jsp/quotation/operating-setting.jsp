@@ -103,6 +103,12 @@
 </head>
 
 <body>
+<c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
+    <c:param name="backgroundColor" value="#B47BFE"/>
+    <c:param name="currentModule" value="quotation"/>
+    <c:param name="title" value="见客设置"/>
+</c:import>
+
 <form id="form" name="form" method="post" action="<c:url value="/quotation/operating/setting"/>">
     <input type="hidden" name="id" value="${quotation.id}"/>
     <div class="main">
@@ -112,7 +118,7 @@
                     <div class="toptt">见客设置</div>
                 </td>
                 <td width="176" align="right" valign="bottom">
-                    <div class="liehao">列号：&nbsp; ${quotation.serialNumber}</div>
+                    <div class="liehao">&nbsp;</div>
                 </td>
             </tr>
         </table>
@@ -222,7 +228,7 @@
     </div>
 </form>
 
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/operating-setting.js"/>"></script>
 <script>
 

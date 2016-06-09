@@ -11,8 +11,8 @@ A.a1:link{	COLOR:#f00;}
 A.a1:visited{COLOR:#f00;}
 A.a1:hover{	text-decoration:underline;}
 
-.fl{float:left;}
-.fr{float:right;}
+.float-left, .fl{float:left;}
+.float-right, .fr{float:right;}
 .textl{text-align:left;}
 td{table-layout:fixed;}
 .break{word-break:break-all;word-wrap:break-word;/*支持IE，chrome，FF*/text-align:center;line-height:20px;padding:2px 0;}

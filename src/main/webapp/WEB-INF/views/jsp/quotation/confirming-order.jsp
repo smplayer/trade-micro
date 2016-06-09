@@ -52,7 +52,7 @@
                 <td class="ddtd tdbg">${p.packageForm}</td>
                 <td class="ddtd tdbg">${p.unit}</td>
                 <td class="ddtd tdbg">${p.quotedPrice}</td>
-                <td class="ddtd tdbg"></td>
+                <td class="ddtd tdbg">${p.functionDescription}</td>
                 <td class="ddtd tdbg">${p.cartonSize}</td>
                 <td class="ddtd tdbg">${p.packingQuantity}</td>
                 <td class="ddtd tdbg">${p.orderedCartonQuantity}</td>
@@ -96,9 +96,9 @@
         <tr>
             <td width="40">&nbsp;</td>
             <td width="150" align="left">确认签章:</td>
-            <td width="160" align="left">贸易条款:</td>
-            <td width="175" align="left">柜型:</td>
-            <td width="100" align="right">装运港:</td>
+            <td width="160" align="left">贸易条款:&nbsp;${quotation.tradeClause}</td>
+            <td width="175" align="left">柜型:&nbsp;${quotation.containerType}</td>
+            <td width="100" align="right">装运港:${quotation.shipmentPort}</td>
             <td width="110" align="left">&nbsp;</td>
         </tr>
     </table>
@@ -108,11 +108,15 @@
         <td height="30" colspan="6">&nbsp;</td>
     </tr>
     <tr>
-        <td width="157" align="center">中文/英文</td>
-        <td width="199" align="center">
-            <a href="<c:url value="/quotation/confirming/order?id=${param.id}" />"/>公司</a>
+        <td width="157" align="center">
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}" />" class="${empty param.lang || param.lang == 'cn' ? 'current' : ''}" />中文</a>
             /
-            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&productNoFrom=factory" />"/>工厂货号</a>
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&lang=en" />"  class="${param.lang == 'en' ? 'current' : ''}"/>英文</a>
+        </td>
+        <td width="199" align="center">
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}" />" class="${empty param.productNoFrom || param.productNoFrom == 'company' ? 'current' : ''}" />公司</a>
+            /
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&productNoFrom=factory" />"  class="${param.productNoFrom == 'factory' ? 'current' : ''}"/>工厂货号</a>
         </td>
         </td>
         <td width="66" align="center">
@@ -134,10 +138,9 @@
 
 <p>&nbsp;</p>
 
-<div id="dialog-accumulation"
-     style="display: none; background-color: #fff; width: 300px; height: 220px; border: 2px solid #a839a8;">
+<div id="dialog-accumulation" style="display: none; background-color: #fff; width: 300px; height: 220px; border: 2px solid #a839a8;">
     <div style="text-align: right;">
-        <a href="javascript:void (0);" class="close">
+        <a href="javascript:void (0);" class="dialog-close">
             <img src="<c:url value="/resources/common/project/images/close.png" />"
                  style="width: 24px; height: 24px; margin: 10px 10px 0px 0px"/>
         </a>

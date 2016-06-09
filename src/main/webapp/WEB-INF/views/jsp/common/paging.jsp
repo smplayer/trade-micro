@@ -30,7 +30,7 @@
                    value="${empty param.pageIndex ? 0 : param.pageIndex}"
                    style="width: 20px; text-align: center; border: 0; background-color: transparent;"
             />/<span
-                style="width: 20px; text-align: center; display: inline-block;">${empty param.pageQuantity ? 0 : page.pageQuantity}</span>
+                style="width: 20px; text-align: center; display: inline-block;">${empty param.pageQuantity ? 0 : param.pageQuantity}</span>
         </td>
         <td width="9">
             <c:if test="${param.pageIndex < param.pageQuantity}" var="notLastPage">

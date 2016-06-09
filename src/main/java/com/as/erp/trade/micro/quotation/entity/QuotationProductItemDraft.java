@@ -43,6 +43,7 @@ public class QuotationProductItemDraft extends BaseEntity {
     private String remark;
 
     private Date addedDate;
+    private Date lastQuotedDate;
 
     public String getQuotationId() {
         return quotationId;
@@ -270,5 +271,13 @@ public class QuotationProductItemDraft extends BaseEntity {
 
     public void setAddedDate(Date addedDate) {
         this.addedDate = addedDate;
+    }
+
+    public Date getLastQuotedDate() {
+        return lastQuotedDate;
+    }
+
+    public void setLastQuotedDate(Date lastQuotedDate) {
+        this.lastQuotedDate = lastQuotedDate;
     }
 }

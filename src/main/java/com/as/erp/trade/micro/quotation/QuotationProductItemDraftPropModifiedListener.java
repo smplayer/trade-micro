@@ -13,6 +13,7 @@ import org.springframework.context.event.SmartApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,6 +67,7 @@ public class QuotationProductItemDraftPropModifiedListener implements SmartAppli
                 reCalTotalAmount(item);
             } else if ("quotedPrice".equals(propertyName)) {
                 reCalTotalAmount(item);
+                item.setLastQuotedDate(new Date());
             } else if ("factoryProductName".equals(propertyName)) {
                 initCompanyProductName(item);
             } else if ("factoryName".equals(propertyName)) {

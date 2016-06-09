@@ -5,13 +5,19 @@ import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.hibernate.Query;
 import com.as.erp.trade.micro.factory.service.FactoryService;
 import com.as.erp.trade.micro.product.service.ProductService;
+import com.as.erp.trade.micro.quotation.entity.FavorQuotationItem;
 import com.as.erp.trade.micro.quotation.entity.Quotation;
+import com.as.erp.trade.micro.quotation.entity.QuotationProductItemDraft;
+import com.as.erp.trade.micro.quotation.service.FavorQuotationItemService;
+import com.as.user.entity.User;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,14 +32,16 @@ public class QuotationOperatingController extends BaseQuotationController {
     private FactoryService factoryService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private FavorQuotationItemService favorQuotationItemService;
 
     @RequestMapping("quotation/operating/list")
     public String operatingList(
             ModelMap modelMap
-    ){
+    ) {
         List<Quotation> list = quotationService.getList(
                 Conditions.newInstance()
-                .eq("operationFlag", Quotation.FLAG_OPERATING)
+                        .eq("operationFlag", Quotation.FLAG_OPERATING)
         );
         modelMap.put("list", list);
         return "quotation/operating-list";
@@ -41,60 +49,53 @@ public class QuotationOperatingController extends BaseQuotationController {
 
     @RequestMapping("quotation/operating")
     public String operating(
+            @RequestParam(value = "empty", required = false, defaultValue = "false") Boolean empty,
             @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "pageIndex", required = false) Long pageIndex,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            HttpSession session,
             ModelMap modelMap
     ) {
-        Quotation quotation = quotationService.getById(id);
-        modelMap.put("quotation", quotation);
+        if(!empty) {
+            User user = (User) session.getAttribute("user");
 
-        String view = "quotation/draft";
-        PageHandler page = null;
-        page = quotationProductItemDraftService.getPage(
-                new Query()
-                        .setPageIndex(pageIndex)
-                        .setPageSize(pageSize)
-                        .setConditions(
-                                Conditions.newInstance()
-                                        .eq("quotationId", quotation.getId())
-                        )
-                        .addOrder(Order.desc("addedDate"))
-        );
-        modelMap.put("page", page);
+            List<FavorQuotationItem> favorQuotationItemList = (List<FavorQuotationItem>) favorQuotationItemService.getPage(
+                    new Query().setConditions(
+                            Conditions.newInstance().eq("userId", user.getId()).eq("passwordFlag", user.getRole())
+                    ).addOrder(Order.asc("indexNumber"))
+            ).getDataList();
 
-//        if (quotation != null) {
-//            PageHandler page = null;
-//            if(Quotation.FLAG_OPERATING_DRAFT == quotation.getOperationFlag()){
-//                page = quotationProductItemDraftService.getPage(
-//                        new Query()
-//                                .setPageIndex(pageIndex)
-//                                .setPageSize(pageSize)
-//                                .setConditions(
-//                                        Conditions.newInstance()
-//                                                .eq("quotationId", quotation.getId())
-//                                )
-//                );
-//                modelMap.put("page", page);
-//
-//                view = "quotation/draft";
-//            } else if (Quotation.FLAG_OPERATING == quotation.getOperationFlag()){
-//                page = quotationProductItemService.getQuotationProductItemVOPage(
-//                        new Query()
-//                                .setPageIndex(pageIndex)
-//                                .setPageSize(pageSize)
-//                                .setConditions(
-//                                        Conditions.newInstance()
-//                                                .eq("quotationId", quotation.getId())
-//                                )
-//                );
-//                modelMap.put("page", page);
-//
-//                view = "quotation/operating";
-//            }
-//        }
+            if (!favorQuotationItemList.isEmpty()) {
+                modelMap.put("favorQuotationItemList", favorQuotationItemList);
+            }
 
-        return view;
+            Quotation quotation = null;
+            if (StringUtils.isNotBlank(id)) {
+                quotation = quotationService.getById(id);
+            } else {
+                if (!favorQuotationItemList.isEmpty()) {
+                    quotation = quotationService.getOperatingOrReloadFromArchive(favorQuotationItemList.get(0).getQuotationId());
+                }
+            }
+
+            if (quotation != null) {
+                modelMap.put("quotation", quotation);
+
+                PageHandler page = null;
+                page = quotationProductItemDraftService.getPage(
+                        new Query()
+                                .setPageIndex(pageIndex)
+                                .setPageSize(pageSize)
+                                .setConditions(
+                                        Conditions.newInstance()
+                                                .eq("quotationId", quotation.getId())
+                                )
+                                .addOrder(Order.desc("addedDate"))
+                );
+                modelMap.put("page", page);
+            }
+        }
+        return "quotation/draft";
     }
 
     @RequestMapping("quotation/confirming/order")
@@ -103,6 +104,7 @@ public class QuotationOperatingController extends BaseQuotationController {
             @RequestParam("id") String id,
             @RequestParam(value = "pageIndex", defaultValue = "1") Long pageIndex,
             @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
+            @RequestParam(value = "lang", required = false) String lang,
             ModelMap modelMap
     ) {
         Quotation quotation = quotationService.getById(id);
@@ -118,6 +120,11 @@ public class QuotationOperatingController extends BaseQuotationController {
         modelMap.put("productNoFrom", productNoFrom);
         modelMap.put("quotation", quotation);
         modelMap.put("page", page);
+
+        modelMap.put("lang", lang);
+        if ("en".equals(lang)) {
+            return "quotation/confirming-order-en";
+        }
         return "quotation/confirming-order";
     }
 
@@ -134,9 +141,28 @@ public class QuotationOperatingController extends BaseQuotationController {
 
     @RequestMapping("quotation/saveToArchive")
     public String saveToArchive(
-            @RequestParam("id") String id
+            @RequestParam("id") String id,
+            HttpSession session
     ) {
-        quotationService.saveToArchive(id);
+        if (StringUtils.isBlank(id)) {
+            User user = (User) session.getAttribute("user");
+            List<FavorQuotationItem> favorQuotationItemList = favorQuotationItemService.getList(
+                    new Query().addOrder(Order.asc("indexNumber"))
+                            .setPageSize(1)
+                            .setConditions(
+                                Conditions.newInstance()
+                                    .eq("userId", user.getId())
+                                    .eq("passwordFlag", user.getRole())
+                            )
+            );
+            if (favorQuotationItemList.size() == 1) {
+                id = favorQuotationItemList.get(0).getQuotationId();
+            }
+        }
+
+        if (StringUtils.isBlank(id))
+            quotationService.saveToArchive(id);
+
         return "redirect:/quotation/operating/list";
     }
 
@@ -155,11 +181,11 @@ public class QuotationOperatingController extends BaseQuotationController {
             @RequestParam("quotationProductItemDraftId") String quotationProductItemDraftId,
             @RequestParam("keywords") String factoryName,
             ModelMap modelMap
-    ){
+    ) {
         PageHandler page = factoryService.getPage(
                 new Query().setConditions(
                         Conditions.newInstance()
-                        .like("name", "%" + factoryName + "%")
+                                .like("name", "%" + factoryName + "%")
                 )
         );
 
@@ -191,6 +217,37 @@ public class QuotationOperatingController extends BaseQuotationController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("ids", ids);
+        map.put("result", "success");
+        return map;
+    }
+
+    @ResponseBody
+    @RequestMapping("quotation/deleteDraftItem")
+    public Object deleteDraftItem(
+            @RequestBody Map<String, Object> req
+    ) {
+        List<String> ids = (List<String>) req.get("ids");
+        quotationProductItemDraftService.delete(ids);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "success");
+        return map;
+    }
+
+    @ResponseBody
+    @RequestMapping("quotation/saveRemark")
+    public Object saveRemark(
+            @RequestBody Map<String, Object> req
+    ) {
+        List<Map<String, String>> remarkData = (List<Map<String, String>>) req.get("remarkData");
+
+        for (Map<String, String> r : remarkData) {
+            QuotationProductItemDraft draft = quotationProductItemDraftService.getById(r.get("id"));
+            draft.setRemark(r.get("remark"));
+            quotationProductItemDraftService.update(draft);
+        }
+
+        Map<String, Object> map = new HashMap<>();
         map.put("result", "success");
         return map;
     }

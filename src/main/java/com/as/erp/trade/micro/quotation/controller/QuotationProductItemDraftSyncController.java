@@ -60,7 +60,7 @@ public class QuotationProductItemDraftSyncController {
         String id = (String) req.get("id");
         String propName = (String) req.get("propName");
         Object propValue = req.get("propValue");
-        Integer lineNumber = (Integer) req.get("lineNumber");
+        Integer lineNumber = Integer.valueOf(req.get("lineNumber").toString());
 
         QuotationProductItemDraft item = quotationProductItemDraftService.modify(id, propName, propValue);
 

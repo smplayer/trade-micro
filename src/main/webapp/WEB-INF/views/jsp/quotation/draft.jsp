@@ -24,12 +24,57 @@
 
 <div id="container">
 
+
     <c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
+        <c:param name="backgroundColor" value="#B47BFE"/>
+        <c:param name="currentModule" value="quotation"/>
+        <c:param name="currentSubModule" value="operating"/>
+        <c:param name="title" value="操作版"/>
     </c:import>
-    <c:import url="/WEB-INF/views/jsp/quotation/common/quotation-header.jsp">
-        <c:param name="title" value="见客下单"/>
-        <c:param name="curPage" value="operating"/>
-    </c:import>
+
+
+    <div id="cus-list">
+        <ul>
+            <li class="text key-cus-name">
+                客户名:
+            </li>
+
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+            <li class="favor-cus-name">
+                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </li>
+
+            <li class="text more" id="set-favor-quotation-list">
+               <a href="javascript:void(0);">更多</a>
+            </li>
+        </ul>
+    </div>
 
 
     <form id="form" name="form" method="post" action="">
@@ -106,7 +151,9 @@
                 <td rowspan="2" class="td70 toptdbg">联系人</td>
                 <td rowspan="2" class="td100 toptdbg">手机/电话</td>
                 <td rowspan="2" class="td150 toptdbg">备 注</td>
-                <td rowspan="2" class="td40 toptdbg">全选</td>
+                <td rowspan="2" class="td40 toptdbg">
+                    <a href="javascript:void(0);" id="select-all">全选</a>
+                </td>
             </tr>
             <tr>
                 <td class="td75 toptdbg">品名</td>
@@ -127,25 +174,44 @@
                 <td class="break tdbg"><input type="text" name="cartonSize" /></td>
                 <td class="break tdbg"><input type="text" name="packingQuantity" /></td>
                 <td class="break tdbg">
-                    <input type="text" name="grossWeight" value="" style="width: 25px;" />/<input type="text" name="grossWeight" value="" style="width: 25px;" />
+                    <input type="text" name="grossWeight" value="" style="width: 25px;" />/<input type="text" name="netWeight" value="" style="width: 25px;" />
                 </td>
                 <td class="break tdbg"><input type="text" name="orderedCartonQuantity" /></td>
                 <td class="break tdbg"><input type="text" name="quotedPrice" /></td>
-                <td class="break tdbg"><input type="text" name="orderedProductQuantity" /></td>
-                <td class="break tdbg"><input type="text" name="totalVolume" /></td>
-                <td class="break tdbg"><input type="text" name="totalAmount" /></td>
+                <td class="break tdbg"><input type="text" name="orderedProductQuantity" readonly /></td>
+                <td class="break tdbg"><input type="text" name="totalVolume" readonly/></td>
+                <td class="break tdbg"><input type="text" name="totalAmount" readonly /></td>
                 <td class="break tdbg"><input type="text" name="factoryName" /></td>
                 <td class="break tdbg"><input type="text" name="linkman" /></td>
                 <td class="break tdbg"><input type="text" name="contactNumber" /></td>
                 <td class="break tdbg"><input type="text" name="remark" /></td>
-                <td class="break tdbg"><input type="checkbox" name="id" value="" class="empty" /></td>
+                <td class="break tdbg">
+                    <input type="hidden" name="id" value="" class="empty" />
+                </td>
             </tr>
             <c:forEach items="${page.dataList}" var="p" varStatus="status">
                 <tr class="item">
                     <td height="24" class="break tdbg line-number">
                             ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
                     </td>
-                    <td class="break tdbg">${p.imageURL}</td>
+                    <td class="break tdbg">
+                        <c:if test="${not empty p.imageURL}" var="hasImage">
+                            <div class="has-image">
+                                <input type="button" value="上传" class="upload-image" data-product-id="${p.id}"/>
+                                <a href="javascript:void(0);">
+                                    <img class="product-image" src="<c:url value="/resources/upload/${p.imageURL}" />" alt="" data-product-id="${p.id}"/>
+                                </a>
+                            </div>
+                        </c:if>
+                        <c:if test="${not hasImage}" >
+                            <div class="not-has-image">
+                                <input type="button" value="上传" class="upload-image" data-product-id="${p.id}"/>
+                                <a href="javascript:void(0);">
+                                    <img class="product-image" src="" alt="" data-product-id="${p.id}"/>
+                                </a>
+                            </div>
+                        </c:if>
+                    </td>
                     <td class="break tdbg"><input class="${empty p.productId ? "" : "extracted-product"}" type="text" name="factoryProductName" value="${p.factoryProductName}" /></td>
                     <td class="break tdbg"><input class="${empty p.productId ? "" : "extracted-product"}" type="text" name="factoryProductNo" value="${p.factoryProductNo}" /></td>
                     <td class="break tdbg"><input type="text" name="packageForm" value="${p.packageForm}" /></td>
@@ -158,9 +224,9 @@
                     </td>
                     <td class="break tdbg"><input type="text" name="orderedCartonQuantity" value="${p.orderedCartonQuantity}" /></td>
                     <td class="break tdbg"><input type="text" name="quotedPrice" value="<fmt:formatNumber value="${p.quotedPrice}" maxFractionDigits="${quotation.decimalPlaces}"/>" /></td>
-                    <td class="break tdbg"><input type="text" name="orderedProductQuantity" value="${p.orderedProductQuantity}" /></td>
-                    <td class="break tdbg"><input type="text" name="totalVolume" value="<fmt:formatNumber value="${p.totalVolume}" maxFractionDigits="2"/>" /></td>
-                    <td class="break tdbg"><input type="text" name="totalAmount" value="<fmt:formatNumber value="${p.totalAmount}" maxFractionDigits="2"/>" /></td>
+                    <td class="break tdbg"><input type="text" name="orderedProductQuantity" readonly value="${p.orderedProductQuantity}" /></td>
+                    <td class="break tdbg"><input type="text" name="totalVolume" readonly value="<fmt:formatNumber value="${p.totalVolume}" maxFractionDigits="2"/>" /></td>
+                    <td class="break tdbg"><input type="text" name="totalAmount" readonly value="<fmt:formatNumber value="${p.totalAmount}" maxFractionDigits="2" pattern="#.##"/>" /></td>
                     <td class="break tdbg"><input class="${not empty p.factoryId ? "found-factory":""}" type="text" name="factoryName" value="${p.factoryName}" /></td>
                     <td class="break tdbg"><input type="text" name="linkman" value="${p.linkman}" /></td>
                     <td class="break tdbg"><input type="text" name="contactNumber" value="${p.contactNumber}" /></td>
@@ -227,7 +293,7 @@
                 <td width="70" align="right" valign="top">
                     <input type="image" id="btn-save" src="<c:url value="/resources/quotation/images/save1.png" />" class="btn"/>
                 </td>
-                <td width="70" align="right" valign="top"><input type="image"
+                <td width="70" align="right" valign="top"><input type="image" id="btn-delete"
                                                                  src="<c:url value="/resources/quotation/images/del2.png" />"
                                                                  class="btn"/></td>
                 <td width="70" align="center" valign="top">&nbsp;</td>
@@ -238,15 +304,46 @@
 </div>
 
 
+<div id="dialog-upload-image" style="display: none; background-color: #fff; width: 300px; height: 220px; border: 2px solid #a839a8;">
 
+    <div class="dialog-header">
+        <a href="javascript:void (0);" class="dialog-close">
+            <img src="<c:url value="/resources/common/project/images/close.png" />"/>
+        </a>
+    </div>
+
+    <iframe name="iframe-upload-image" id="iframe-upload-image" style="width: 300px; height: 220px; border: 0;" src=""></iframe>
+</div>
+
+<div id="dialog-favor-setting" style="display: none; background-color: #fff; width: 682px; border: 2px solid #a839a8;">
+
+    <div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">
+        <a href="javascript:void (0);" class="dialog-close">
+            <img src="<c:url value="/resources/common/project/images/close.png" />"/>
+        </a>
+    </div>
+
+    <iframe name="iframe-favor-setting" id="iframe-favor-setting" style="margin-top: 0px; width: 682px; height: 483px; border: 0;"
+            <%--src="<c:url value="/quotation/favor/setting"/>"--%>
+    ></iframe>
+</div>
+
+<div id="dialog-big-image" style="display: none; background-color: #fff; width: 250px; height: 250px; border: 2px solid #a839a8;">
+    <div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">
+        <a href="javascript:void (0);" class="dialog-close">
+            <img src="<c:url value="/resources/common/project/images/close.png" />"/>
+        </a>
+    </div>
+    <img id="big-img" src="" style="width: 220px; height: 220px; margin-top: 15px" />
+</div>
+
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
     var pageIndex = '${page.pageIndex}';
     var pageSize = '${page.pageSize}';
-    var createNewItemUrl = '<c:url value="/ajax/quotation/productItemDraft/create" />';
-    var modifyItemPropUrl = '<c:url value="/ajax/quotation/productItemDraft/modifyProp" />';
-    var findFactoryUrl = '<c:url value="/quotation/findFactoryForDraft" />';
-    var generateProductsUrl = '<c:url value="/quotation/generateProducts" />';
+    var quotationId = '${quotation.id}';
+    var currentModule = 'quotation';
 </script>
 <script type="text/javascript" src="<c:url value="/resources/common/project/js/uuid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/draft.js"/>"></script>

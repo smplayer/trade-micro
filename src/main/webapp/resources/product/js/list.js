@@ -2,7 +2,28 @@
  * Created by yrx on 2016/5/8.
  */
 
+function uploadImage(id) {
+    $("#iframe-upload-image").attr("src", ctx + "/product/uploadImage?id=" + id);
+    dialog("#dialog-upload-image");
+}
+
+function uploadImageFinish() {
+    dialog("#dialog-upload-image", {close : true});
+}
+
+function showBigProductImage($img) {
+    $("#big-img").attr("src", $img.attr("src"));
+    dialog("#dialog-big-image");
+}
+
 $(function () {
+    $(".product-image").click(function (e) {
+        showBigProductImage($(this));
+    });
+    $(".upload-image").click(function (e) {
+        var id = $(this).attr("data-product-id");
+        uploadImage(id);
+    });
     $("#add-product").click(function (e) {
         e.preventDefault();
         open($(this).attr("href"),'_blank');
@@ -26,7 +47,8 @@ $(function () {
             contentType: "application/json",
             data: JSON.stringify(products),
             success: function(data){
-                alert('数据加载成功');
+                // alert('数据加载成功');
+                window.location.reload();
             },
             error: function(xhr, type){
                 alert('数据加载失败' + type);

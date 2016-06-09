@@ -177,6 +177,20 @@ public class QuotationServiceImpl extends GenericServiceImpl<Quotation, String> 
         return operating;
     }
 
+    @Override
+    public Quotation getOperatingOrReloadFromArchive(String id) {
+        Quotation quotation = getById(id);
+        if(quotation != null) {
+            if(quotation.getOperationFlag().equals(Quotation.FLAG_OPERATING)) {
+                return quotation;
+            } else {
+                return reloadFromArchive(quotation.getId());
+            }
+        } else {
+            return null;
+        }
+    }
+
     private void copyQuotationProps(Quotation a, Quotation b) {
         b.setSerialNumber(a.getSerialNumber());
         b.setCustomerName(a.getCustomerName());
