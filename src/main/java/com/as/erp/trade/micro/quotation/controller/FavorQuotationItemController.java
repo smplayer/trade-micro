@@ -8,6 +8,7 @@ import com.as.erp.trade.micro.quotation.entity.Quotation;
 import com.as.erp.trade.micro.quotation.service.FavorQuotationItemService;
 import com.as.erp.trade.micro.quotation.service.QuotationService;
 import com.as.user.entity.User;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,56 +67,92 @@ public class FavorQuotationItemController {
 
     @RequestMapping(value = "quotation/favor/setting", method = RequestMethod.POST)
     public String favorSetting(
-            @RequestParam Integer indexNumber,
-            @RequestParam String quotationId,
+            @RequestParam(required = false) Integer indexNumber,
+            @RequestParam(required = false) String quotationId,
             HttpSession session,
             ModelMap modelMap
     ) {
 
-        FavorQuotationItem existsItem = favorQuotationItemService.get(Conditions.newInstance().eq("quotationId", quotationId));
-        if (existsItem != null)
-            favorQuotationItemService.delete(existsItem.getId());
+        if (indexNumber != null && StringUtils.isNotBlank(quotationId)) {
 
-        FavorQuotationItem item = favorQuotationItemService.get(
-                Conditions.newInstance()
-                .eq("indexNumber",indexNumber)
-        );
-        Quotation quotation = quotationService.getById(quotationId);
-        if (item == null) {
-            User user = (User) session.getAttribute("user");
-            String role = user.getRole();
+            FavorQuotationItem existsItem = favorQuotationItemService.get(Conditions.newInstance().eq("quotationId", quotationId));
+            if (existsItem != null)
+                favorQuotationItemService.delete(existsItem.getId());
 
-            item = new FavorQuotationItem();
-            item.setIndexNumber(indexNumber);
-            item.setUserId(user.getId());
-            item.setPasswordFlag(role);
+            FavorQuotationItem item = favorQuotationItemService.get(
+                    Conditions.newInstance()
+                            .eq("indexNumber",indexNumber)
+            );
+            Quotation quotation = quotationService.getById(quotationId);
+            if (item == null) {
+                User user = (User) session.getAttribute("user");
+                String role = user.getRole();
+
+                item = new FavorQuotationItem();
+                item.setIndexNumber(indexNumber);
+                item.setUserId(user.getId());
+                item.setPasswordFlag(role);
+            }
+
+            item.setCustomerName(quotation.getCustomerName());
+            item.setQuotationId(quotationId);
+            favorQuotationItemService.saveOrUpdate(item);
         }
 
-        item.setCustomerName(quotation.getCustomerName());
-        item.setQuotationId(quotationId);
-        favorQuotationItemService.saveOrUpdate(item);
-
         return "quotation/favor-quotation-setting-success";
-
     }
 
     @RequestMapping(value = "quotation/favor/delete", method = RequestMethod.POST)
     public String deleteFavor(
-            @RequestParam Integer indexNumber,
+            @RequestParam(required = false) Integer[] indexNumber,
+            @RequestParam(required = false) String[] quotationId,
             HttpSession session,
             ModelMap modelMap
     ) {
 
+        if (indexNumber == null) {
+            indexNumber = new Integer[]{};
+        }
+        if (quotationId == null) {
+            quotationId = new String[]{};
+        }
+        for (Integer i = 0 ; i < indexNumber.length ; i++) {
+            FavorQuotationItem item = favorQuotationItemService.get(
+                    Conditions.newInstance()
+                            .eq("indexNumber", indexNumber[i])
+            );
+            if (item != null) {
+                favorQuotationItemService.delete(item.getId());
+            }
+
+        }
+        for (Integer i = 0 ; i < quotationId.length ; i++) {
+
+            String qid = quotationId[i];
+            if (StringUtils.isNotBlank(qid)) {
+                quotationService.delete(qid);
+                FavorQuotationItem item = favorQuotationItemService.get(
+                        Conditions.newInstance()
+                                .eq("quotationId", qid)
+                );
+                if (item != null) {
+                    favorQuotationItemService.delete(item.getId());
+                }
+            }
+
+        }
+
+        return "redirect:/quotation/favor/setting";
+    }
+
+    private void deleteFavorByIndexNumber(Integer i) {
         FavorQuotationItem item = favorQuotationItemService.get(
                 Conditions.newInstance()
-                .eq("indexNumber",indexNumber)
+                        .eq("indexNumber", i)
         );
         if (item != null) {
             favorQuotationItemService.delete(item.getId());
         }
-
-        return "redirect:/quotation/favor/setting";
-
     }
 
     @ResponseBody

@@ -45,8 +45,8 @@
 	<!-- 针对全局来配置
 	-->
 	<root>
-		<!--<level value="INFO" />-->
-		<level value="ERROR" />
+		<level value="INFO" />
+		<!--<level value="ERROR" />-->
 		<appender-ref ref="console.log" />
 		<appender-ref ref="rollingFile.log" />
 	</root>

@@ -21,7 +21,7 @@ import java.util.List;
  * Created by yrx on 2016/5/16.
  */
 @Component
-public class SyncQuotationProductItemDraftPropFromProductListener implements SmartApplicationListener {
+public class SyncQuotationProductItemDraftPropFromProductModificationListener implements SmartApplicationListener {
 
     @Autowired
     private QuotationService quotationService;

@@ -32,6 +32,23 @@ public class FavorQuotationItemServiceImpl extends GenericServiceImpl<FavorQuota
     }
 
     @Override
+    public void addToSpecifiedPosition(String quotationId, Integer indexNumber, User user) {
+        FavorQuotationItem favorQuotationItem = get(Conditions.newInstance().eq("indexNumber", indexNumber));
+        if (favorQuotationItem == null) {
+            favorQuotationItem = new FavorQuotationItem();
+            favorQuotationItem.setIndexNumber(indexNumber);
+        }
+        favorQuotationItem.setQuotationId(quotationId);
+        favorQuotationItem.setUserId(user.getId());
+        favorQuotationItem.setPasswordFlag(user.getRole());
+
+        Quotation quotation = quotationService.getById(quotationId);
+        favorQuotationItem.setCustomerName(quotation.getCustomerName());
+
+        saveOrUpdate(favorQuotationItem);
+    }
+
+    @Override
     public void addToFront(String quotationId, User user) {
         PageHandler favorPage = getPage(
                 new Query().addOrder(Order.asc("indexNumber"))

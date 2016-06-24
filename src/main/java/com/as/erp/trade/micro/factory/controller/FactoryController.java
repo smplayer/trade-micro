@@ -5,6 +5,8 @@ import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.hibernate.Query;
 import com.as.erp.trade.micro.factory.entity.Factory;
 import com.as.erp.trade.micro.factory.service.FactoryService;
+import com.as.erp.trade.micro.quotation.entity.QuotationProductItemDraft;
+import com.as.erp.trade.micro.quotation.service.QuotationProductItemDraftService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ public class FactoryController {
 
     @Autowired
     private FactoryService factoryService;
+    @Autowired
+    private QuotationProductItemDraftService quotationProductItemDraftService;
 
     @RequestMapping(value = "factory/create", method = RequestMethod.GET)
     public String createFactory(){
@@ -32,28 +36,9 @@ public class FactoryController {
     @ResponseBody
     @RequestMapping(value = "ajax/factory/create", method = RequestMethod.POST)
     public Object createFactory(
-//            @RequestParam String name,
-//            @RequestParam String mainProduct,
-//            @RequestParam String linkman,
-//            @RequestParam String mobileNumber,
-//            @RequestParam String phoneNumber,
-//            @RequestParam String fax,
-//            @RequestParam String qq,
-//            @RequestParam String address,
-//            @RequestParam String remark
-
             @RequestBody Map<String, Object> req
     ){
         Factory factory = new Factory();
-//        factory.setName(name);
-//        factory.setMainProduct(mainProduct);
-//        factory.setMobileNumber(mobileNumber);
-//        factory.setPhoneNumber(phoneNumber);
-//        factory.setFax(fax);
-//        factory.setQq(qq);
-//        factory.setLinkman(linkman);
-//        factory.setAddress(address);
-//        factory.setRemark(remark);
         factory.setName((String) req.get("name"));
         factory.setMainProduct((String) req.get("mainProduct"));
         factory.setLinkman((String) req.get("linkman"));
@@ -62,9 +47,18 @@ public class FactoryController {
         factory.setFax((String) req.get("fax"));
         factory.setQq((String) req.get("qq"));
         factory.setAddress((String) req.get("address"));
-        factory.setRemark((String) req.get("remark"));
+        factory.setSummary((String) req.get("summary"));
         factory.setCreatedDate(new Date());
         factoryService.save(factory);
+
+        //在为见客下单模块进行工厂查新过程中新建工厂时, 同步保存工厂id到draft
+        String draftId = (String) req.get("draftId");
+        if (StringUtils.isNotBlank(draftId)) {
+            QuotationProductItemDraft draft = quotationProductItemDraftService.getById(draftId);
+            draft.setFactoryId(factory.getId());
+            draft.setFactoryName(factory.getName());
+            quotationProductItemDraftService.update(draft);
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("success", true);
@@ -100,7 +94,7 @@ public class FactoryController {
             @RequestParam String fax,
             @RequestParam String qq,
             @RequestParam String address,
-            @RequestParam String remark
+            @RequestParam String summary
     ){
         Factory factory = factoryService.getById(id);
         factory.setName(name);
@@ -111,7 +105,7 @@ public class FactoryController {
         factory.setQq(qq);
         factory.setLinkman(linkman);
         factory.setAddress(address);
-        factory.setRemark(remark);
+        factory.setSummary(summary);
         factoryService.update(factory);
         return "";
     }
@@ -130,7 +124,7 @@ public class FactoryController {
         factory.setFax((String) req.get("fax"));
         factory.setQq((String) req.get("qq"));
         factory.setAddress((String) req.get("address"));
-        factory.setRemark((String) req.get("remark"));
+        factory.setSummary((String) req.get("summary"));
         factoryService.update(factory);
 
         Map<String, Object> result = new HashMap<>();

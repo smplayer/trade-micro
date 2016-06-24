@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
@@ -40,7 +40,7 @@ public class DaoConfig {
      * @return
      */
     @Bean
-    public static PropertySourcesPlaceholderConfigurer placehodlerConfigurer() {
+    public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
         logger.info("PropertySourcesPlaceholderConfigurer");
         return new PropertySourcesPlaceholderConfigurer();
     }
@@ -65,7 +65,7 @@ public class DaoConfig {
         //注意hibernate版本对应, 否则会出现SessionFactory注入异常
         hibernateProperties.setProperty(
                 "hibernate.current_session_context_class",
-                "org.springframework.orm.hibernate5.SpringSessionContext"
+                "org.springframework.orm.hibernate4.SpringSessionContext"
         );
         sessionFactory.setHibernateProperties(hibernateProperties);
 

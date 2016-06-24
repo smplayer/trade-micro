@@ -22,7 +22,11 @@ public class ProductCreationController {
     private ProductService productService;
 
     @RequestMapping(value = "product/create", method = RequestMethod.GET)
-    public String create() {
+    public String create(
+            @RequestParam(value = "factoryName", required = false) String factoryName,
+            ModelMap modelMap
+            ) {
+        modelMap.put("factoryName", factoryName);
         return "product/edit";
     }
 
@@ -76,7 +80,6 @@ public class ProductCreationController {
             p = productService.getById(productId);
         } else {
             p = new Product();
-            p.setAddedDate(new Date());
         }
 
         p.setFactoryName((String) req.get("factoryName"));

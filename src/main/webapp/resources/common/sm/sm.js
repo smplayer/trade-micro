@@ -31,10 +31,27 @@ var sm = {};
             $dialog.hide();
         }
     }
-    
-    $sm.queue = {
-        node : {
+
+    $sm.safeExecute = function (func, params) {
+        if (typeof(func) == "function") {
+            func(params);
         }
-    };
+    }
+
+    $sm.ajax = function (params) {
+        $.ajax({
+            type: params.type,
+            url: params.url,
+            data: params.data,
+            dataType: params.dataType,
+            contentType: params.contentType,
+            success: function (data) {
+                $sm.safeExecute(params.success, data);
+            },
+            error: function (xhr, type) {
+                params.error(xhr, type);
+            }
+        });
+    }
     
 })(sm, $);

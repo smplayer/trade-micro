@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="<c:url value="/resources/system/set-password/css/global.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/system/set-password/css/auto280.css"/>">
     <style>
+        body {
+            background: transparent;
+        }
+
         input[type=text] {
             background: transparent;
             text-align: center;
@@ -47,20 +51,17 @@
         <form id="form" action="<c:url value="/system/setPassword"/>" method="post">
 
             <input type="text" name="oldAdminPassword" value="${user.adminPassword}"
-                   style="position: absolute; width: 120px; height: 18px; top: 145px; left: 400px; border: 1px solid red;" />
-            <input type="text" name="newAdminPassword" value=""
-                   style="position: absolute; width: 120px; height: 18px; top: 207px; left: 400px; border: 1px solid red;" />
-            <input type="text" name="confirmNewAdminPassword" value=""
-                   style="position: absolute; width: 120px; height: 18px; top: 262px; left: 400px; border: 1px solid red;" />
+                   style="position: absolute; width: 134px; height: 18px; top: 145px; left: 394px; border: 1px solid #000;"/>
+            <input type="text" id="newAdminPassword" name="newAdminPassword" value=""
+                   style="position: absolute; width: 134px; height: 18px; top: 207px; left: 394px; border: 1px solid #000;"/>
 
             <input type="text" name="oldStandardPassword" value="${user.standardPassword}"
-                   style="position: absolute; width: 120px; height: 18px; top: 346px; left: 400px; border: 1px solid red;" />
-            <input type="text" name="newStandardPassword" value=""
-                   style="position: absolute; width: 120px; height: 18px; top: 408px; left: 400px; border: 1px solid red;" />
-            <input type="text" name="confirmNewStandardPassword" value=""
-                   style="position: absolute; width: 120px; height: 18px; top: 463px; left: 400px; border: 1px solid red;" />
+                   style="position: absolute; width: 134px; height: 18px; top: 269px; left: 394px; border: 1px solid #000;"/>
+            <input type="text" id="newStandardPassword" name="newStandardPassword" value=""
+                   style="position: absolute; width: 134px; height: 18px; top: 331px; left: 394px; border: 1px solid #000;"/>
 
-            <a href="javascript:void(0);" id="confirm" style="position: absolute; display: block; width: 50px; height: 30px; top: 516px; left: 587px; border: 1px solid red;">
+            <a href="javascript:void(0);" id="confirm"
+               style="position: absolute; display: block; width: 50px; height: 30px; top: 488px; left: 587px; border: 0px solid #000;">
                 &nbsp;
             </a>
 
@@ -69,13 +70,50 @@
 </div>
 <div class="toolbar"></div>
 
-
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
-
+    var error = '${param.error}';
     $(function () {
+        if (error != '') {
+            dialogAlert("#dialog-alert", {
+                textContent: error,
+                onClose: function () {
+                }
+            });
+        }
+
+
         $("#confirm").click(function () {
+            var reg = /^.*[0-9]+.*[a-zA-Z]+.*$|^.*[a-zA-Z]+.*[0-9]+.*$/;
+            var newAdminPassword = $.trim($("#newAdminPassword").val());
+            var newStandardPassword = $.trim($("#newStandardPassword").val());
+            if (newAdminPassword.length > 0 && (newAdminPassword.length < 6 || newAdminPassword.length > 12)) {
+                dialogAlert("#dialog-alert", {
+                    textContent: "密码长度必须为6-12位英文和数字混合",
+                    onClose: function () {
+                    }
+                });
+                return false;
+            }
+            if (newStandardPassword.length > 0 && (newStandardPassword.length < 6 || newStandardPassword.length > 12)) {
+                dialogAlert("#dialog-alert", {
+                    textContent: "密码长度必须为6-12位英文和数字混合",
+                    onClose: function () {
+                    }
+                });
+                return false;
+            }
+            if (newAdminPassword.length > 0 && newStandardPassword.length > 0 && !(reg.test(newAdminPassword) && reg.test(newStandardPassword))) {
+                dialogAlert("#dialog-alert", {
+                    textContent: "密码格式错误",
+                    onClose: function () {
+                    }
+                });
+                return false;
+            }
             $("#form").submit();
+
         });
     })
 

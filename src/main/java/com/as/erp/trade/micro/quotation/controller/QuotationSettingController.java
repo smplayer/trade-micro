@@ -31,8 +31,10 @@ public class QuotationSettingController extends BaseQuotationController {
     @RequestMapping(value = "quotation/operating/setting", method = RequestMethod.GET)
     public String setting(
             @RequestParam(value = "id", required = false) String id,
+            @RequestParam(value = "indexNumber", required = false) Integer indexNumber,
             ModelMap modelMap
     ) {
+        modelMap.put("indexNumber", indexNumber);
         if (StringUtils.isNotBlank(id)) {
             Quotation quotation = quotationService.getById(id);
             if (quotation != null) {
@@ -63,6 +65,7 @@ public class QuotationSettingController extends BaseQuotationController {
             @RequestParam(value = "decimalPlaces", required = false) Integer decimalPlaces,
             @RequestParam(value = "editor", required = false) String editor,
             @RequestParam(value = "tel", required = false) String tel,
+            @RequestParam(value = "indexNumber", required = false) Integer indexNumber,
 
             HttpSession session,
             ModelMap modelMap
@@ -71,6 +74,7 @@ public class QuotationSettingController extends BaseQuotationController {
         if (StringUtils.isNotBlank(id)) {
             quotation = quotationService.getById(id);
         } else {
+            modelMap.put("isNew", true);
             quotation = new Quotation();
             quotation.setLastQuotedDate(new Date());
         }
@@ -114,9 +118,12 @@ public class QuotationSettingController extends BaseQuotationController {
         quotationService.saveOrUpdate(quotation);
 
 //        favorQuotationItemService.addToFront(quotation.getId(), (User) session.getAttribute("user"));
+        if(indexNumber != null) {
+            favorQuotationItemService.addToSpecifiedPosition(quotation.getId(), indexNumber, (User) session.getAttribute("user"));
+        }
 
         modelMap.put("id", quotation.getId());
-        return "redirect:/quotation/operating";
+        return "quotation/operating-setting-finish";
     }
 
 

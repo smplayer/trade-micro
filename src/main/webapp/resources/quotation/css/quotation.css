@@ -6,7 +6,7 @@ body {
     font-size: 13px;
     font-family: "Microsoft YaHei", "宋体", Verdana, Arial, Verdana, Geneva, sans-serif;
     color: #000;
-    line-height: 1.5em;
+    /*line-height: 1.5em;*/
 }
 
 img {

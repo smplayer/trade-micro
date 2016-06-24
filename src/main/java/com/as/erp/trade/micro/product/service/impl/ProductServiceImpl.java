@@ -2,8 +2,10 @@ package com.as.erp.trade.micro.product.service.impl;
 
 import com.as.common.dao.GenericDao;
 import com.as.common.service.impl.GenericServiceImpl;
+import com.as.erp.trade.micro.factory.ProductToFactoryEvent;
 import com.as.erp.trade.micro.factory.entity.Factory;
 import com.as.erp.trade.micro.factory.service.FactoryService;
+import com.as.erp.trade.micro.product.ProductDeletedEvent;
 import com.as.erp.trade.micro.product.ProductModifiedEvent;
 import com.as.erp.trade.micro.product.dao.ProductDao;
 import com.as.erp.trade.micro.product.entity.Product;
@@ -15,6 +17,10 @@ import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by yrx on 2016/4/29.
@@ -84,8 +90,8 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
             }
             product.setCompanyProductNo(companyProductNo);
 
-            Factory factory = factoryService.getById(product.getFactoryId());
-            if (factory != null) {
+            if (product.getFactoryId() != null) {
+                Factory factory = factoryService.getById(product.getFactoryId());
                 product.setFactoryContactNumber(
                         StringUtils.isNotBlank(factory.getMobileNumber()) ? factory.getMobileNumber() :
                                 StringUtils.isNotBlank(factory.getPhoneNumber()) ? factory.getPhoneNumber() : null
@@ -94,9 +100,23 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
         }
     }
 
+    private void _publishForFactoryProductQuantity(Product product){
+        if (product.getFactoryId() != null) {
+            Map<String, Object> source = new HashMap<>();
+            source.put("newFactoryId", product.getFactoryId());
+            source.put("product", product);
+            applicationContext.publishEvent(new ProductToFactoryEvent(source));
+        }
+
+    }
+
     @Override
     public void save(Product product) {
         refreshProduct(product);
+        product.setAddedDate(new Date());
+
+        _publishForFactoryProductQuantity(product);
+
         super.save(product);
 //        applicationContext.publishEvent(new ProductModifiedEvent(product));
     }
@@ -104,6 +124,12 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
     @Override
     public void saveOrUpdate(Product product) {
         refreshProduct(product);
+        if (product.getAddedDate() == null) {
+            product.setAddedDate(new Date());
+        }
+
+        _publishForFactoryProductQuantity(product);
+
         super.saveOrUpdate(product);
         applicationContext.publishEvent(new ProductModifiedEvent(product));
     }
@@ -111,6 +137,9 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
     @Override
     public void update(Product product) {
         refreshProduct(product);
+
+        _publishForFactoryProductQuantity(product);
+
         applicationContext.publishEvent(new ProductModifiedEvent(product));
         super.update(product);
     }
@@ -119,7 +148,17 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
     public Product selectFactory(String id, String factoryId) {
         Product product = getById(id);
         product.setFactoryId(factoryId);
+
+        _publishForFactoryProductQuantity(product);
+
         update(product);
         return product;
+    }
+
+    @Override
+    public void delete(String id) {
+        applicationContext.publishEvent(new ProductDeletedEvent(id));
+        _publishForFactoryProductQuantity(getById(id));
+        super.delete(id);
     }
 }

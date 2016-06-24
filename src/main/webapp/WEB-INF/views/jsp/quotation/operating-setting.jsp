@@ -34,12 +34,14 @@
         }
 
         .main {
-            width: 760px;
-            height: 545px;
+            /*width: 760px;*/
+            /*height: 545px;*/
+            width: 753px;
+            height: 530px;
             margin: 0 auto;
             background: #F6D6FB;
             border: 1px solid #000;
-            padding-top: 55px;
+            padding-top: 33px;
         }
 
         table {
@@ -103,25 +105,26 @@
 </head>
 
 <body>
-<c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
-    <c:param name="backgroundColor" value="#B47BFE"/>
-    <c:param name="currentModule" value="quotation"/>
-    <c:param name="title" value="见客设置"/>
-</c:import>
+<%--<c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">--%>
+    <%--<c:param name="backgroundColor" value="#B47BFE"/>--%>
+    <%--<c:param name="currentModule" value="quotation"/>--%>
+    <%--<c:param name="title" value="见客设置"/>--%>
+<%--</c:import>--%>
 
 <form id="form" name="form" method="post" action="<c:url value="/quotation/operating/setting"/>">
     <input type="hidden" name="id" value="${quotation.id}"/>
+    <input type="hidden" name="indexNumber" value="${param.indexNumber}"/>
     <div class="main">
-        <table width="505" border="0" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-                <td width="329" height="28" align="right" valign="top">
-                    <div class="toptt">见客设置</div>
-                </td>
-                <td width="176" align="right" valign="bottom">
-                    <div class="liehao">&nbsp;</div>
-                </td>
-            </tr>
-        </table>
+        <%--<table width="505" border="0" align="center" cellpadding="0" cellspacing="0">--%>
+            <%--<tr>--%>
+                <%--<td width="329" height="28" align="right" valign="top">--%>
+                    <%--<div class="toptt">见客设置</div>--%>
+                <%--</td>--%>
+                <%--<td width="176" align="right" valign="bottom">--%>
+                    <%--<div class="liehao">&nbsp;</div>--%>
+                <%--</td>--%>
+            <%--</tr>--%>
+        <%--</table>--%>
         <table width="505" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
                 <td height="37" colspan="4" align="right">&nbsp;</td>
@@ -184,7 +187,7 @@
                 <td height="46" align="right">选择整柜利润：</td>
                 <td colspan="3" align="left">（在货值上加点）
                     <input name="profitPercent" type="text" id="profitPercent" class="w40"
-                           value="${quotation.profitPercent}"/>
+                           value="<fmt:formatNumber type="number" pattern="#" value="${quotation.profitPercent}" maxFractionDigits="0"/>"/>
                     %&nbsp;&nbsp;&nbsp;（加佣金）
                     <input name="profitAmount" type="text" id="profitAmount" class="w40"
                            value="<fmt:formatNumber type="number" pattern="#" value="${quotation.profitAmount}" maxFractionDigits="0"/>"/>
@@ -201,11 +204,11 @@
             <tr>
                 <td height="46" align="right">币种：</td>
                 <td colspan="3" align="left">
-                    <input name="currency" type="text" id="currency" class="w60" value="${quotation.currency}"/>
+                    <input name="currency" type="text" id="currency" class="w60" value="${quotation.exchangeRate != 1 ? quotation.currency : ''}"/>
                     &nbsp; &nbsp;汇率：
-                    <input name="exchangeRate" type="text" id="exchangeRate" class="w60" value="${quotation.exchangeRate}"/>
-                    %&nbsp; &nbsp;小数点后保留：
-                    <input name="decimalPlaces" type="text" id="decimalPlaces" class="w40" value="${quotation.decimalPlaces}"/>
+                    <input name="exchangeRate" type="text" id="exchangeRate" class="w60" value="<fmt:formatNumber type="number" pattern="#" value="${quotation.exchangeRate != 1 ? quotation.exchangeRate : ''}" maxFractionDigits="4"/>"/>
+                    &nbsp; &nbsp;小数点后保留：
+                    <input name="decimalPlaces" type="text" id="decimalPlaces" class="w40" value="${quotation.exchangeRate != 1 ? quotation.decimalPlaces : ''}"/>
                     位
                 </td>
             </tr>
@@ -228,6 +231,7 @@
     </div>
 </form>
 
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/operating-setting.js"/>"></script>
 <script>

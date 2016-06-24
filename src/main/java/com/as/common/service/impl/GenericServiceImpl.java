@@ -48,7 +48,7 @@ public abstract class GenericServiceImpl<E extends BaseEntity, PK extends Serial
 
     @Override
     public void save(E entity) {
-        entity.setCreatedTime(new Date().getTime());
+        entity.setCreatedTime(System.currentTimeMillis());
         getDao().save(entity);
     }
 
@@ -62,9 +62,9 @@ public abstract class GenericServiceImpl<E extends BaseEntity, PK extends Serial
     @Override
     public void saveOrUpdate(E entity) {
         if (entity.getCreatedTime() == null)
-            entity.setCreatedTime(new Date().getTime());
+            entity.setCreatedTime(System.currentTimeMillis());
         else
-            entity.setLastUpdatedTime(new Date().getTime());
+            entity.setLastUpdatedTime(System.currentTimeMillis());
         getDao().saveOrUpdate(entity);
     }
 

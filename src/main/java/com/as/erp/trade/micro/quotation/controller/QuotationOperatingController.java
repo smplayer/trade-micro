@@ -50,9 +50,11 @@ public class QuotationOperatingController extends BaseQuotationController {
     @RequestMapping("quotation/operating")
     public String operating(
             @RequestParam(value = "empty", required = false, defaultValue = "false") Boolean empty,
+//            @RequestParam(value = "indexNumber", required = false) Integer indexNumber,
             @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "pageIndex", required = false) Long pageIndex,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "factoryId", required = false) String factoryId,
             HttpSession session,
             ModelMap modelMap
     ) {
@@ -82,14 +84,17 @@ public class QuotationOperatingController extends BaseQuotationController {
                 modelMap.put("quotation", quotation);
 
                 PageHandler page = null;
+
+                Conditions conditions = Conditions.newInstance().eq("quotationId", quotation.getId());
+                if (StringUtils.isNotBlank(factoryId)) {
+                    conditions.eq("factoryId", factoryId);
+                }
+
                 page = quotationProductItemDraftService.getPage(
                         new Query()
                                 .setPageIndex(pageIndex)
                                 .setPageSize(pageSize)
-                                .setConditions(
-                                        Conditions.newInstance()
-                                                .eq("quotationId", quotation.getId())
-                                )
+                                .setConditions(conditions)
                                 .addOrder(Order.desc("addedDate"))
                 );
                 modelMap.put("page", page);
@@ -144,26 +149,30 @@ public class QuotationOperatingController extends BaseQuotationController {
             @RequestParam("id") String id,
             HttpSession session
     ) {
-        if (StringUtils.isBlank(id)) {
-            User user = (User) session.getAttribute("user");
-            List<FavorQuotationItem> favorQuotationItemList = favorQuotationItemService.getList(
-                    new Query().addOrder(Order.asc("indexNumber"))
-                            .setPageSize(1)
-                            .setConditions(
-                                Conditions.newInstance()
-                                    .eq("userId", user.getId())
-                                    .eq("passwordFlag", user.getRole())
-                            )
-            );
-            if (favorQuotationItemList.size() == 1) {
-                id = favorQuotationItemList.get(0).getQuotationId();
-            }
+//        if (StringUtils.isBlank(id)) {
+//            User user = (User) session.getAttribute("user");
+//            List<FavorQuotationItem> favorQuotationItemList = favorQuotationItemService.getList(
+//                    new Query().addOrder(Order.asc("indexNumber"))
+//                            .setPageSize(1)
+//                            .setConditions(
+//                                Conditions.newInstance()
+//                                    .eq("userId", user.getId())
+//                                    .eq("passwordFlag", user.getRole())
+//                            )
+//            );
+//            if (favorQuotationItemList.size() == 1) {
+//                id = favorQuotationItemList.get(0).getQuotationId();
+//            }
+//        }
+
+
+        if (StringUtils.isNotBlank(id)) {
+            Quotation quotation = quotationService.saveToArchive(id);
+            FavorQuotationItem f = favorQuotationItemService.get(Conditions.newInstance().eq("quotationId", quotation.getId()));
+            favorQuotationItemService.delete(f.getId());
         }
 
-        if (StringUtils.isBlank(id))
-            quotationService.saveToArchive(id);
-
-        return "redirect:/quotation/operating/list";
+        return "redirect:/quotation/operating";
     }
 
     @RequestMapping("quotation/reloadFromArchive")
@@ -189,9 +198,16 @@ public class QuotationOperatingController extends BaseQuotationController {
                 )
         );
 
-        modelMap.put("page", page);
         modelMap.put("quotationProductItemDraftId", quotationProductItemDraftId);
-        return "factory/factory-search-for-draft";
+
+        if (page.getDataQuantity() > 0) {
+            modelMap.put("page", page);
+            return "factory/factory-search-for-draft";
+        } else {
+            modelMap.put("factoryName", factoryName);
+            return "redirect:/factory/create";
+        }
+
     }
 
     @ResponseBody

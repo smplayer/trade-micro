@@ -22,10 +22,12 @@
 
 <body>
 
-<div id="container" style="padding-top: 70px;">
-    <form id="form" name="form" method="post" enctype="multipart/form-data" action="<c:url value="/quotation/uploadImage"/>">
+<div id="container" style="padding: 40px 10px 0 10px;">
+    <form id="form" name="form" method="post" enctype="multipart/form-data" action="<c:url value="/quotation/uploadImage"/>" style="text-align: left">
         <input type="hidden" name="id" value="${id}"/>
-        <input type="file" name="product-image" style="width:70px;"/>
+        <input type="file" name="product-image" style="
+        /*width:70px;*/
+        "/><br/><br/>
         <input type="submit" value="提交" style="border: 1px solid #000">
     </form>
 </div>

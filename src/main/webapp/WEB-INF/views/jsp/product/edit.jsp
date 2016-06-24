@@ -115,6 +115,7 @@
 
 <body>
 <form id="form" name="form" method="post" action="<c:url value="/ajax/product/saveOrUpdate"/>">
+    <input type="hidden" id="factoryId" name="factoryId" />
     <div class="main border">
         <div class="top topw">
             <div class="toptt">样品录入</div>
@@ -125,7 +126,7 @@
                 <td style="height: 26px; width: 100px" align="center" class="key" bgcolor="#FFFFFF">工厂/公司名称</td>
                 <td colspan="3" bgcolor="#FFFFFF" id="factoryName-with-action" class="value">
                     <div class="findExistingFactory-wrap float-right"><a href="javascript:void(0);" id="findExistingFactory" class="a2">查新</a></div>
-                    <input type="text" id="factoryName" name="factoryName" style="width: 350px" />
+                    <input type="text" id="factoryName" name="factoryName" value="${factoryName}" style="width: 350px" />
                 </td>
             </tr>
             <tr>
@@ -195,12 +196,13 @@
             </tr>
         </table>
         <div class="bottom">
-            <div class="btmbtn"><input id="btn-confirm" type="image" src="<c:url value="/resources/common/project/images/bluetj.png" />" class="btn"/></div>
-            <div class="fr"><input type="image" src="<c:url value="/resources/common/project/images/blueqk.png" />" class="btn"/></div>
+            <div class="fr btmbtn"><input id="btn-confirm" type="image" src="<c:url value="/resources/common/project/images/bluetj.png" />" class="btn"/></div>
+            <div class="fr"><input id="btn-clear" type="image" src="<c:url value="/resources/common/project/images/blueqk.png" />" class="btn"/></div>
         </div>
     </div>
 </form>
 
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
     var productId = "${product.id}";

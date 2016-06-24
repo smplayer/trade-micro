@@ -1,0 +1,55 @@
+
+body {
+    background: url(../images/qiqiubg.png) #F0E8C7;
+}
+
+.toptt {
+    letter-spacing: 18px;
+}
+
+.top div {
+    margin-left: 18px;
+}
+
+.toplw {
+    width: 190px;
+}
+
+.topw {
+    width: 620px;
+    padding-top: 43px;
+}
+
+.top2w {
+    width: 1330px;
+    margin-top: 34px;
+    margin-bottom: 3px;
+}
+
+.topfl {
+    margin-left: 70px;
+    text-align: left;
+    width: 160px;
+}
+
+.topr2 {
+    margin-right: 70px;
+    width: 210px;
+    text-align: right;
+}
+
+.tdbg {
+    background: #F0EEE4;
+}
+
+.toptdbg {
+    background: #9ADDF5;
+    text-align: center;
+}
+
+.jkmenu {
+    width: 320px;
+    margin: 0 auto 7px auto;
+    height: 20px;
+    line-height: 20px;
+}

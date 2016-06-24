@@ -23,9 +23,13 @@ function selectFactory() {
 
     var checkedItems = $(".factory-id-checkbox:checked");
     if(checkedItems.length == 0){
-        alert("请选择一项");
+        dialogAlert("#dialog-alert", {
+            textContent: '请选择一项'
+        });
     } else if (checkedItems.length > 1) {
-        alert("只能选择一项");
+        dialogAlert("#dialog-alert", {
+            textContent: '只能选择一项'
+        });
     } else {
         
         $.ajax({
@@ -43,8 +47,8 @@ function selectFactory() {
                 CloseWebPage();
             },
             error: function(xhr, type){
-                alert('数据加载失败' + type);
-                console.log(xhr);
+                // alert('数据加载失败' + type);
+                // console.log(xhr);
             }
         });
         

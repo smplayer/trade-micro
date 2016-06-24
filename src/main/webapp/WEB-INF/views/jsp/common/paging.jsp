@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<table width="98" border="0" align="center" cellpadding="0" cellspacing="0">
+<table width="98" border="0" align="right" cellpadding="0" cellspacing="0">
     <tr>
         <td width="9">
             <c:if test="${param.pageIndex > 1}" var="notFirstPage">

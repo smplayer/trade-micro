@@ -31,38 +31,38 @@
         <div class="fl">报价日期：&nbsp;<fmt:formatDate value="${quotation.lastQuotedDate}" pattern="MM-dd"/></div>
         <div class="fr topr2">${page.pageIndex}/${page.pageQuantity}</div>
     </div>
-    <table width="735" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#000000">
+    <table width="620" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#000000">
         <tr>
-            <td height="35" class="toptdbg td65">品名</td>
+            <td height="35" class="toptdbg td80">品名</td>
             <td class="toptdbg td85">货号</td>
-            <td class="toptdbg td45">包装</td>
-            <td class="toptdbg td40">单位</td>
+            <td class="toptdbg td50">包装</td>
+            <td class="toptdbg td39">单位</td>
             <td class="toptdbg td40">报价</td>
-            <td class="toptdbg td45">功能</td>
             <td class="toptdbg td75">纸箱规格</td>
             <td class="toptdbg td45">装量</td>
-            <td class="toptdbg td40">箱数</td>
-            <td class="toptdbg td45">总体积</td>
-            <td class="toptdbg td50">总金额</td>
+            <td class="toptdbg td50">箱数</td>
+            <td class="toptdbg td50">总数量</td>
+            <td class="toptdbg td50">总体积</td>
+            <td class="toptdbg td55">总金额</td>
         </tr>
         <c:forEach items="${page.dataList}" var="p" varStatus="status">
             <tr>
-                <td height="26" class="ddtd tdbg">${p.companyProductName}</td>
+                <td height="28" class="ddtd tdbg">${p.companyProductName}</td>
                 <td class="ddtd tdbg">${productNoFrom=='factory' ? p.factoryProductNo : p.companyProductNo}</td>
                 <td class="ddtd tdbg">${p.packageForm}</td>
                 <td class="ddtd tdbg">${p.unit}</td>
                 <td class="ddtd tdbg">${p.quotedPrice}</td>
-                <td class="ddtd tdbg">${p.functionDescription}</td>
                 <td class="ddtd tdbg">${p.cartonSize}</td>
                 <td class="ddtd tdbg">${p.packingQuantity}</td>
                 <td class="ddtd tdbg">${p.orderedCartonQuantity}</td>
+                <td class="ddtd tdbg">${p.orderedProductQuantity}</td>
                 <td class="ddtd tdbg">${p.totalVolume}</td>
                 <td class="ddtd tdbg">${p.totalAmount}</td>
             </tr>
         </c:forEach>
-        <c:forEach begin="${fn:length(page.dataList)}" end="14" step="1">
+        <c:forEach begin="${fn:length(page.dataList)}" end="23" step="1">
             <tr>
-                <td height="26" class="ddtd tdbg">&nbsp;</td>
+                <td height="28" class="ddtd tdbg">&nbsp;</td>
                 <td class="ddtd tdbg">&nbsp;</td>
                 <td class="ddtd tdbg">&nbsp;</td>
                 <td class="ddtd tdbg">&nbsp;</td>
@@ -76,7 +76,7 @@
             </tr>
         </c:forEach>
         <tr>
-            <td height="26" class="ddtd tdbg">合计</td>
+            <td height="28" class="ddtd tdbg">合计</td>
             <td class="ddtd tdbg">&nbsp;</td>
             <td class="ddtd tdbg">&nbsp;</td>
             <td class="ddtd tdbg">&nbsp;</td>
@@ -89,42 +89,39 @@
             <td class="ddtd tdbg">&nbsp;</td>
         </tr>
     </table>
-    <table width="735" border="0" align="center" cellpadding="0" cellspacing="0">
+    <table width="620" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
-            <td height="22" colspan="6">&nbsp;</td>
+            <td height="22" colspan="5">&nbsp;</td>
         </tr>
         <tr>
             <td width="40">&nbsp;</td>
             <td width="150" align="left">确认签章:</td>
             <td width="160" align="left">贸易条款:&nbsp;${quotation.tradeClause}</td>
-            <td width="175" align="left">柜型:&nbsp;${quotation.containerType}</td>
-            <td width="100" align="right">装运港:${quotation.shipmentPort}</td>
-            <td width="110" align="left">&nbsp;</td>
+            <td width="115" align="left">柜型:&nbsp;${quotation.containerType}</td>
+            <td width="155" align="left">装运港:${quotation.shipmentPort}</td>
         </tr>
     </table>
 </div>
-<table width="845" border="0" align="center" cellpadding="0" cellspacing="0">
+<table width="735" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
-        <td height="30" colspan="6">&nbsp;</td>
+        <td height="30" colspan="8">&nbsp;</td>
     </tr>
     <tr>
-        <td width="157" align="center">
-            <a href="<c:url value="/quotation/confirming/order?id=${param.id}" />" class="${empty param.lang || param.lang == 'cn' ? 'current' : ''}" />中文</a>
+        <td width="40" align="center">&nbsp;</td>
+        <td width="110" align="left">
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&productNoFrom=${empty param.productNoFrom ? 'company' : param.productNoFrom}" />" class="${empty param.lang || param.lang == 'cn' ? 'current' : ''}" />中文</a>
             /
-            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&lang=en" />"  class="${param.lang == 'en' ? 'current' : ''}"/>英文</a>
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&lang=en&productNoFrom=${empty param.productNoFrom ? 'company' : param.productNoFrom}" />"  class="${param.lang == 'en' ? 'current' : ''}"/>英文</a>
         </td>
-        <td width="199" align="center">
-            <a href="<c:url value="/quotation/confirming/order?id=${param.id}" />" class="${empty param.productNoFrom || param.productNoFrom == 'company' ? 'current' : ''}" />公司</a>
+        <td width="140" align="left">
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&lang=${empty param.lang ? 'cn' : param.lang}" />" class="${empty param.productNoFrom || param.productNoFrom == 'company' ? 'current' : ''}" />公司</a>
             /
-            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&productNoFrom=factory" />"  class="${param.productNoFrom == 'factory' ? 'current' : ''}"/>工厂货号</a>
+            <a href="<c:url value="/quotation/confirming/order?id=${param.id}&productNoFrom=factory&lang=${empty param.lang ? 'cn' : param.lang}" />"  class="${param.productNoFrom == 'factory' ? 'current' : ''}"/>工厂货号</a>
         </td>
-        </td>
-        <td width="66" align="center">
-            <a id="show-accumulative-total" href="javascript:void(0)">累计</a>
-        </td>
-        <td width="150" align="center">转订单管理</td>
-        <td width="88" align="center">打印</td>
-        <td width="185" align="center">
+        <td width="60" align="left"><a id="show-accumulative-total" href="javascript:void(0)">累计</a></td>
+        <td width="105" align="center">转订单管理</td>
+        <td width="90" align="right">打印</td>
+        <td width="150" align="right">
             <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
                 <c:param name="prePageImage" value="/resources/common/project/images/left_03.png"  />
                 <c:param name="nextPageImage" value="/resources/common/project/images/right_03.png"  />
@@ -133,10 +130,13 @@
                 <c:param name="url" value="/quotation/confirming/order?id=${param.id}"/>
             </c:import>
         </td>
+        <td width="40" align="center">&nbsp;</td>
     </tr>
 </table>
 
 <p>&nbsp;</p>
+
+
 
 <div id="dialog-accumulation" style="display: none; background-color: #fff; width: 300px; height: 220px; border: 2px solid #a839a8;">
     <div style="text-align: right;">
@@ -170,15 +170,13 @@
     </table>
 </div>
 
-
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/confirming-order.js"/>"></script>
 <script>
     var pageIndex = '${page.pageIndex}';
     var pageSize = '${page.pageSize}';
     var quotationId = '${quotation.id}';
-
 </script>
-
 </body>
+
 </html>

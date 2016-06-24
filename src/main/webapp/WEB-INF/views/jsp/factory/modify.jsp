@@ -51,8 +51,8 @@
                 <td colspan="3"><input type="text" name="address" id="address" class="w404" value="${factory.address}"/></td>
             </tr>
             <tr>
-                <td><input name="textfield17" type="text" class="w102h" id="textfield17" value="备注" readonly="readonly"/></td>
-                <td colspan="3"><textarea name="remark" id="remark" cols="45" rows="5" class="w404h" value="${factory.remark}">${factory.remark}</textarea>
+                <td><input name="textfield17" type="text" class="w102h" id="textfield17" value="简录" readonly="readonly"/></td>
+                <td colspan="3"><textarea name="summary" id="summary" cols="45" rows="5" class="w404h" value="${factory.summary}">${factory.summary}</textarea>
                 </td>
             </tr>
         </table>
@@ -63,10 +63,8 @@
     </div>
 </form>
 
-<script>
-    var confirmUrl = '<c:url value="/ajax/factory/modify" />';
-</script>
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/modify.js"/>"></script>
 
 

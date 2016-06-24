@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by yrx on 2016/5/19.
@@ -42,12 +44,26 @@ public class SystemConfigController {
     public String config1(
             @RequestParam String startProductNumber
     ) {
-        String prefix = startProductNumber.substring(0, startProductNumber.lastIndexOf("A") + 1);
-        String begin = startProductNumber.substring(startProductNumber.lastIndexOf("A") + 1);
-        systemConfigItemService.setValue(SystemConfigItem.PRODUCT_N0_PREFIX, prefix);
-        systemConfigItemService.setValue(SystemConfigItem.PRODUCT_NO_BEGIN, begin);
+//        String prefix = startProductNumber.substring(0, startProductNumber.lastIndexOf("A") + 1);
+        Pattern pattern = Pattern.compile("[A-Za-z]{1,2}[1-9][0-9]{4}");
+        Matcher matcher = pattern.matcher(startProductNumber);
+        if (matcher.matches()) {
+            Pattern prefixPattern = Pattern.compile("[A-Za-z]{1,2}");
+            Pattern numberPattern = Pattern.compile("[1-9][0-9]{4}");
+            Matcher prefixMatcher = prefixPattern.matcher(startProductNumber);
+            Matcher numberMatcher = numberPattern.matcher(startProductNumber);
 
-        return "common/close-after-success";
+            if (prefixMatcher.find()) {
+                String prefix = prefixMatcher.group();
+                systemConfigItemService.setValue(SystemConfigItem.PRODUCT_N0_PREFIX, prefix);
+            }
+            if (numberMatcher.find()) {
+                String begin = numberMatcher.group();
+                systemConfigItemService.setValue(SystemConfigItem.PRODUCT_NO_BEGIN, begin);
+            }
+        }
+
+        return "system/config/config-number-finish";
     }
 
 }

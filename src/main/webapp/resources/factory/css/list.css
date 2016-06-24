@@ -1,6 +1,6 @@
 
 body {
-    background: url(../images/gongchangbg.png) #F0E6C7;
+    background: url(../images/gongchangbg.png) #c9f5da;
 }
 
 .toptt {
@@ -22,7 +22,8 @@ body {
 
 .top2w {
     width: 1230px;
-    padding-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 3px;
 }
 
 .top span {
@@ -40,18 +41,27 @@ body {
 }
 
 .tdbg {
-    background: #F0EBE1;
+    background: #dcf5f3;
 }
 
 .toptdbg {
     /*background: #F0C77D;*/
-    background: #faecd2;
+    background: #b9f0ce;
     text-align: center;
 }
 
 .jkmenu {
     width: 320px;
     margin: 0 auto 7px auto;
+    height: 20px;
+    line-height: 20px;
+}
+
+input[name=remark] {
+    width: 100%;
+    text-align: center;
+    color: #333;
+    background: transparent;
     height: 20px;
     line-height: 20px;
 }

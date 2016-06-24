@@ -37,7 +37,7 @@
             </tr>
             <tr>
                 <td height="55" align="right">&nbsp;</td>
-                <td align="center"><input type="image" src="<c:url value="/resources/index/images/indexbtn.png"/>" class="btn"/></td>
+                <td align="center"><input type="image" src="<c:url value="/resources/index/images/indexbtn.png"/>" class="btn-login"/></td>
             </tr>
         </table>
     </form>

@@ -32,8 +32,9 @@
 
     <table width="1240" border="0" align="center" cellspacing="1">
         <tr>
-            <td width="197" height="20" align="left"><input name="textfield" type="text" id="textfield" size="10"
-                                                            class="border"/> &nbsp;查询
+            <td width="197" height="20" align="left">
+                <input name="keywords" type="text" id="keywords" size="10" class="border keywords"/>
+                &nbsp;<a href="javascript:void(0);" id="btn-query">查询</a>
             </td>
             <td width="761" align="left">&nbsp;</td>
             <td width="128" align="right">
@@ -45,7 +46,7 @@
                     <c:param name="nextPageImage" value="/resources/common/project/images/right_03.png"  />
                     <c:param name="pageIndex" value="${productPage.pageIndex}"  />
                     <c:param name="pageQuantity" value="${productPage.pageQuantity}"  />
-                    <c:param name="url" value="/product/list"/>
+                    <c:param name="url" value="/product/list${empty param.keywords ? '' : '?keywords='}${empty param.keywords ? '' : param.keywords}"/>
                 </c:import>
             </td>
         </tr>
@@ -165,7 +166,7 @@
             <td height="20" align="left" valign="top" class="padtop3">&nbsp;</td>
             <td width="139" align="center" valign="top">
                 <input type="image" src="<c:url value="/resources/product/images/save.png" />" class="btn" id="save"/>&nbsp;&nbsp;&nbsp;
-                <input type="image" src="<c:url value="/resources/product/images/del.png" />" class="btn"/></td>
+                <input type="image" src="<c:url value="/resources/product/images/del.png" />" class="btn" id="del"/></td>
         </tr>
     </table>
 </form>
@@ -200,7 +201,6 @@
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/product/js/list.js"/>"></script>
 <script>
-    var productModificationUrl = '<c:url value="/ajax/product/modify"/>';
 </script>
 
 </body>

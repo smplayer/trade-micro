@@ -20,6 +20,7 @@ public class Factory extends BaseEntity {
     private String fax;
     private String qq;
     private String address;
+    private String summary;
     private String remark;
     private Integer productQuantity;
     private Date createdDate;
@@ -88,6 +89,14 @@ public class Factory extends BaseEntity {
         this.address = address;
     }
 
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -97,6 +106,8 @@ public class Factory extends BaseEntity {
     }
 
     public Integer getProductQuantity() {
+        if (productQuantity == null)
+            return 0;
         return productQuantity;
     }
 

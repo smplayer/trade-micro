@@ -4,12 +4,12 @@
 
 function initMenu() {
     // $("#sub-menu").css("top", $("#action-product").offset().top + $("#action-product").height());
-    $(".menu-item a").mouseover(function (e) {
+    $(".menu-item a.current").mouseover(function (e) {
         var aid = $(this).attr("id");
         var module = aid.substring(aid.indexOf("-") + 1);
         var $dropDown = $(".drop-down-menu." + module);
         if ($dropDown) {
-            $dropDown.css("top", $(this).offset().top);
+            $dropDown.css("top", $(this).offset().top + 5);
             $dropDown.css("left", $(this).offset().left - (($dropDown.width() - $(this).width()) / 2));
             $dropDown.show();
         }
@@ -24,6 +24,10 @@ function initMenu() {
     var $currentMenu = $(".menu-item a.current");
     if ($currentMenu.length > 0)
         $("#notice-current-module").css("left", $currentMenu.offset().left - (($("#notice-current-module").width() - $currentMenu.width()) / 2)).text(title).show();
+}
+
+function setModuleNotice(v) {
+    $("#notice-current-module").text(v);
 }
 
 function initFavorModule() {
@@ -67,8 +71,13 @@ $(function () {
         open(ctx + "/system/setPassword", '_blank');
     });
 
-    $("#set-favor-module").click(function () {
-        $("#top-bar").toggleClass("setting-favor");
+    // $("#set-favor-module").click(function () {
+    //     $("#top-bar").toggleClass("setting-favor");
+    // });
+    $(".top-bar .set-favor-module").click(function (e) {
+        e.preventDefault();
+        $(".top-bar").toggleClass("setting");
+        $(".set-favor-module").toggleClass("setting");
     });
 
     $("#set-favor-module-confirm").click(function () {
@@ -88,7 +97,7 @@ $(function () {
                 "module": $favor.val()
             }),
             success: function (data) {
-                alert("设置成功");
+                // alert("设置成功");
             },
             error: function (xhr, type) {
                 alert('数据加载失败' + type);

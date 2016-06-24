@@ -60,7 +60,7 @@ input.extracted-product[type=text] {
     vertical-align: middle;
 }
 
-.btn {
+.btn-login {
     height: 23px;
     width: 42px;
     cursor: pointer;
@@ -82,16 +82,15 @@ input.extracted-product[type=text] {
 
 
 
+
+#cus-list {
+    margin-top: 25px;
+    overflow: hidden;
+}
 #cus-list .text{
     width: 60px;
 }
 #cus-list .text.key-cus-name {
-}
-
-#cus-list {
-    margin-top: 18px;
-    margin-bottom: 5px;
-    overflow: hidden;
 }
 
 #cus-list ul {
@@ -108,8 +107,11 @@ input.extracted-product[type=text] {
     margin-left: 5px;
     border: 1px solid #B47BFE;
     height: 18px;
-}
+}f
 
+.top2 {
+    margin-top: 20px;
+}
 
 
 .dialog-header {
@@ -125,4 +127,11 @@ input.extracted-product[type=text] {
 .favor-cus-name a {
     display: block;
     width: 100%;
+}
+
+#cus-list .favor-cus-name.current a{
+    color: red;
+}
+#cus-list .favor-cus-name.empty.current {
+    border: 1px solid red;
 }

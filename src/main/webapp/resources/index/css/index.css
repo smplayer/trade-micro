@@ -27,9 +27,9 @@ body {
     margin: 0 auto;
 }
 
-.btn {
-    height: 23px;
-    width: 43px;
+.btn-login {
+    /*height: 23px;*/
+    /*width: 43px;*/
     cursor: pointer;
 }
 

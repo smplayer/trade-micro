@@ -11,6 +11,8 @@
     <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <link href="<c:url value="/resources/factory/css/list.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
+        .top2 {
+        }
     </style>
 </head>
 
@@ -19,6 +21,7 @@
     <c:param name="backgroundColor" value="#eeb13f"/>
     <c:param name="currentModule" value="factory"/>
     <c:param name="title" value="工厂管理"/>
+    <c:param name="bgColor" value="#eeb13f"/>
 </c:import>
 
 <%--<div class="top topw">--%>
@@ -58,7 +61,7 @@
         </form>
     </div>
     <div class="fr topr2">
-        <table width="98" border="0" align="right" cellpadding="0" cellspacing="0">
+        <table id="table1" width="98" border="0" align="right" cellpadding="0" cellspacing="0">
             <tr>
                 <td width="9">
 
@@ -118,7 +121,7 @@
 </div>
 
 <form id="form1" name="form1" method="post" action="">
-    <table border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
+    <table style="width: 1230px;" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
         <tr>
             <td height="40" class="td39 toptdbg">序号</td>
             <td class="td150 toptdbg">厂 名</td>
@@ -139,14 +142,25 @@
                 </td>
                 <td class="break tdbg">${f.name}</td>
                 <td class="break tdbg">${f.mainProduct}</td>
-                <td class="break tdbg">${f.productQuantity}</td>
+                <td class="break tdbg">
+                    <c:if test="${f.productQuantity > 0}" var="hasProduct">
+                        <a href="<c:url value="/product/listOfFactory?factoryId=${f.id}"/>" class="show-product-list" target="_blank">
+                            ${f.productQuantity}
+                        </a>
+                    </c:if>
+                    <c:if test="${not hasProduct}" >
+                        ${f.productQuantity}
+                    </c:if>
+                </td>
                 <td class="break tdbg">${f.linkman}</td>
                 <td class="break tdbg">${f.mobileNumber}${empty f.mobileNumber || empty f.phoneNumber ? "" : "/"}${f.phoneNumber}</td>
                 <td class="break tdbg">${f.address}</td>
                 <td class="break tdbg"><a href="javascript:void(0)" data-url="<c:url value="/factory/modify/${f.id}"/>"
                                           target="_blank" class="modify-factory">查看</a></td>
                 <td class="break tdbg"><fmt:formatDate value="${f.createdDate}" pattern="MM-dd"/></td>
-                <td class="break tdbg">${f.remark}</td>
+                <td class="break tdbg">
+                <input type="text" value="${f.remark}" name="remark" />
+                </td>
                 <td class="break tdbg">
                     <input name="id" class="factory-checkbox" type="checkbox" value="${f.id}"/>
                 </td>
@@ -185,9 +199,6 @@
         </tr>
     </table>
 </form>
-<script>
-    var searchUrl = '<c:url value="/factory/search" />';
-</script>
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
 <script>

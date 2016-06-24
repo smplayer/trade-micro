@@ -16,7 +16,41 @@ function showBigProductImage($img) {
     dialog("#dialog-big-image");
 }
 
+function deleteProducts() {
+    var ids = [];
+    $("[name=id]:checked").each(function () {
+        ids.push($(this).val())
+    });
+    if (ids.length > 0) {
+        $.ajax({
+            type: 'POST',
+            url: ctx + "/product/delete",
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(ids),
+            success: function(data){
+                window.location.reload();
+            },
+            error: function(xhr, type){
+                alert('数据加载失败' + type);
+            }
+        });
+    }
+    
+}
+
 $(function () {
+    $("#btn-query").click(function (e) {
+        e.preventDefault();
+        var keywords = $("#keywords").val();
+        var url = document.location.pathname;
+        if ($.trim(keywords) != '') {
+            document.location.href = url + "?keywords=" + keywords;
+        } else {
+            document.location.href = url;
+        }
+    })
+
     $(".product-image").click(function (e) {
         showBigProductImage($(this));
     });
@@ -42,19 +76,22 @@ $(function () {
         });
         $.ajax({
             type: 'POST',
-            url: productModificationUrl,
+            url: ctx + "/ajax/product/modify",
             dataType: 'json',
             contentType: "application/json",
             data: JSON.stringify(products),
             success: function(data){
-                // alert('数据加载成功');
                 window.location.reload();
             },
             error: function(xhr, type){
-                alert('数据加载失败' + type);
-                console.log(xhr);
+                // alert('数据加载失败' + type);
+                // console.log(xhr);
             }
         });
+    });
+    $("#del").click(function (e) {
+        e.preventDefault();
+        deleteProducts();
     });
     
 //        $("#editor-template").blur(function () {

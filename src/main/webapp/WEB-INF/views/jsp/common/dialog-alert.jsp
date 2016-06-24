@@ -6,10 +6,10 @@
 <style type="text/css">
     #dialog-alert {
         display: none;
-        background-color: #fff;
-        width: 300px;
+        background: #fff url("<c:url value="/resources/common/project/images/dialog-alert-bg.jpg"/>") no-repeat;
+        width: 250px;
         /*height: 220px;*/
-        border: 3px solid #006DB8;
+        /*border: 3px solid #006DB8;*/
     }
 
     .dialog-header {
@@ -22,21 +22,26 @@
         margin: 10px 10px 0px 0px
     }
 
-    .dialog-alert-main {
-        height: 186px;
+    .dialog-main {
+        height: 216px;
     }
 
-    .dialog-alert-main table {
-        height: 146px;
-        width: 300px;
+    .dialog-main table {
+        height: 182px;
+        width: 100%;
     }
 
-    .dialog-alert-main table td {
+    .dialog-main table td {
         vertical-align: middle;
+
     }
 
     .dialog-alert-text-content {
         font-size: 18px;
+        font-weight: normal;
+        padding: 0 30px;
+        line-height: 2em;
+        text-align: center;
     }
 </style>
 
@@ -47,7 +52,7 @@
         </a>
     </div>
 
-    <div class="dialog-alert-main">
+    <div class="dialog-main">
         <table>
             <tr>
                 <td class="dialog-alert-text-content"></td>

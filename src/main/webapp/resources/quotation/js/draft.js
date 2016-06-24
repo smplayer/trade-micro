@@ -45,27 +45,34 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
             "lineNumber": lineNumber
         }),
         success: function (data) {
-            if(synchronizing[data['lineNumber'] + data['modifiedPropName']] === false) {
-                var context = $("#" + data.item.id).parents('.item').first();
-                for ( var pName in data.item) {
-                    if(pName != data.modifiedPropName)
-                        if(
-                            // pName == "orderedProductQuantity" ||
-                            // pName == "totalVolume" ||
-                            // pName == "totalAmount"
-                            false
-                        ) {
-                            $("input[name=" + pName + "]", context).val(data.item[pName]);
-                        } else {
-                            if(data.item[pName] != 0)
-                                $("input[name=" + pName + "]", context).val(data.item[pName]);
-                            else
-                                $("input[name=" + pName + "]", context).val("");
-                        }
-                }
+            // if(synchronizing[data['lineNumber'] + data['modifiedPropName']] === false) {
+            //     var context = $("#" + data.item.id).parents('.item').first();
+            //     for ( var pName in data.item) {
+            //         if(pName != data.modifiedPropName)
+            //             if(
+            //                 // pName == "orderedProductQuantity" ||
+            //                 // pName == "totalVolume" ||
+            //                 // pName == "totalAmount"
+            //                 false
+            //             ) {
+            //                 $("input[name=" + pName + "]", context).val(data.item[pName]);
+            //             } else {
+            //                 if(data.item[pName] != 0)
+            //                     $("input[name=" + pName + "]", context).val(data.item[pName]);
+            //                 else
+            //                     $("input[name=" + pName + "]", context).val("");
+            //             }
+            //     }
+            //
+            //     getAccumulativeTotal();
+            // }
 
-                getAccumulativeTotal();
-            }
+            var context = $("#" + data.item.id).parents('.item').first();
+            $("input[name=orderedProductQuantity]", context).val(data.item["orderedProductQuantity"] != 0 ? data.item["orderedProductQuantity"] : "");
+            $("input[name=totalVolume]", context).val(data.item["totalVolume"] != 0 ? data.item["totalVolume"] : "");
+            $("input[name=totalAmount]", context).val(data.item["totalAmount"] != 0 ? data.item["totalAmount"] : "");
+            $("input[name=quotedPrice]", context).val(data.item["quotedPrice"] != 0 ? data.item["quotedPrice"] : "");
+            getAccumulativeTotal();
         },
         error: function (xhr, type) {
             //alert('数据加载失败' + type);
@@ -216,8 +223,8 @@ function extractAsProduct() {
                     var context = $("#" + this).parents(".item").first();
                     var $factoryProductNo = $("input[name=factoryProductNo]", context);
                     var $factoryProductName = $("input[name=factoryProductName]", context);
-                    $factoryProductNo.addClass("extracted-product")
-                    $factoryProductName.addClass("extracted-product")
+                    $factoryProductNo.addClass("extracted-product");
+                    $factoryProductName.addClass("extracted-product");
                 });
             },
             error: function (xhr, type) {
@@ -243,7 +250,7 @@ function getAccumulativeTotal() {
             success: function (data) {
                 $("#accumulativeTotal-orderedCartonQuantity").text(data.cartonQuantity);
                 $("#accumulativeTotal-orderedProductQuantity").text(data.productQuantity);
-                $("#accumulativeTotal-totalVolume").text(data.volume.toFixed(0));
+                $("#accumulativeTotal-totalVolume").text(data.volume.toFixed(1));
                 $("#accumulativeTotal-totalAmount").text(data.amount.toFixed(0));
             },
             error: function (xhr, type) {
@@ -261,13 +268,16 @@ function loadFavorQuotationList() {
         dataType: 'json',
         contentType: "application/json",
         success: function (data) {
-            var $favorCusNameList = $(".favor-cus-name");
+            $("#cus-list ul.current").remove();
+            var $favorCusNameList = $("#cus-list ul.template").clone(true).addClass('current').removeClass('template hidden').appendTo("#cus-list").find(".favor-cus-name");
             $(data).each(function (i,n) {
                 if( i < $favorCusNameList.length) {
-                    var $a = $("a", $favorCusNameList[n.indexNumber - 1]);
+                    var $f = $($favorCusNameList[n.indexNumber - 1]);
+                    var $a = $("a", $f);
                     $a.text(n.customerName).attr("href", ctx + "/quotation/operating?id=" + n.quotationId);
+                    $f.removeClass("empty");
                     if(quotationId == n.quotationId) {
-                        $a.css("color", "red");
+                        $f.addClass("current");
                     }
                 }
             });
@@ -278,14 +288,29 @@ function loadFavorQuotationList() {
     });
 }
 
+function initFavorQuotationList() {
+    $(".favor-cus-name.empty").each(function (i, n) {
+        $("a", this).attr("href", ctx + "/quotation/operating?empty=true&indexNumber=" + (i + 1));
+    });
+    if (indexNumber > 0) {
+        $($(".favor-cus-name.empty")[indexNumber - 1]).addClass('current');
+    }
+}
+
 function initPage() {
     // var emptyFactoryPriceItems = $("input[name=factoryPrice][value='0']");
     // $(emptyFactoryPriceItems).each(function () {
     //     var context = $(this).parents(".item").first();
     //     $("input[value='0']", context).val("");
     // });
-    $("#form .item input[value='0']").val("");
+    if (empty === true) {
+        // quotationOperatingSetting();
+        openCommonDialog($("#quotation-operating-setting"));
+    } else {
+        $("#form .item input[value='0']").val("");
+    }
     loadFavorQuotationList();
+    initFavorQuotationList();
 }
 
 function uploadImage(id) {
@@ -299,11 +324,38 @@ function uploadImageFinish() {
 
 function setFavorQuotationList() {
     $("#iframe-favor-setting").attr("src", ctx + "/quotation/favor/setting");
-    dialog("#dialog-favor-setting");
+    dialog("#dialog-favor-setting", {
+        onClose : function () {
+            loadFavorQuotationList();
+            initFavorQuotationList();
+        }
+    });
 }
 
 function setFavorQuotationListFinish() {
     dialog("#dialog-favor-setting", {close : true});
+}
+
+function quotationOperatingSetting() {
+    var url = ctx + "/quotation/operating/setting";
+    if ($.trim(quotationId) != '') {
+        url += "?id=" + quotationId;
+    } else if (indexNumber > 0) {
+        url += "?indexNumber=" + indexNumber;
+    }
+    // $("#iframe-operating-setting").attr("src", url);
+    // dialog("#dialog-operating-setting", {top: 80});
+    $("#dialog-operating-setting").attr("href", url);
+}
+beforeOpenDialog['quotation-operating-setting'] = quotationOperatingSetting;
+
+function quotationOperatingSettingFinish(id, isNew) {
+    dialog("#dialog-operating-setting", {close : true});
+    if (isNew && isNew === true) {
+        window.location.href = ctx + "/quotation/operating?id=" + id;
+    } else {
+        window.location.reload();
+    }
 }
 
 function deleteItems() {
@@ -372,9 +424,14 @@ $(function () {
         var id = $(this).attr("data-product-id");
         uploadImage(id);
     });
+
+    $("#quotation-operating-setting").click(function (e) {
+        // e.preventDefault();
+        // quotationOperatingSetting();
+    })
     
     // initEmptyLine();
-    $("#main-table input[type=text]").bind("keyup", function (e) {
+    $("#main-table input[type=text]").bind("keyup change", function (e) {
         //TO-DO 考虑值为空的状况
         if (
             e.keyCode != 9 &&
@@ -497,6 +554,11 @@ $(function () {
     })
 
     $("[name=factoryProductName]").first().focus();
+
+    // $("#extractAsProduct").click(function (e) {
+    //     e.preventDefault();
+    //
+    // });
 
     getAccumulativeTotal();
 

@@ -21,7 +21,8 @@
 <div class="topline toplw"></div>
 <div class="top2 top2w">
     <div class="topfl fl">
-        <form id="form-search" action="<c:url value="/factory/list" />" target="_self">
+        <form id="form-search" action="" target="_self">
+            <input name="quotationProductItemDraftId" value="${param.quotationProductItemDraftId}" type="hidden" id="quotationProductItemDraftId" size="18" class="border"/>
             <input name="keywords" value="${param.keywords}" type="text" id="keywords" size="18" class="border"/>
             <a href="javascript:void(0)" id="search">查询</a>
         </form>
@@ -119,21 +120,21 @@
         </tr>
     </c:forEach>
 
-        <c:forEach begin="${fn:length(page.dataList)}" end="19" step="1">
-            <tr>
-                <td height="24" class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-            </tr>
-        </c:forEach>
+        <%--<c:forEach begin="${fn:length(page.dataList)}" end="19" step="1">--%>
+            <%--<tr>--%>
+                <%--<td height="24" class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+                <%--<td class="break tdbg">&nbsp;</td>--%>
+            <%--</tr>--%>
+        <%--</c:forEach>--%>
     </table>
     <table width="1230" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
@@ -141,18 +142,17 @@
         </tr>
         <tr>
             <td height="20" align="right" valign="top">&nbsp;</td>
+            <td width="70" align="right" valign="top">&nbsp;</td>
             <td width="70" align="right" valign="top"><input type="image" id="btn-confirm"
-                                                             src="<c:url value="/resources/factory/images/save3.png" />"
-                                                             class="btn"/></td>
-            <td width="70" align="right" valign="top"><input type="image"
-                                                             src="<c:url value="/resources/factory/images/del3.png" />"
+                                                             src="<c:url value="/resources/factory/images/search-confirm.png" />"
                                                              class="btn"/></td>
             <td width="70" align="center" valign="top">&nbsp;</td>
         </tr>
     </table>
 </form>
 
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/factory-search-for-draft.js"/>"></script>
 <script>

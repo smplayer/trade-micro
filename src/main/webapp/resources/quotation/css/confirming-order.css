@@ -1,3 +1,4 @@
+
 .toptt {
     letter-spacing: 12px;
 }
@@ -8,7 +9,7 @@
 
 .topw {
     width: 620px;
-    padding-top: 45px;
+    padding-top: 44px;
 }
 
 .top div {
@@ -20,7 +21,7 @@
 }
 
 .top3 {
-    width: 735px;
+    width: 620px;
     height: 20px;
     line-height: 20px;
     margin: 15px auto 5px auto;
@@ -50,8 +51,9 @@
 
 .main {
     margin: 0 auto;
-    width: 845px;
+    width: 735px;
     padding-bottom: 45px;
+    background-color: #fff;
 }
 
 .ddtd {

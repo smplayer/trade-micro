@@ -12,7 +12,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>见客下单</title>
+    <title>操作版</title>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/draft.css"/>"/>
@@ -24,7 +24,6 @@
 
 <div id="container">
 
-
     <c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
         <c:param name="backgroundColor" value="#B47BFE"/>
         <c:param name="currentModule" value="quotation"/>
@@ -32,41 +31,40 @@
         <c:param name="title" value="操作版"/>
     </c:import>
 
-
     <div id="cus-list">
-        <ul>
+        <ul class="template hidden">
             <li class="text key-cus-name">
                 客户名:
             </li>
 
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name">
+            <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
 
@@ -76,13 +74,12 @@
         </ul>
     </div>
 
-
     <form id="form" name="form" method="post" action="">
         <input type="hidden" id="quotation-id" value="${quotation.id}"/>
         <div class="top2 top2w">
             <div class="topfl fl">客户名：&nbsp;${quotation.customerName}</div>
             <div class="topf2 fl">日期：&nbsp;<fmt:formatDate value="${quotation.lastQuotedDate}" pattern="MM-dd"/></div>
-            <div class="fl">币种：&nbsp;${quotation.currency}</div>
+            <div class="fl">币种：&nbsp;${quotation.exchangeRate != 1 ? quotation.currency : ''}</div>
 
             <div class="fr topr2">
                 <table width="98" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -163,7 +160,7 @@
                 <td class="td70 toptdbg">毛/净重</td>
             </tr>
 
-            <tr class="item" id="new-item">
+            <tr class="item ${empty param['empty'] ? '' : 'hidden'}" id="new-item">
                 <td height="24" class="break tdbg line-number">&nbsp;</td>
                 <td class="break tdbg">&nbsp;</td>
                 <td class="break tdbg"><input type="text" name="factoryProductName" /></td>
@@ -304,7 +301,7 @@
 </div>
 
 
-<div id="dialog-upload-image" style="display: none; background-color: #fff; width: 300px; height: 220px; border: 2px solid #a839a8;">
+<div id="dialog-upload-image" style="display: none; background-color: #fff; width: 300px; height: 220px; border: 1px solid #000000;">
 
     <div class="dialog-header">
         <a href="javascript:void (0);" class="dialog-close">
@@ -315,20 +312,45 @@
     <iframe name="iframe-upload-image" id="iframe-upload-image" style="width: 300px; height: 220px; border: 0;" src=""></iframe>
 </div>
 
-<div id="dialog-favor-setting" style="display: none; background-color: #fff; width: 682px; border: 2px solid #a839a8;">
+<div id="dialog-favor-setting" style="display: none; background-color: #fff; width: 682px; border: 1px solid #000000;">
 
-    <div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">
-        <a href="javascript:void (0);" class="dialog-close">
-            <img src="<c:url value="/resources/common/project/images/close.png" />"/>
-        </a>
-    </div>
+    <%--<div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">--%>
+        <%--<a href="javascript:void (0);" class="dialog-close">--%>
+            <%--<img src="<c:url value="/resources/common/project/images/close.png" />"/>--%>
+        <%--</a>--%>
+    <%--</div>--%>
 
     <iframe name="iframe-favor-setting" id="iframe-favor-setting" style="margin-top: 0px; width: 682px; height: 483px; border: 0;"
             <%--src="<c:url value="/quotation/favor/setting"/>"--%>
     ></iframe>
 </div>
 
-<div id="dialog-big-image" style="display: none; background-color: #fff; width: 250px; height: 250px; border: 2px solid #a839a8;">
+<div id="dialog-operating-setting" style="display: none; width: 100%; top: 80px; bottom: 0; border: 0px solid #000000;">
+
+    <%--<div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">--%>
+        <%--<a href="javascript:void (0);" class="dialog-close">--%>
+            <%--<img src="<c:url value="/resources/common/project/images/close.png" />"/>--%>
+        <%--</a>--%>
+    <%--</div>--%>
+    <iframe name="iframe-operating-setting" id="iframe-operating-setting" style="margin-top: 0px; width: 755px; height: 580px; border: 0;"
+            <%--src="<c:url value="/quotation/favor/setting"/>"--%>
+    ></iframe>
+</div>
+
+<div id="dialog-archive-list" style="display: none; width: 100%; top: 80px; bottom: 0; border: 0px solid #000000;">
+
+    <%--<div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">--%>
+        <%--<a href="javascript:void (0);" class="dialog-close">--%>
+            <%--<img src="<c:url value="/resources/common/project/images/close.png" />"/>--%>
+        <%--</a>--%>
+    <%--</div>--%>
+    <iframe name="iframe-archive-list" id="iframe-archive-list" style="margin-top: 0px; width: 755px; height: 580px; border: 0;"
+            src="<c:url value="/quotation/archiveList"/>"
+    ></iframe>
+</div>
+
+
+<div id="dialog-big-image" style="display: none; background-color: #fff; width: 250px; height: 250px; border: 1px solid #000000;">
     <div class="dialog-header" style="position: absolute; top: 0; left: 0; z-index: 10; width: 100%;">
         <a href="javascript:void (0);" class="dialog-close">
             <img src="<c:url value="/resources/common/project/images/close.png" />"/>
@@ -340,6 +362,8 @@
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
 <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
+    var empty = ${empty param['empty'] ? false : true};
+    var indexNumber = ${empty param.indexNumber ? -1 : param.indexNumber};
     var pageIndex = '${page.pageIndex}';
     var pageSize = '${page.pageSize}';
     var quotationId = '${quotation.id}';
@@ -348,8 +372,6 @@
 <script type="text/javascript" src="<c:url value="/resources/common/project/js/uuid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/draft.js"/>"></script>
 <script>
-
-
     $("#pre-reset").click(function () {
         $("input[type=text]", "#form").each(function () {
             $(this).val("");
@@ -358,7 +380,6 @@
             this.checked = false;
         });
     });
-
 </script>
 
 </body>

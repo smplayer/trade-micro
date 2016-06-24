@@ -106,6 +106,7 @@
 
 <body>
 <form id="form1" name="form1" method="post" action="<c:url value="/factory/create"/>">
+    <input type="hidden" name="draftId" id="draftId" value="${param.quotationProductItemDraftId}" />
     <div class="main border">
         <div class="top topw">
             <div class="toptt">工厂资料</div>
@@ -115,7 +116,7 @@
             <tr>
                 <td width="102"><input name="textfield" type="text" class="w102" id="textfield" value="工厂/公司名称"
                                        readonly="readonly"/></td>
-                <td colspan="3"><input type="text" name="name" id="name" class="w404"/></td>
+                <td colspan="3"><input type="text" name="name" id="name" class="w404" value="${param.factoryName}"/></td>
             </tr>
             <tr>
                 <td><input name="textfield2" type="text" class="w102" id="textfield2" value="主营" readonly="readonly"/></td>
@@ -140,8 +141,8 @@
                 <td colspan="3"><input type="text" name="address" id="address" class="w404"/></td>
             </tr>
             <tr>
-                <td><input name="textfield17" type="text" class="w102h" id="textfield17" value="备注" readonly="readonly"/></td>
-                <td colspan="3"><textarea name="remark" id="remark" cols="45" rows="5" class="w404h"></textarea>
+                <td><input name="textfield17" type="text" class="w102h" id="textfield17" value="简录" readonly="readonly"/></td>
+                <td colspan="3"><textarea name="summary" id="summary" cols="45" rows="5" class="w404h"></textarea>
                 </td>
             </tr>
         </table>
@@ -164,10 +165,8 @@
 
     <%--<input type="submit" value="提交" />--%>
 <%--</form>--%>
-<script>
-    var confirmUrl = '<c:url value="/ajax/factory/create" />';
-</script>
-<script type="text/javascript" src="<c:url value="/resources/common/jquery/2.1.4/jquery.min.js"/>"></script>
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
+<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/create.js"/>"></script>
 </body>
 </html>

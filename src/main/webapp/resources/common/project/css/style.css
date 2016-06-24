@@ -11,12 +11,15 @@ A.a1:link{	COLOR:#f00;}
 A.a1:visited{COLOR:#f00;}
 A.a1:hover{	text-decoration:underline;}
 
+.hidden {
+    display: none;
+}
 .float-left, .fl{float:left;}
 .float-right, .fr{float:right;}
 .textl{text-align:left;}
 td{table-layout:fixed;}
 .break{word-break:break-all;word-wrap:break-word;/*支持IE，chrome，FF*/text-align:center;line-height:20px;padding:2px 0;}
-.btn{height:23px;width:43px;cursor:pointer;}
+.btn-login {height:23px;width:43px;cursor:pointer;}
 .border{border:1px solid #000;}
 .topline{height:2px;border-bottom:1px red solid;margin:0 auto;}
 .top{width:620px;margin:0 auto;height:22px;font:500 22px/22px "Microsoft Yahei";text-align:center;}
@@ -69,7 +72,7 @@ A.a1:hover{	text-decoration:underline;}
 .textl{text-align:left;}
 td{table-layout:fixed;}
 .break{word-break:break-all;word-wrap:break-word;/*支持IE，chrome，FF*/text-align:center;line-height:20px;padding:2px 0;}
-.btn{height:23px;width:43px;cursor:pointer;}
+.btn-login {height:23px;width:43px;cursor:pointer;}
 .border{border:1px solid #000;}
 .topline{height:2px;border-bottom:1px red solid;margin:0 auto;}
 .top{width:620px;margin:0 auto;height:22px;font:500 22px/22px "Microsoft Yahei";text-align:center;}

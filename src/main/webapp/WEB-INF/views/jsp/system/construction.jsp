@@ -12,7 +12,7 @@
 <body style="text-align: center;">
 
 <div style="width: 1300px; margin: 0 auto">
-    <img src="<c:url value="/resources/common/project/images/construction.jpg"/>"/>
+    <img src="<c:url value="/resources/common/project/images/construction/about-construction.jpg"/>"/>
 </div>
 
 
