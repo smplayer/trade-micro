@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by yrx on 2016/5/16.
@@ -41,7 +43,7 @@ public class QuotationProductItemDraftPropModifiedListener implements SmartAppli
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        if(event.getSource() instanceof QuotationProductItemDraftPropModifiedVO) {
+        if (event.getSource() instanceof QuotationProductItemDraftPropModifiedVO) {
             QuotationProductItemDraftPropModifiedVO vo = (QuotationProductItemDraftPropModifiedVO) event.getSource();
 
             QuotationProductItemDraft item = quotationProductItemDraftService.getById(vo.getId());
@@ -51,10 +53,20 @@ public class QuotationProductItemDraftPropModifiedListener implements SmartAppli
                 reCalQuotedPrice(item);
                 reCalTotalAmount(item);
             } else if ("cartonSize".equals(propertyName)) {
-                reCalCartonVolume(item);
-                reCalTotalVolume(item);
-                reCalQuotedPrice(item);
-                reCalTotalAmount(item);
+
+                Pattern p = Pattern.compile("^[1-9]+[0-9]*[Xx\\*][1-9]+[0-9]*[Xx\\*][1-9]+[0-9]*$");
+                Matcher m = p.matcher(item.getCartonSize());
+                if (m.matches()) {
+                    reCalCartonVolume(item);
+                    reCalTotalVolume(item);
+                    reCalQuotedPrice(item);
+                    reCalTotalAmount(item);
+                } else {
+                    item.setCartonVolume(0D);
+                    item.setTotalVolume(0D);
+                    item.setQuotedPrice(0D);
+                    item.setTotalAmount(0D);
+                }
             } else if ("packingQuantity".equals(propertyName)) {
                 reCalOrderedProductQuantity(item);
                 reCalTotalVolume(item);
@@ -72,7 +84,10 @@ public class QuotationProductItemDraftPropModifiedListener implements SmartAppli
                 initCompanyProductName(item);
             } else if ("factoryName".equals(propertyName)) {
                 item.setFactoryId(null);
-            } else if (
+            }
+
+
+            if (
                     "factoryProductName".equals(propertyName) ||
                             "factoryProductNo".equals(propertyName) ||
                             "packageForm".equals(propertyName) ||
@@ -83,7 +98,7 @@ public class QuotationProductItemDraftPropModifiedListener implements SmartAppli
                             "grossWeight".equals(propertyName) ||
                             "netWeight".equals(propertyName)
                     ) {
-                item.setProductId(null);
+//                item.setSyncToProduct(false);
             }
 
             quotationProductItemDraftService.update(item);
@@ -151,8 +166,8 @@ public class QuotationProductItemDraftPropModifiedListener implements SmartAppli
     }
 
     private void initCompanyProductName(QuotationProductItemDraft item) {
-        if (StringUtils.isBlank(item.getCompanyProductName()))
-            item.setCompanyProductName(item.getFactoryProductName());
+//        if (StringUtils.isBlank(item.getCompanyProductName()))
+        item.setCompanyProductName(item.getFactoryProductName());
     }
 
     private Double round(Double value, Integer scale) {

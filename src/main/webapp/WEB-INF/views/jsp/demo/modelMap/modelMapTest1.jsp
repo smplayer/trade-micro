@@ -15,6 +15,7 @@
 <html lang="zh-CN">
 <head>
     <title>产品列表</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
     <c:import url="/WEB-INF/views/jsp/common/common-meta.jsp"/>
     <c:import url="/WEB-INF/views/jsp/common/common-link.jsp"/>
 </head>
@@ -23,7 +24,6 @@ ${param1}
 
 <form id="form" action="/demo/modelMap/test1" method="post"></form>
 <a id="confirm" href="javascript:void(0);">confirm</a>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
 <script>
     $(function(){
         $("#confirm").click(function(){

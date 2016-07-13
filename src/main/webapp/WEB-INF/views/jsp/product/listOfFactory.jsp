@@ -7,6 +7,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>产品列表</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <link href="<c:url value="/resources/product/css/listOfFactory.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
@@ -78,7 +79,10 @@
             <input name="keywords" value="${param.keywords}" type="text" id="keywords" size="15" class="border"/>
             <a href="<c:url value="/"/>" id="search">查询</a>
         </div>
-        <div class="fl">手机/电话</div>
+        <div class="fl">
+            <span id="factory-name" style="margin-left: 10px;">厂名：&nbsp;${factory.name}</span>
+            <span id="contact-number" style="margin-left: 80px;">手机/电话：&nbsp;${not empty factory.mobileNumber ? factory.mobileNumber : factory.phoneNumber}</span>
+        </div>
         <div class="fr topr2">
             <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
                 <c:param name="prePageImage" value="/resources/common/project/images/left_03.png"  />
@@ -137,7 +141,7 @@
             <td class="break tdbg">${p.packageForm}</td>
             <td class="break tdbg">${p.unit}</td>
             <td class="break tdbg">${p.factoryPrice}</td>
-            <td class="break tdbg">${p.lastFactoryQuotedTime}</td>
+            <td class="break tdbg"><fmt:formatDate value="${p.lastFactoryQuotedDate}" pattern="MM-dd" /></td>
             <td class="break tdbg">${p.cartonSize}</td>
             <td class="break tdbg">${p.packingQuantity}</td>
             <td class="break tdbg">${p.grossWeight}/${p.netWeight}</td>
@@ -192,7 +196,6 @@
 
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 
 <script type="text/javascript" src="<c:url value="/resources/product/js/listOfFactory.js"/>"></script>
 

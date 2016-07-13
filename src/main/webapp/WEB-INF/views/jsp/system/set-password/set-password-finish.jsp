@@ -8,6 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>见客设置完成</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
     <style type="text/css">
@@ -17,7 +18,6 @@
 <body>
 
 
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
     $(function () {
         //window.parent.quotationOperatingSettingFinish('${id}', ${isNew});

@@ -8,6 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>见客操作</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .toptt {
@@ -87,7 +88,7 @@
         <div class="topline toplw" ></div>
         <table width="580" border="0" align="center" cellpadding="0" cellspacing="0">
 
-            <c:forEach var="o" items="list" varStatus="status">
+            <c:forEach var="f" items="list" varStatus="status">
                 <tr>
                     <td width="163" height="45">列号：</td>
                     <td width="180">客户名：</td>
@@ -104,7 +105,6 @@
     </div>
 </form>
 
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/confirming-order.js"/>"></script>
 
 </body>

@@ -233,11 +233,14 @@
 <div class="drop-down-menu quotation">
     <div class="wrap">
         <div>
-            <c:if test="${param.currentSubModule != 'operating'}" var="notOperating">
-                <span class="disabled"> 见客设置</span>
+            <c:if test="${param.currentSubModule == 'operating' && not empty quotation}" var="operating">
+                <a id="quotation-operating-setting" class="open-in-dialog" alt="见客设置" href="<c:url value="/quotation/operating/setting?id=${quotation.id}"/>">见客设置</a>
             </c:if>
-            <c:if test="${not notOperating}">
-                <a id="quotation-operating-setting" class="open-in-dialog" alt="见客设置" href="<c:url value="/quotation/operating/setting?id=${quotation.id}&indexNumber=${param.indexNumber}"/>">见客设置</a>
+            <c:if test="${not operating && not empty param.indexNumber}" var="creating">
+                <a id="quotation-operating-setting" class="open-in-dialog" alt="见客设置" href="<c:url value="/quotation/operating/setting?indexNumber=${param.indexNumber}"/>">见客设置</a>
+            </c:if>
+            <c:if test="${not operating && not creating}">
+                <span class="disabled"> 见客设置</span>
             </c:if>
         </div>
         <div>
@@ -288,7 +291,7 @@
 <div class="drop-down-menu order">
     <div class="wrap">
         <div>
-            <a href="<c:url value="/order/list"/>">订单管理</a>
+            <a href="<c:url value="/order"/>">订单管理</a>
         </div>
     </div>
 </div>

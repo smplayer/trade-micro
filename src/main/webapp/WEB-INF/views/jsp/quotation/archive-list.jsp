@@ -2,139 +2,235 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>档案</title>
-
+    <title>见客档案</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/archive-list.css"/>"/>
-
-    <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
+        .top2w {
+            width: 1100px;
+        }
 
+        .topr2 {
+            margin-right: 70px;
+        }
+
+        .tdbg {
+            background: #F1F5DA;
+        }
+
+        .toptdbg {
+            background: #D9D9D9;
+            text-align: center;
+        }
+
+        .main {
+            width: 1262px;
+            /*height: 765px;*/
+            border: 1px solid #000;
+            margin: 0 auto;
+            background: #EBEAE8;
+            margin-top: 65px;
+        }
+
+        .btn {
+            height: 25px;
+            width: 46px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
 <form id="form1" name="form1" method="post" action="">
+    <div class="main">
+        <div class="top2 top2w" style="overflow: hidden">
+            <div class="fr topr2" style="margin-right: 50px;">
+                <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
+                    <c:param name="prePageImage" value="/resources/common/project/images/leftg.png"  />
+                    <c:param name="nextPageImage" value="/resources/common/project/images/rightg.png"  />
+                    <c:param name="pageIndex" value="${page.pageIndex}"  />
+                    <c:param name="pageQuantity" value="${page.pageQuantity}"  />
+                    <c:param name="url" value="/quotation/archiveList"/>
+                </c:import>
+            </div>
+        </div>
+        <table id="data-table" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
+            <tr>
+                <td height="40" class="td39 toptdbg">序号</td>
+                <td class="td100 toptdbg">存档日期</td>
+                <td class="td150 toptdbg">客 户 名</td>
+                <td class="td100 toptdbg">贸易条款</td>
+                <td class="td80 toptdbg">装运港</td>
+                <td class="td60 toptdbg">币种</td>
+                <td class="td90 toptdbg">柜 型</td>
+                <td class="td90 toptdbg">货柜数量</td>
+                <td class="td90 toptdbg">总箱数</td>
+                <td class="td90 toptdbg">总体积</td>
+                <td class="td90 toptdbg">总金额</td>
+                <td class="td80 toptdbg">档案</td>
+                <td class="td40 toptdbg">
+                    <a href="javascript: void(0);" id="select-all">全选</a>
+                </td>
+            </tr>
 
-    <c:import url="/WEB-INF/views/jsp/quotation/common/quotation-header.jsp">
-        <c:param name="title" value="档案"/>
-        <c:param name="curPage" value="archive"/>
-    </c:import>
 
 
-    <div class="123 top2w">
-        <div class="fr topr2">
 
-            <table width="98" border="0" align="center" cellpadding="0" cellspacing="0">
+
+
+            <c:forEach items="${page.dataList}" var="a" varStatus="status">
                 <tr>
-                    <td width="9">
-                        <c:if test="${page.pageIndex > 1}" var="notFirstPage">
-                            <a href="
-                                    <c:url value="/quotation/archiveList">
-                                        <c:param name="pageIndex" value="${page.pageIndex - 1}"/>
-                                    </c:url>
-                                ">
-                                <img src="<c:url value="/resources/quotation/images/left_03.png" />" width="9" height="8"/>
-                            </a>
-                        </c:if>
-                        <c:if test="${not notFirstPage}">
-                            <img src="<c:url value="/resources/quotation/images/left_03.png" />" width="9" height="8"/>
-                        </c:if>
+                    <td height="24" class="break tdbg">
+                            ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
                     </td>
-                    <td width="66" align="center">
-                        <a href="<c:url value="/quotation/archiveList" /> ">1</a>
-                        <span style="width: 10px; text-align: right; display: inline-block;">-</span><input id="newPageIndex" type="text" value="${empty page ? 0 : page.pageIndex}" style="width: 20px; text-align: center; border: 0; background-color: transparent;"
-                    />/<span style="width: 20px; text-align: center; display: inline-block;">${empty page ? 0 : page.pageQuantity}</span>
+                    <td class="break tdbg">
+                        <fmt:formatDate value="${a.archivedDate}" pattern="MM-dd"/>
                     </td>
-                    <td width="9">
-                        <c:if test="${page.pageIndex < page.pageQuantity}" var="notLastPage">
-                            <a href="
-                                    <c:url value="/quotation/archiveList">
-                                        <c:param name="pageIndex" value="${page.pageIndex + 1}"/>
-                                    </c:url>
-                                ">
-                                <img src="<c:url value="/resources/quotation/images/right_03.png" />" width="9" height="8"/>
-                            </a>
-                        </c:if>
-                        <c:if test="${not notLastPage}">
-                            <img src="<c:url value="/resources/quotation/images/right_03.png" />" width="9" height="8"/>
-                        </c:if>
+                    <td class="break tdbg">${a.customerName}</td>
+                    <td class="break tdbg">${a.tradeClauseType}${a.tradeClause}</td>
+                    <td class="break tdbg">${a.shipmentPort}</td>
+                    <td class="break tdbg">${a.currency}</td>
+                    <td class="break tdbg">${a.containerType == '1' ? '20尺' : a.containerType == '2' ? '40尺' : a.containerType == '3' ? "40尺加高" : ''}</td>
+                    <td class="break tdbg">
+                        <fmt:formatNumber value="${totalValueMap[a.id].containerQuantity}" maxFractionDigits="1" pattern="#.#" />
+                    </td>
+                    <td class="break tdbg">
+                        ${totalValueMap[a.id].cartonQuantity}
+                    </td>
+                    <td class="break tdbg">
+                        <fmt:formatNumber value="${totalValueMap[a.id].volume}" maxFractionDigits="0" pattern="#" />
 
+                    </td>
+                    <td class="break tdbg">
+                        <fmt:formatNumber value="${totalValueMap[a.id].amount}" maxFractionDigits="0" pattern="#" />
+                    </td>
+                    <td class="break tdbg">
+                        <a class="reload-from-archive" id="${a.id}" href="javascript:void(0);">调阅</a>
+                    </td>
+                    <td class="break tdbg">
+                        <input type="checkbox" id="${a.id}" name="id" value="${a.id}" />
                     </td>
                 </tr>
-            </table>
-        </div>
-    </div>
-    <table border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
-        <tr>
-            <td height="40" class="td39 toptdbg">序号</td>
-            <td class="td100 toptdbg">存档日期</td>
-            <td class="td150 toptdbg">客户名</td>
-            <td class="td120 toptdbg">国家/地区</td>
-            <td class="td100 toptdbg">贸易条款</td>
-            <td class="td80 toptdbg">装运港</td>
-            <td class="td70 toptdbg">柜型</td>
-            <td class="td70 toptdbg">币种</td>
-            <td class="td70 toptdbg">产品数量</td>
-            <td class="td90 toptdbg">总金额</td>
-            <td class="td80 toptdbg">档案</td>
-            <td class="td40 toptdbg">全选</td>
-        </tr>
-        <c:forEach items="${page.dataList}" var="a" varStatus="status">
-        <tr>
-            <td height="24" class="break tdbg">
-                    ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
-            </td>
-            <td class="break tdbg">
-                <fmt:formatDate value="${a.archivedDate}" pattern="MM-dd"/>
-            </td>
-            <td class="break tdbg">${a.customerName}</td>
-            <td class="break tdbg">${a.region}</td>
-            <td class="break tdbg">${a.tradeClauseType}</td>
-            <td class="break tdbg">${a.shipmentPort}</td>
-            <td class="break tdbg">${a.containerType}</td>
-            <td class="break tdbg">${a.currency}</td>
-            <td class="break tdbg"></td>
-            <td class="break tdbg"></td>
-            <td class="break tdbg">
-                <a href="<c:url value="/quotation/reloadFromArchive?id=${a.id}"/>">调阅</a>
-            </td>
-            <td class="break tdbg"></td>
-        </tr>
-        </c:forEach>
+            </c:forEach>
 
-        <c:forEach begin="${fn:length(page.dataList)}" end="18" step="1">
+            <c:forEach begin="${fn:length(page.dataList)}" end="12" step="1">
+                <tr>
+                    <td height="26" class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                </tr>
+            </c:forEach>
+
+
+
+
+
+        </table>
+        <table width="1100" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
-                <td height="24" class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
+                <td height="30" colspan="3" align="left" valign="middle">&nbsp;</td>
             </tr>
-        </c:forEach>
-    </table>
-    <table width="1010" border="0" align="center" cellpadding="0" cellspacing="0">
-        <tr>
-            <td height="21" colspan="3" align="left" valign="middle">&nbsp;</td>
-        </tr>
-        <tr>
-            <td height="20" align="right" valign="top">&nbsp;</td>
-            <td width="70" align="right" valign="top"><input type="image" src="<c:url value="/resources/quotation/images/del.png" />" class="btn"/></td>
-            <td width="60" align="center" valign="top">&nbsp;</td>
-        </tr>
-    </table>
+            <tr>
+                <td width="950" height="20" align="right" valign="top">
+                    <a href="javascript:void(0);" id="copyFromArchive" >复制</a>
+                </td>
+                <td width="70" align="right" valign="top"><input type="image" src="<c:url value="/resources/quotation/images/delg.png" />" class="btn" id="del"/></td>
+                <td width="80" align="right" valign="top">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
 </form>
+
+
+
+
+<script>
+
+function selectAll() {
+    var $ids = $("[type=checkbox][name=id]");
+    var $checked = $("[name=id]:checked");
+    var status;
+    if($ids.length > $checked.length && $checked.length >= 0) {
+        status = 0;
+    } else if ($ids.length == $checked.length) {
+        status = 1;
+    }
+    if( status == 0) {
+        $ids.each(function (e) {
+            this.checked = true;
+        });
+    } else {
+        $ids.each(function (e) {
+            this.checked = false;
+        });
+    }
+}
+
+$(function () {
+    $("#select-all").click(selectAll);
+
+    $(".reload-from-archive").click(function (e) {
+        e.preventDefault();
+        window.parent.location.href = ctx + '/quotation/reloadFromArchive?id=' + $(this).attr("id");
+    })
+    $("#copyFromArchive").click(function (e) {
+        e.preventDefault();
+        var checked = $("#data-table input[name=id]:checked");
+        if (checked.length == 1) {
+            var id = checked.val();
+            window.parent.location.href = ctx + '/quotation/copyFromArchive?id=' + id;
+        }
+    })
+
+    $("#del").click(function (e) {
+        e.preventDefault();
+
+        var checked = $("#data-table input[name=id]:checked");
+        var ids = [];
+        checked.each(function () {
+            ids.push($(this).val());
+        });
+        if (ids.length != 0) {
+            $.ajax({
+                type: 'POST',
+                url: ctx + "/quotation/deleteArchive",
+                data: JSON.stringify({
+                    "ids": ids
+                }),
+                dataType: 'json',
+                contentType: "application/json",
+                success: function (data) {
+                    window.location.reload();
+                },
+                error: function (xhr, type) {
+                    //alert('数据加载失败' + type);
+                }
+            });
+        } else {
+            window.location.reload();
+        }
+
+    })
+
+})
+</script>
+
+
 </body>
 </html>

@@ -9,6 +9,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>工厂录入</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .toptt {
@@ -33,7 +34,7 @@
         .main {
             width: 638px;
             height: 418px;
-            margin: 0 auto;
+            margin: 30px auto 0 auto;
             background: #E4DFFD;
         }
 
@@ -116,33 +117,33 @@
             <tr>
                 <td width="102"><input name="textfield" type="text" class="w102" id="textfield" value="工厂/公司名称"
                                        readonly="readonly"/></td>
-                <td colspan="3"><input type="text" name="name" id="name" class="w404" value="${param.factoryName}"/></td>
+                <td colspan="3"><input type="text" name="name" id="name" class="w404 prop-value" value="${factoryName}"/></td>
             </tr>
             <tr>
                 <td><input name="textfield2" type="text" class="w102" id="textfield2" value="主营" readonly="readonly"/></td>
-                <td width="148"><input type="text" name="mainProduct" id="mainProduct" class="w148"/></td>
+                <td width="148"><input type="text" name="mainProduct" id="mainProduct" class="w148 prop-value"/></td>
                 <td width="90"><input name="textfield14" type="text" class="w90" id="textfield14" value="联系人" readonly="readonly"/></td>
-                <td width="148"><input type="text" name="linkman" id="linkman" class="w148"/></td>
+                <td width="148"><input type="text" name="linkman" id="linkman" class="w148 prop-value" value="${linkman}"/></td>
             </tr>
             <tr>
                 <td><input name="textfield3" type="text" class="w102" id="textfield3" value="手机" readonly="readonly"/></td>
-                <td><input type="text" name="mobileNumber" id="mobileNumber" class="w148"/></td>
+                <td><input type="text" name="mobileNumber" id="mobileNumber" class="w148 prop-value" value="${contactNumber}"/></td>
                 <td><input name="textfield15" type="text" class="w90" id="textfield15" value="电话" readonly="readonly"/></td>
-                <td><input type="text" name="phoneNumber" id="phoneNumber" class="w148"/></td>
+                <td><input type="text" name="phoneNumber" id="phoneNumber" class="w148 prop-value"/></td>
             </tr>
             <tr>
                 <td><input name="textfield4" type="text" class="w102" id="textfield4" value="传真" readonly="readonly"/></td>
-                <td><input type="text" name="fax" id="fax" class="w148"/></td>
+                <td><input type="text" name="fax" id="fax" class="w148 prop-value"/></td>
                 <td><input name="textfield16" type="text" class="w90" id="textfield16" value="QQ" readonly="readonly"/></td>
-                <td><input type="text" name="qq" id="qq" class="w148"/></td>
+                <td><input type="text" name="qq" id="qq" class="w148 prop-value"/></td>
             </tr>
             <tr>
                 <td><input name="textfield5" type="text" class="w102" id="textfield5" value="地址" readonly="readonly"/></td>
-                <td colspan="3"><input type="text" name="address" id="address" class="w404"/></td>
+                <td colspan="3"><input type="text" name="address" id="address" class="w404 prop-value"/></td>
             </tr>
             <tr>
                 <td><input name="textfield17" type="text" class="w102h" id="textfield17" value="简录" readonly="readonly"/></td>
-                <td colspan="3"><textarea name="summary" id="summary" cols="45" rows="5" class="w404h"></textarea>
+                <td colspan="3"><textarea name="summary" id="summary" cols="45" rows="5" class="w404h prop-value"></textarea>
                 </td>
             </tr>
         </table>
@@ -166,7 +167,6 @@
     <%--<input type="submit" value="提交" />--%>
 <%--</form>--%>
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/create.js"/>"></script>
 </body>
 </html>

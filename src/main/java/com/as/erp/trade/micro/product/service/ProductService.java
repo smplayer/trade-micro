@@ -10,4 +10,6 @@ public interface ProductService extends GenericService<Product, String> {
 
     Product selectFactory(String id, String factoryId);
 
+    void copyProducts(String targetId, Integer count);
+
 }

@@ -8,6 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>见客设置</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
     <style type="text/css">
@@ -148,9 +149,9 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp; CNF
                                 <input name="CNF" type="text" id="CNF" class="w80"
                                        value="${quotation.tradeClauseType == "CNF" ? quotation.tradeClause : ""}"/></td>
-                            <td width="27%" align="right">GIF
-                                <input name="GIF" type="text" id="GIF" class="w80"
-                                       value="${quotation.tradeClauseType == "GIF" ? quotation.tradeClause : ""}"/></td>
+                            <td width="27%" align="right">CIF
+                                <input name="CIF" type="text" id="CIF" class="w80"
+                                       value="${quotation.tradeClauseType == "CIF" ? quotation.tradeClause : ""}"/></td>
                         </tr>
                     </table>
                 </td>
@@ -232,7 +233,6 @@
 </form>
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/operating-setting.js"/>"></script>
 <script>
 

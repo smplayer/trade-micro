@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<table width="98" border="0" align="right" cellpadding="0" cellspacing="0">
+<table width="110" border="0" align="right" cellpadding="0" cellspacing="0">
     <tr>
         <td width="9">
             <c:if test="${param.pageIndex > 1}" var="notFirstPage">
@@ -30,7 +30,11 @@
                    value="${empty param.pageIndex ? 0 : param.pageIndex}"
                    style="width: 20px; text-align: center; border: 0; background-color: transparent;"
             />/<span
-                style="width: 20px; text-align: center; display: inline-block;">${empty param.pageQuantity ? 0 : param.pageQuantity}</span>
+                style="width: 20px; text-align: center; display: inline-block;"><a href="
+                                <c:url value="${param.url}">
+                                    <c:param name="pageIndex" value="${param.pageQuantity}"/>
+                                </c:url>
+                             ">${empty param.pageQuantity ? 0 : param.pageQuantity}</a></span>
         </td>
         <td width="9">
             <c:if test="${param.pageIndex < param.pageQuantity}" var="notLastPage">
@@ -49,3 +53,27 @@
         </td>
     </tr>
 </table>
+
+<script>
+    $(function () {
+        $("#newPageIndex").keyup(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                var url = ctx + '${param.url}';
+                if (url.indexOf('?') == -1) {
+                    url += '?';
+                } else {
+                    url += '&';
+                }
+
+                var pageIndex = $(this).val();
+                if ($.trim(pageIndex) == '') {
+                    pageIndex = 1;
+                }
+                url += 'pageIndex=' + pageIndex;
+
+                document.location.href = url;
+            }
+        });
+    })
+</script>

@@ -9,6 +9,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>解说</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <style type="text/css">
     </style>
 </head>
@@ -17,7 +18,6 @@
 <img src="<c:url value="/resources/common/project/images/construction/${param.currentModule}.jpg"/>" />
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/construction.js"/>"></script>
 </body>
 </html>

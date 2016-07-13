@@ -13,6 +13,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>上传图片</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/uploading-image.css"/>"/>
@@ -32,7 +33,6 @@
     </form>
 </div>
 
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
 </script>
 <script type="text/javascript" src="<c:url value="/resources/common/project/js/uuid.js"/>"></script>

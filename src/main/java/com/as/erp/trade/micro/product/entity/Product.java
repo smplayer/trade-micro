@@ -2,6 +2,7 @@ package com.as.erp.trade.micro.product.entity;
 
 import com.as.common.entity.BaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class Product extends BaseEntity {
     private String factoryProductNo;
     private String companyProductNo;
     private Double factoryPrice;
-    private Long lastFactoryQuotedTime;
+    private Date lastFactoryQuotedDate;
     private String cartonSize;
     private Integer packingQuantity;
     private Double grossWeight;
@@ -86,6 +87,7 @@ public class Product extends BaseEntity {
         this.factoryProductNo = factoryProductNo;
     }
 
+    @Column(unique = true)
     public String getCompanyProductNo() {
         return companyProductNo;
     }
@@ -102,12 +104,12 @@ public class Product extends BaseEntity {
         this.factoryPrice = factoryPrice;
     }
 
-    public Long getLastFactoryQuotedTime() {
-        return lastFactoryQuotedTime;
+    public Date getLastFactoryQuotedDate() {
+        return lastFactoryQuotedDate;
     }
 
-    public void setLastFactoryQuotedTime(Long lastFactoryQuotedTime) {
-        this.lastFactoryQuotedTime = lastFactoryQuotedTime;
+    public void setLastFactoryQuotedDate(Date lastFactoryQuotedDate) {
+        this.lastFactoryQuotedDate = lastFactoryQuotedDate;
     }
 
     public String getCartonSize() {

@@ -6,7 +6,7 @@ function alertIfError() {
         dialogAlert("#dialog-alert", {
             topOffset: -100,
             leftOffset: 420,
-            textContent: error,
+            textContent: "用户名或密码错误<br/><br/>请重新输入",
             onClose: function () {
                 $("#password").focus();
             }
@@ -15,9 +15,7 @@ function alertIfError() {
 }
 
 $(function () {
-   if($.trim(error) != '') {
-       alertIfError();
-   }
+   alertIfError();
 
     $("#password").focus();
 });

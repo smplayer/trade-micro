@@ -20,7 +20,7 @@ function checkCustomerName() {
 function checkClause() {
     var fob = $("#FOB").val();
     var cnf = $("#CNF").val();
-    var gif = $("#GIF").val();
+    var cif = $("#CIF").val();
 
     var inputtedCount = 0;
     if ($.trim(fob) != "") {
@@ -29,7 +29,7 @@ function checkClause() {
     if ($.trim(cnf) != "") {
         inputtedCount++;
     }
-    if ($.trim(gif) != "") {
+    if ($.trim(cif) != "") {
         inputtedCount++;
     }
 

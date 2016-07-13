@@ -11,7 +11,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "as_tb_order")
 public class Order extends BaseEntity {
+    private String quotationId;
     private String customerName;
+
+    public String getQuotationId() {
+        return quotationId;
+    }
+
+    public void setQuotationId(String quotationId) {
+        this.quotationId = quotationId;
+    }
 
     public String getCustomerName() {
         return customerName;

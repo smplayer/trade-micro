@@ -13,6 +13,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>修改密码</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/user/css/modify-password.css"/>"/>
     <style type="text/css">
@@ -30,7 +31,6 @@
 
 
 
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
 </script>
 <script type="text/javascript" src="<c:url value="/resources/user/js/modify-password.js"/>"></script>

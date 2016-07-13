@@ -7,9 +7,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>登陆</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/index/css/index.css"/>"/>
     <style type="text/css">
-
+        #password{
+            font-size: 28px;
+        }
     </style>
 </head>
 
@@ -43,7 +46,6 @@
 <script>
     var error = '${param.error}';
 </script>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"/>
 <script type="text/javascript" src="<c:url value="/resources/user/js/login.js"/>"></script>
 
 </body>

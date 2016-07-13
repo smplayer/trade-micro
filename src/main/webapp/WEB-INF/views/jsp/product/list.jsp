@@ -7,6 +7,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>产品库微</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <link href="<c:url value="/resources/product/css/list.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
@@ -14,10 +15,10 @@
 </head>
 
 <body>
-<form id="form1" name="form1" method="post" action="">
+<%--<form id="form1" name="form1" method="post" action="">--%>
 
     <c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
-        <c:param name="backgroundColor" value="#2ebc54"/>
+        <c:param name="bgColor" value="#EF7BDE"/>
         <c:param name="currentModule" value="product"/>
         <c:param name="title" value="${not empty title ? title : '操作版'}"/>
     </c:import>
@@ -30,15 +31,18 @@
         <%--<a href="<c:url value="/product/list/incomplete"/>">补料产品</a>--%>
     <%--</div>--%>
 
-    <table width="1240" border="0" align="center" cellspacing="1">
+    <table width="1240" border="0" align="center" cellspacing="1" style="margin-top: 30px;">
         <tr>
             <td width="197" height="20" align="left">
-                <input name="keywords" type="text" id="keywords" size="10" class="border keywords"/>
+                <input name="keywords" type="text" id="keywords" size="10" class="border keywords" value="${keywords}"/>
                 &nbsp;<a href="javascript:void(0);" id="btn-query">查询</a>
             </td>
-            <td width="761" align="left">&nbsp;</td>
+            <td width="761" align="right">
+                <a href="javascript:void(0);" id="copy-product">复制下行</a>
+                <input id="copy-count" style="width: 30px; border: 1px solid black"/>&nbsp;行
+            </td>
             <td width="128" align="right">
-                <a href="<c:url value="/product/create" />" id="add-product">产品录入</a>
+                <a href="<c:url value="/product/create" />" id="add-product" class="open-in-dialog">产品录入</a>
             </td>
             <td width="151">
                 <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
@@ -55,7 +59,7 @@
         <tr>
             <td height="40" rowspan="2" class="td39 toptdbg">序号</td>
             <td rowspan="2" class="td50 toptdbg">图片</td>
-            <td rowspan="2" class="td80 toptdbg">品 名</td>
+            <td colspan="2" class="toptdbg">品 名</td>
             <td colspan="2" class="toptdbg">货 号</td>
             <td rowspan="2" class="td65 toptdbg">包装方式</td>
             <td rowspan="2" class="td50 toptdbg">单位</td>
@@ -64,12 +68,16 @@
             <td rowspan="2" class="td55 toptdbg">功能</td>
             <td rowspan="2" class="td55 toptdbg">类别</td>
             <td rowspan="2" class="td55 toptdbg">细类</td>
-            <td colspan="2" class="toptdbg">工厂资料</td>
-            <td rowspan="2" class="td65 toptdbg">录入日期</td>
-            <td rowspan="2" class="td140 toptdbg">备 注</td>
-            <td rowspan="2" class="td40 toptdbg">全选</td>
+            <td rowspan="2" class="td85 toptdbg">厂名</td>
+            <td rowspan="2" class="td75 toptdbg">录入日期</td>
+            <td rowspan="2" class="td125 toptdbg">备 注</td>
+            <td rowspan="2" class="td40 toptdbg">
+                <a href="javascript:void(0);" id="select-all">全选</a>
+            </td>
         </tr>
         <tr>
+            <td class="td80 toptdbg">公司</td>
+            <td class="td80 toptdbg">工厂</td>
             <td class="td90 toptdbg">公司</td>
             <td class="td80 toptdbg">工厂</td>
             <td class="td50 toptdbg">厂价</td>
@@ -77,8 +85,6 @@
             <td class="td85 toptdbg">纸箱规格</td>
             <td class="td50 toptdbg">装量</td>
             <td class="td70 toptdbg">毛/净重</td>
-            <td class="td85 toptdbg">厂名</td>
-            <td class="td75 toptdbg">电话</td>
         </tr>
         <c:forEach items="${productPage.dataList}" var="p" varStatus="status">
             <tr>
@@ -90,8 +96,8 @@
                         <div class="has-image">
                             <input type="button" value="上传" class="upload-image" data-product-id="${p.id}"/>
                             <a href="javascript:void (0);">
-                            <img class="product-image" src="<c:url value="/resources/upload/${p.imageURL}" />" alt="" data-product-id="${p.id}"
-                                 style=""/>
+                                <img class="product-image" src="<c:url value="/resources/upload/${p.imageURL}" />" alt="" data-product-id="${p.id}"
+                                     style=""/>
                             </a>
                         </div>
                     </c:if>
@@ -99,7 +105,7 @@
                         <div class="not-has-image">
                             <input type="button" value="上传" class="upload-image" data-product-id="${p.id}"/>
                             <a href="javascript:void (0);">
-                            <img class="product-image" src="" alt="" data-product-id="${p.id}" style=""/>
+                                <img class="product-image" src="" alt="" data-product-id="${p.id}" style=""/>
                             </a>
                         </div>
                     </c:if>
@@ -107,29 +113,62 @@
                 <td class="break tdbg">
                     <input name="companyProductName" type="text" value="${p.companyProductName}"/>
                 </td>
-                <td class="break tdbg"><input name="companyProductNo" type="text" value="${p.companyProductNo}"/></td>
-                <td class="editable break tdbg"><input name="factoryProductNo" type="text" value="${p.factoryProductNo}"/></td>
-                <td class="editable break tdbg"><input name="packageForm" type="text" value="${p.packageForm}"/></td>
-                <td class="editable break tdbg"><input name="unit" type="text" value="${p.unit}"/></td>
-                <td class="editable break tdbg"><input name="factoryPrice" type="text" value="<fmt:formatNumber type="number" pattern="#.#" value="${p.factoryPrice}" maxFractionDigits="1"/>"/></td>
-                <td class="break tdbg">${p.lastFactoryQuotedTime}</td>
-                <td class="editable break tdbg"><input name="cartonSize" type="text" value="${p.cartonSize}"/></td>
-                <td class="editable break tdbg"><input name="packingQuantity" type="text" value="${p.packingQuantity}"/></td>
-                <td class="editable break tdbg">
+                <td class="break tdbg">
+                    <input name="factoryProductName" type="text" value="${p.factoryProductName}"/>
+                </td>
+                <td class="break tdbg">
+                    <input name="companyProductNo" type="text" value="${p.companyProductNo}"/>
+                </td>
+                <td class="break tdbg">
+                    <input name="factoryProductNo" type="text" value="${p.factoryProductNo}"/>
+                </td>
+                <td class="break tdbg">
+                    <input name="packageForm" type="text" value="${p.packageForm}"/>
+                </td>
+                <td class="break tdbg">
+                    <input name="unit" type="text" value="${p.unit}"/>
+                </td>
+                <td class="break tdbg">
+                    <c:if test="${p.factoryPrice != 0}" var="hasFactoryPrice">
+                        <input name="factoryPrice" type="text" value="<fmt:formatNumber value="${p.factoryPrice}" maxFractionDigits="2" pattern="#.#" />"/>
+                    </c:if>
+                    <c:if test="${not hasFactoryPrice}">
+                        <input name="factoryPrice" type="text"/>
+                    </c:if>
+                </td>
+                <td class="break tdbg">
+                    <fmt:formatDate value="${p.lastFactoryQuotedDate}" pattern="MM-dd" />
+                </td>
+                <td class="break tdbg">
+                    <input name="cartonSize" type="text" value="${p.cartonSize}"/>
+                </td>
+                <td class="break tdbg">
+                    <input name="packingQuantity" type="text" value="${p.packingQuantity != 0 ? p.packingQuantity : ''}"/>
+                </td>
+                <td class="break tdbg">
                     <input type="text" name="grossWeight" value="<fmt:formatNumber value="${p.grossWeight}" maxFractionDigits="2"/>" style="width: 25px;"
                     />/<input type="text" name="netWeight" value="<fmt:formatNumber value="${p.netWeight}" maxFractionDigits="2"/>" style="width: 25px;" />
                 </td>
-                <td class="editable break tdbg"><input name="functionDescription" type="text" value="${p.functionDescription}"/></td>
-                <td class="editable break tdbg"><input name="category" type="text" value="${p.category}"/></td>
-                <td class="editable break tdbg"><input name="subCategory" type="text" value="${p.subCategory}"/></td>
-                <td class="break tdbg">${p.factoryName}</td>
-                <td class="break tdbg">${p.factoryContactNumber}</td>
+                <td class="break tdbg">
+                    <input name="functionDescription" type="text" value="${p.functionDescription}"/>
+                </td>
+                <td class="break tdbg">
+                    <input name="category" type="text" value="${p.category}"/>
+                </td>
+                <td class="break tdbg">
+                    <input name="subCategory" type="text" value="${p.subCategory}"/>
+                </td>
+                <td class="break tdbg">
+                        <a href="javascript:void(0);" class="factoryName" id="${p.factoryId}">${p.factoryName}</a>
+                </td>
                 <td class="break tdbg">
                     <fmt:formatDate value="${p.addedDate}" pattern="MM-dd" />
                 </td>
-                <td class="break tdbg"><input name="remark" type="text" value="${p.remark}"/></td>
                 <td class="break tdbg">
-                    <input name="id" class="product-checkbox" type="checkbox" value="${p.id}" />
+                    <input name="remark" type="text" value="${p.remark}"/>
+                </td>
+                <td class="break tdbg">
+                        <input name="id" class="product-checkbox ${status.index == 0 ? 'first-item' : ''}" type="checkbox" value="${p.id}" />
                 </td>
             </tr>
         </c:forEach>
@@ -154,7 +193,9 @@
                 <td class="break tdbg">&nbsp;</td>
                 <td class="break tdbg">&nbsp;</td>
                 <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
+                <td class="break tdbg">
+                    <%--<input name="id" class="empty product-checkbox" type="checkbox" value="" />--%>
+                </td>
             </tr>
         </c:forEach>
     </table>
@@ -163,13 +204,16 @@
             <td height="25" colspan="2" align="left" valign="middle">&nbsp;</td>
         </tr>
         <tr>
-            <td height="20" align="left" valign="top" class="padtop3">&nbsp;</td>
+            <td height="20" align="right" valign="top" class="padtop3" style="padding-right: 50px">
+                <%--<a href="javascript:void(0);" id="copy-product">复制下行</a>--%>
+                <%--<input id="copy-count" style="width: 30px; border: 1px solid black"/>&nbsp;行--%>
+            </td>
             <td width="139" align="center" valign="top">
                 <input type="image" src="<c:url value="/resources/product/images/save.png" />" class="btn" id="save"/>&nbsp;&nbsp;&nbsp;
                 <input type="image" src="<c:url value="/resources/product/images/del.png" />" class="btn" id="del"/></td>
         </tr>
     </table>
-</form>
+<%--</form>--%>
 <div class="html-template" style="display: none;">
     <input id="editor-template" class="editor" type="text" />
 </div>
@@ -195,10 +239,29 @@
 </div>
 
 
+
+
+<div id="dialog-common2" style="display: none; width: 100%; top: 0px; bottom: 0; border: 0px solid #000000; z-index: 999">
+    <iframe name="iframe-common2" id="iframe-common2" style="border: 0; width: 800px; margin:0 auto">
+    </iframe>
+</div>
+
+
+<div id="factoryDetails" style="display: none; width: 100px; position: absolute; background-color: #fff; border: 1px solid #000;">
+    <div>
+        <span class="factoryName"></span>
+    </div>
+    <div>
+        <span class="contactNumber"></span>
+    </div>
+</div>
+
+
+
 <script>
     var currentModule = 'product';
+    var pageIndex = '${param.pageIndex}';
 </script>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/product/js/list.js"/>"></script>
 <script>
 </script>

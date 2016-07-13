@@ -52,12 +52,6 @@ public class ProductQueryController {
 
         Conditions conditions = Conditions.newInstance().eq("factoryId", factoryId);
 
-        Query query = new Query();
-        query.setPageIndex(pageIndex)
-                .setPageSize(pageSize)
-                .addOrder(Order.desc("addedDate"))
-                .setConditions(conditions);
-
         keywords = StringUtils.trim(keywords);
         if (StringUtils.isNotBlank(keywords)) {
             conditions.or(
@@ -67,8 +61,18 @@ public class ProductQueryController {
                         .like("companyProductName", "%" + keywords + "%")
                         .like("factoryProductNo", "%" + keywords + "%")
                         .like("companyProductNo", "%" + keywords + "%")
+                        .like("category", "%" + keywords + "%")
+                        .like("subCategory", "%" + keywords + "%")
+                        .like("functionDescription", "%" + keywords + "%")
+                        .like("packageForm", "%" + keywords + "%")
             );
         }
+
+        Query query = new Query();
+        query.setPageIndex(pageIndex)
+                .setPageSize(pageSize)
+                .addOrder(Order.desc("createdTime"))
+                .setConditions(conditions);
 
         PageHandler productPage = productService.getPage(query);
         modelMap.put("productPage", productPage);
@@ -86,7 +90,7 @@ public class ProductQueryController {
         Query query = new Query();
         query.setPageIndex(pageIndex)
                 .setPageSize(pageSize)
-                .addOrder(Order.desc("addedDate"));
+                .addOrder(Order.desc("createdTime"));
 
         if (StringUtils.isNotBlank(keywords)) {
             query.setConditions(
@@ -97,6 +101,10 @@ public class ProductQueryController {
                                     .like("companyProductName", "%" + keywords + "%")
                                     .like("factoryProductNo", "%" + keywords + "%")
                                     .like("companyProductNo", "%" + keywords + "%")
+                                    .like("category", "%" + keywords + "%")
+                                    .like("subCategory", "%" + keywords + "%")
+                                    .like("functionDescription", "%" + keywords + "%")
+                                    .like("packageForm", "%" + keywords + "%")
                     )
             );
         }
@@ -116,7 +124,7 @@ public class ProductQueryController {
         Query query = new Query().setPageIndex(pageIndex)
                 .setPageSize(pageSize)
                 .setConditions(Conditions.newInstance().eq("productStatus", Product.PRODUCT_STATUS_COMPLETE))
-                .addOrder(Order.desc("addedDate"));
+                .addOrder(Order.desc("createdTime"));
 
         PageHandler productPage = productService.getPage(query);
         modelMap.put("productPage", productPage);
@@ -139,7 +147,7 @@ public class ProductQueryController {
                                         .ne("productStatus", Product.PRODUCT_STATUS_COMPLETE).isNull("productStatus")
                         )
                 )
-                .addOrder(Order.desc("addedDate"));
+                .addOrder(Order.desc("createdTime"));
 
         PageHandler productPage = productService.getPage(query);
         modelMap.put("productPage", productPage);

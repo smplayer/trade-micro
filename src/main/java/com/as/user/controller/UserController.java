@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class UserController extends Base {
             @RequestParam("password") String password,
             HttpSession session,
             ModelMap modelMap
-    ){
+    ) throws UnsupportedEncodingException {
         User user = userService.get(Conditions.newInstance().eq("username", username));
         boolean flag = false;
         if(user != null) {
@@ -60,8 +61,13 @@ public class UserController extends Base {
             }
         }
 
+        if (flag) {
+            session.setMaxInactiveInterval(-1);
+        }
+
         if(!flag) {
-            modelMap.put("error", "用户名或密码错误<br/><br/>请重新输入");
+//            modelMap.put("error", java.net.URLEncoder.encode("用户名或密码错误<br/><br/>请重新输入", "UTF-8"));
+            modelMap.put("error", 1);
             return "redirect:/user/login";
         }
 
@@ -90,12 +96,13 @@ public class UserController extends Base {
     public String modifyPassowrd(
             HttpSession session,
             ModelMap modelMap
-    ) {
+    ) throws UnsupportedEncodingException {
         User user = (User) session.getAttribute("user");
         if(user.getRole().equals(User.ROLE_ADMIN)) {
             return "user/modify-password";
         } else {
-            modelMap.put("error", "权限不足");
+//            modelMap.put("error", java.net.URLEncoder.encode("权限不足", "UTF-8"));
+            modelMap.put("error", 1);
             return "redirect:/user/login";
         }
     }

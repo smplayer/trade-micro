@@ -13,6 +13,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>操作版</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/draft.css"/>"/>
@@ -37,36 +38,11 @@
                 客户名:
             </li>
 
+            <c:forEach var="i" begin="1" end="10" varStatus="status" step="1" >
             <li class="favor-cus-name empty">
                 <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
-            <li class="favor-cus-name empty">
-                <a href="<c:url value="/quotation/operating?empty=true"/>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            </li>
+            </c:forEach>
 
             <li class="text more" id="set-favor-quotation-list">
                <a href="javascript:void(0);">更多</a>
@@ -74,61 +50,25 @@
         </ul>
     </div>
 
-    <form id="form" name="form" method="post" action="">
+
         <input type="hidden" id="quotation-id" value="${quotation.id}"/>
         <div class="top2 top2w">
             <div class="topfl fl">客户名：&nbsp;${quotation.customerName}</div>
             <div class="topf2 fl">日期：&nbsp;<fmt:formatDate value="${quotation.lastQuotedDate}" pattern="MM-dd"/></div>
-            <div class="fl">币种：&nbsp;${quotation.exchangeRate != 1 ? quotation.currency : ''}</div>
+            <div class="fl">币种：&nbsp;${quotation.exchangeRate != 1 || true ? quotation.currency : ''}</div>
 
-            <div class="fr topr2">
-                <table width="98" border="0" align="center" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td width="9">
-                            <c:if test="${page.pageIndex > 1}" var="notFirstPage">
-                                <a href="
-                                    <c:url value="/quotation/operating">
-                                        <c:param name="pageIndex" value="${page.pageIndex - 1}"/>
-                                        <c:param name="id" value="${quotation.id}"/>
-                                    </c:url>
-                                ">
-                                    <img src="<c:url value="/resources/quotation/images/left1.png" />" width="9" height="8"/>
-                                </a>
-                            </c:if>
-                            <c:if test="${not notFirstPage}">
-                                <img src="<c:url value="/resources/quotation/images/left1.png" />" width="9" height="8"/>
-                            </c:if>
-                        </td>
-                        <td width="66" align="center">
-                            <a href="
-                                <c:url value="/quotation/operating" >
-                                    <c:param name="pageIndex" value="1"/>
-                                    <c:param name="id" value="${quotation.id}"/>
-                                </c:url>
-                             ">1</a>
-                            <span style="width: 10px; text-align: right; display: inline-block;">-</span><input id="newPageIndex" type="text" value="${empty page ? 0 : page.pageIndex}" style="width: 20px; text-align: center; border: 0; background-color: transparent;"
-                        />/<span style="width: 20px; text-align: center; display: inline-block;">${empty page ? 0 : page.pageQuantity}</span>
-                        </td>
-                        <td width="9">
-                            <c:if test="${page.pageIndex < page.pageQuantity}" var="notLastPage">
-                                <a href="
-                                    <c:url value="/quotation/operating">
-                                        <c:param name="pageIndex" value="${page.pageIndex + 1}"/>
-                                        <c:param name="id" value="${quotation.id}"/>
-                                    </c:url>
-                                ">
-                                    <img src="<c:url value="/resources/quotation/images/right1.png" />" width="9" height="8"/>
-                                </a>
-                            </c:if>
-                            <c:if test="${not notLastPage}">
-                                <img src="<c:url value="/resources/quotation/images/right1.png" />" width="9" height="8"/>
-                            </c:if>
+            <div class="fr topr2" style="margin-right: 50px">
 
-                        </td>
-                    </tr>
-                </table>
+                <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
+                    <c:param name="prePageImage" value="/resources/common/project/images/left1.png"  />
+                    <c:param name="nextPageImage" value="/resources/common/project/images/right1.png"  />
+                    <c:param name="pageIndex" value="${page.pageIndex}"  />
+                    <c:param name="pageQuantity" value="${page.pageQuantity}"  />
+                    <c:param name="url" value="/quotation/operating"/>
+                </c:import>
             </div>
-            <div class="fr"><a href="javascript:findFactory();" id="find-factory">厂名查新</a></div>
+            <div class="fr"><a href="javascript:void(0);" id="find-factory" class="" alt="厂名查新">厂名查新</a></div>
+            <div class="fr" style="margin-right: 30px;"><a href="javascript:void(0);" id="copy-item" class="create-item-after-enter" alt="复制下行">复制下行</a></div>
         </div>
         <table id="main-table" style="width: 1330px;" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
             <tr>
@@ -160,36 +100,38 @@
                 <td class="td70 toptdbg">毛/净重</td>
             </tr>
 
-            <tr class="item ${empty param['empty'] ? '' : 'hidden'}" id="new-item">
-                <td height="24" class="break tdbg line-number">&nbsp;</td>
-                <td class="break tdbg">&nbsp;</td>
-                <td class="break tdbg"><input type="text" name="factoryProductName" /></td>
-                <td class="break tdbg"><input type="text" name="factoryProductNo" /></td>
-                <td class="break tdbg"><input type="text" name="packageForm" /></td>
-                <td class="break tdbg"><input type="text" name="unit" /></td>
-                <td class="break tdbg"><input type="text" name="factoryPrice" /></td>
-                <td class="break tdbg"><input type="text" name="cartonSize" /></td>
-                <td class="break tdbg"><input type="text" name="packingQuantity" /></td>
-                <td class="break tdbg">
-                    <input type="text" name="grossWeight" value="" style="width: 25px;" />/<input type="text" name="netWeight" value="" style="width: 25px;" />
-                </td>
-                <td class="break tdbg"><input type="text" name="orderedCartonQuantity" /></td>
-                <td class="break tdbg"><input type="text" name="quotedPrice" /></td>
-                <td class="break tdbg"><input type="text" name="orderedProductQuantity" readonly /></td>
-                <td class="break tdbg"><input type="text" name="totalVolume" readonly/></td>
-                <td class="break tdbg"><input type="text" name="totalAmount" readonly /></td>
-                <td class="break tdbg"><input type="text" name="factoryName" /></td>
-                <td class="break tdbg"><input type="text" name="linkman" /></td>
-                <td class="break tdbg"><input type="text" name="contactNumber" /></td>
-                <td class="break tdbg"><input type="text" name="remark" /></td>
-                <td class="break tdbg">
-                    <input type="hidden" name="id" value="" class="empty" />
-                </td>
+            <tr class="${not empty param['empty'] || page.pageIndex > 1 ? 'hidden' : ''}" id="new-item">
+                <form id="form" name="form" method="post" action="">
+                    <td height="24" class="break tdbg line-number">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg"><input type="text" name="factoryProductName" /></td>
+                    <td class="break tdbg"><input type="text" name="factoryProductNo" /></td>
+                    <td class="break tdbg"><input type="text" name="packageForm" /></td>
+                    <td class="break tdbg"><input type="text" name="unit" /></td>
+                    <td class="break tdbg"><input type="text" name="factoryPrice" /></td>
+                    <td class="break tdbg"><input type="text" name="cartonSize" /></td>
+                    <td class="break tdbg"><input type="text" name="packingQuantity" /></td>
+                    <td class="break tdbg">
+                        <input type="text" name="grossWeight" value="" style="width: 25px;" />/<input type="text" name="netWeight" value="" style="width: 25px;" />
+                    </td>
+                    <td class="break tdbg"><input type="text" name="orderedCartonQuantity" /></td>
+                    <td class="break tdbg"><input type="text" name="quotedPrice" /></td>
+                    <td class="break tdbg"><input type="text" name="orderedProductQuantity" readonly /></td>
+                    <td class="break tdbg"><input type="text" name="totalVolume" readonly/></td>
+                    <td class="break tdbg"><input type="text" name="totalAmount" readonly /></td>
+                    <td class="break tdbg"><input type="text" name="factoryName" /></td>
+                    <td class="break tdbg"><input type="text" name="linkman" /></td>
+                    <td class="break tdbg"><input type="text" name="contactNumber" /></td>
+                    <td class="break tdbg"><input type="text" name="remark" /></td>
+                    <td class="break tdbg">
+                        <input type="hidden" name="id" value="" class="empty" />
+                    </td>
+                </form>
             </tr>
             <c:forEach items="${page.dataList}" var="p" varStatus="status">
-                <tr class="item">
+                <tr class="item ${status.index == 0 ? 'first' : ''}">
                     <td height="24" class="break tdbg line-number">
-                            ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
+                            ${fn:length(page.dataList)  - status.index}
                     </td>
                     <td class="break tdbg">
                         <c:if test="${not empty p.imageURL}" var="hasImage">
@@ -209,18 +151,25 @@
                             </div>
                         </c:if>
                     </td>
-                    <td class="break tdbg"><input class="${empty p.productId ? "" : "extracted-product"}" type="text" name="factoryProductName" value="${p.factoryProductName}" /></td>
-                    <td class="break tdbg"><input class="${empty p.productId ? "" : "extracted-product"}" type="text" name="factoryProductNo" value="${p.factoryProductNo}" /></td>
+                    <td class="break tdbg"><input class="${p.syncToProduct ? "extracted-product" : ""}" type="text" name="factoryProductName" value="${p.factoryProductName}" /></td>
+                    <td class="break tdbg"><input class="${p.syncToProduct ? "extracted-product" : ""}" type="text" name="factoryProductNo" value="${p.factoryProductNo}" /></td>
                     <td class="break tdbg"><input type="text" name="packageForm" value="${p.packageForm}" /></td>
                     <td class="break tdbg"><input type="text" name="unit" value="${p.unit}" /></td>
                     <td class="break tdbg"><input type="text" name="factoryPrice" value="<fmt:formatNumber value="${p.factoryPrice}" maxFractionDigits="2"/>" /></td>
                     <td class="break tdbg"><input type="text" name="cartonSize" value="${p.cartonSize}" /></td>
-                    <td class="break tdbg"><input type="text" name="packingQuantity" value="${p.packingQuantity}" /></td>
+                    <td class="break tdbg"><input type="text" name="packingQuantity" value="${p.packingQuantity != 0 ? p.packingQuantity : ''}" /></td>
                     <td class="break tdbg">
                         <input type="text" name="grossWeight" value="<fmt:formatNumber value="${p.grossWeight}" maxFractionDigits="2"/>" style="width: 25px;" />/<input type="text" name="netWeight" value="<fmt:formatNumber value="${p.netWeight}" maxFractionDigits="2"/>" style="width: 25px;" />
                     </td>
-                    <td class="break tdbg"><input type="text" name="orderedCartonQuantity" value="${p.orderedCartonQuantity}" /></td>
-                    <td class="break tdbg"><input type="text" name="quotedPrice" value="<fmt:formatNumber value="${p.quotedPrice}" maxFractionDigits="${quotation.decimalPlaces}"/>" /></td>
+                    <td class="break tdbg"><input type="text" name="orderedCartonQuantity" value="${p.orderedCartonQuantity != 0 ? p.orderedCartonQuantity : ''}" /></td>
+                    <td class="break tdbg">
+                        <c:if test="${p.quotedPrice != 0}" var="hasQuotedPrice">
+                            <input type="text" name="quotedPrice" value="<fmt:formatNumber value="${p.quotedPrice}" maxFractionDigits="${quotation.decimalPlaces}"/>" />
+                        </c:if>
+                        <c:if test="${not hasQuotedPrice}">
+                            <input type="text" name="quotedPrice" />
+                        </c:if>
+                    </td>
                     <td class="break tdbg"><input type="text" name="orderedProductQuantity" readonly value="${p.orderedProductQuantity}" /></td>
                     <td class="break tdbg"><input type="text" name="totalVolume" readonly value="<fmt:formatNumber value="${p.totalVolume}" maxFractionDigits="2"/>" /></td>
                     <td class="break tdbg"><input type="text" name="totalAmount" readonly value="<fmt:formatNumber value="${p.totalAmount}" maxFractionDigits="2" pattern="#.##"/>" /></td>
@@ -231,7 +180,7 @@
                     <td class="break tdbg"><input type="checkbox" class="draft-id" name="id" value="${p.id}" id="${p.id}" /></td>
                 </tr>
             </c:forEach>
-            <c:forEach begin="${fn:length(page.dataList)}" end="17" step="1">
+            <c:forEach begin="${fn:length(page.dataList)}" end="19" step="1">
                 <tr class="item">
                     <td height="24" class="break tdbg line-number">&nbsp;</td>
                     <td class="break tdbg"></td>
@@ -252,7 +201,9 @@
                     <td class="break tdbg"></td>
                     <td class="break tdbg"></td>
                     <td class="break tdbg"></td>
-                    <td class="break tdbg"></td>
+                    <td class="break tdbg">
+                        <%--<input type="checkbox" class="empty draft-id" name="id" />--%>
+                    </td>
                 </tr>
             </c:forEach>
             <tr class="item">
@@ -296,7 +247,6 @@
                 <td width="70" align="center" valign="top">&nbsp;</td>
             </tr>
         </table>
-    </form>
 
 </div>
 
@@ -345,7 +295,7 @@
         <%--</a>--%>
     <%--</div>--%>
     <iframe name="iframe-archive-list" id="iframe-archive-list" style="margin-top: 0px; width: 755px; height: 580px; border: 0;"
-            src="<c:url value="/quotation/archiveList"/>"
+            <%--src="<c:url value="/quotation/archiveList"/>"--%>
     ></iframe>
 </div>
 
@@ -360,14 +310,15 @@
 </div>
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
     var empty = ${empty param['empty'] ? false : true};
     var indexNumber = ${empty param.indexNumber ? -1 : param.indexNumber};
+    var pageQuantity = '${page.pageQuantity}';
     var pageIndex = '${page.pageIndex}';
     var pageSize = '${page.pageSize}';
     var quotationId = '${quotation.id}';
     var currentModule = 'quotation';
+    var generatedOrder = ${quotation.generatedOrder == true ? true : false};
 </script>
 <script type="text/javascript" src="<c:url value="/resources/common/project/js/uuid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/draft.js"/>"></script>

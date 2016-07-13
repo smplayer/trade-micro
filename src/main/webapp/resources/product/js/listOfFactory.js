@@ -9,7 +9,6 @@ function initSearch() {
             $("#form-search").submit();
         }
     });
-
 }
 
 $(function () {

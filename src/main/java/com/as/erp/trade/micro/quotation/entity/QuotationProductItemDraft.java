@@ -45,6 +45,14 @@ public class QuotationProductItemDraft extends BaseEntity {
     private Date addedDate;
     private Date lastQuotedDate;
 
+    private Boolean syncToProduct = false;
+
+
+
+    private String factoryProductNameEn;
+    private String packageFormEn;
+    private String unitEn;
+
     public String getQuotationId() {
         return quotationId;
     }
@@ -279,5 +287,37 @@ public class QuotationProductItemDraft extends BaseEntity {
 
     public void setLastQuotedDate(Date lastQuotedDate) {
         this.lastQuotedDate = lastQuotedDate;
+    }
+
+    public Boolean getSyncToProduct() {
+        return syncToProduct;
+    }
+
+    public void setSyncToProduct(Boolean syncToProduct) {
+        this.syncToProduct = syncToProduct;
+    }
+
+    public String getFactoryProductNameEn() {
+        return factoryProductNameEn;
+    }
+
+    public void setFactoryProductNameEn(String factoryProductNameEn) {
+        this.factoryProductNameEn = factoryProductNameEn;
+    }
+
+    public String getPackageFormEn() {
+        return packageFormEn;
+    }
+
+    public void setPackageFormEn(String packageFormEn) {
+        this.packageFormEn = packageFormEn;
+    }
+
+    public String getUnitEn() {
+        return unitEn;
+    }
+
+    public void setUnitEn(String unitEn) {
+        this.unitEn = unitEn;
     }
 }

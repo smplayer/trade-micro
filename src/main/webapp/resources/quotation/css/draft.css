@@ -8,6 +8,7 @@ body {
 
 .top2w {
     width: 1330px;
+    /*margin-top: 10px;*/
 }
 
 .topfl {
@@ -22,7 +23,7 @@ body {
 }
 
 .topr2 {
-    width: 250px;
+    width: 160px;
     text-align: center;
 }
 
@@ -31,7 +32,7 @@ body {
 }
 
 .toptdbg {
-    background: #F5CAF5;
+    background: #EED5D2;
     text-align: center;
 }
 
@@ -107,7 +108,11 @@ input.extracted-product[type=text] {
     margin-left: 5px;
     border: 1px solid #B47BFE;
     height: 18px;
-}f
+}
+.favor-cus-name a {
+    display: block;
+    width: 100%;
+}
 
 .top2 {
     margin-top: 20px;
@@ -122,11 +127,6 @@ input.extracted-product[type=text] {
     width: 24px;
     height: 24px;
     margin: 10px 10px 0px 0px
-}
-
-.favor-cus-name a {
-    display: block;
-    width: 100%;
 }
 
 #cus-list .favor-cus-name.current a{

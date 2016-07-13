@@ -24,7 +24,7 @@ public class PageHandler extends Base {
 
     public Long getPageQuantity() {
         Long pageQuantity = dataQuantity / pageSize;
-        return (0 == pageQuantity || 0 != pageQuantity % pageSize) ? ++pageQuantity : pageQuantity;
+        return (0 == pageQuantity || 0 != dataQuantity % pageSize) ? ++pageQuantity : pageQuantity;
     }
 
     public Long getPageIndex() {

@@ -7,6 +7,7 @@
 <head>
     <meta charset="utf-8">
     <title>修改密码</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" href="<c:url value="/resources/system/set-password/css/global.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/system/set-password/css/auto280.css"/>">
     <style>
@@ -71,13 +72,12 @@
 <div class="toolbar"></div>
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
     var error = '${param.error}';
     $(function () {
         if (error != '') {
             dialogAlert("#dialog-alert", {
-                textContent: error,
+                textContent: '权限不足',
                 onClose: function () {
                 }
             });

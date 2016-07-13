@@ -9,6 +9,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>产品编辑</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .template{
@@ -51,7 +52,6 @@
 </div>
 
 
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
     var productId = "${product.id}";
 </script>

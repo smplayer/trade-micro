@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class ProductModificationController {
             @RequestParam(value = "packing-quantity") Integer packingQuantity,
             @RequestParam(value = "gross-weight") Double grossWeight,
             @RequestParam(value = "net-weight") Double netWeight,
+            @RequestParam(value = "unit") String unit,
             @RequestParam(value = "remark") String remark,
             @RequestParam(value = "factory-id") String factoryId,
             @RequestParam(value = "package-form") String packageForm,
@@ -51,6 +53,10 @@ public class ProductModificationController {
     ){
 
         Product p = productService.getById(id);
+
+        Double oldPrice = p.getFactoryPrice();
+
+
         p.setName(name);
         p.setFactoryProductNo(factoryProductNo);
         p.setCompanyProductNo(companyProductNo);
@@ -59,12 +65,18 @@ public class ProductModificationController {
         p.setPackingQuantity(packingQuantity);
         p.setGrossWeight(grossWeight);
         p.setNetWeight(netWeight);
+        p.setUnit(unit);
         p.setRemark(remark);
         p.setFactoryId(factoryId);
         p.setPackageForm(packageForm);
         p.setFunctionDescription(functionDescription);
         p.setCategory(category);
         p.setSubCategory(subCategory);
+
+
+        if (oldPrice != p.getFactoryPrice()) {
+            p.setLastFactoryQuotedDate(new Date());
+        }
         productService.update(p);
 
         return "redirect:/product/" + "id";
@@ -77,6 +89,11 @@ public class ProductModificationController {
     ){
         for (Map pMap : req){
             Product p = productService.getById((String) pMap.get("id"));
+
+
+            Double oldPrice = p.getFactoryPrice();
+
+
             p.setName((String) pMap.get("name"));
             p.setCompanyProductName((String) pMap.get("companyProductName"));
 //            p.setFactoryName((String) pMap.get("factoryName"));
@@ -95,6 +112,13 @@ public class ProductModificationController {
             p.setFunctionDescription((String) pMap.get("functionDescription"));
             p.setCategory((String) pMap.get("category"));
             p.setSubCategory((String) pMap.get("subCategory"));
+            p.setUnit((String) pMap.get("unit"));
+
+
+            if (oldPrice != p.getFactoryPrice()) {
+                p.setLastFactoryQuotedDate(new Date());
+            }
+
             productService.update(p);
         }
 

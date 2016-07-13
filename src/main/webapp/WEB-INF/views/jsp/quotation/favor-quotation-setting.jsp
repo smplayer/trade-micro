@@ -8,6 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>更多客户名</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <style type="text/css">
         .toptt {
@@ -39,7 +40,7 @@
 
         table div {
             color: red;
-            font-size: 8px;
+            font-size: 12px;
             margin-bottom: 1px;
         }
 
@@ -93,6 +94,10 @@
 
         #table1 .high-light{
             background-color: #DBFDF5;
+        }
+
+        input[name=quotationId] {
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -195,22 +200,22 @@
             <%--</tr>--%>
 
 
-            <c:forEach var="q" items="${quotationPage.dataList}" varStatus="status">
+            <c:forEach var="f" items="${quotationPage.dataList}" varStatus="status">
                 <c:if test="${status.index == 0}" var="firstLine">
                     <tr>
                 </c:if>
 
                 <c:if test="${status.index % 5 == 1 || status.index % 5 == 3}" var="highLight">
-                    <td height="30" align="center" valign="middle" class="high-light">${q.customerName}</td>
+                    <td height="30" align="center" valign="middle" class="high-light">${f.customerName}</td>
                     <td align="center" valign="middle" class="high-light">
-                        <input type="checkbox" name="quotationId" value="${q.id}" id="${q.id}"/>
+                        <input type="checkbox" name="quotationId" value="${f.id}" id="${f.id}"/>
                     </td>
                 </c:if>
 
                 <c:if test="${not highLight}">
-                    <td height="30" align="center" valign="middle">${q.customerName}</td>
+                    <td height="30" align="center" valign="middle">${f.customerName}</td>
                     <td align="center" valign="middle">
-                        <input type="checkbox" name="quotationId" value="${q.id}" id="${q.id}"/>
+                        <input type="checkbox" name="quotationId" value="${f.id}" id="${f.id}"/>
                     </td>
                 </c:if>
 
@@ -221,11 +226,13 @@
                             <c:if test="${i % 5 == 1 || i % 5 == 3}" var="highLight2">
                                 <td height="30" align="center" valign="middle" class="high-light"></td>
                                 <td align="center" valign="middle" class="high-light">
+                                    <input type="checkbox" name="quotationId" disabled/>
                                 </td>
                             </c:if>
                             <c:if test="${not highLight2}">
-                                <td height="30" align="center" valign="middle""></td>
+                                <td height="30" align="center" valign="middle"></td>
                                 <td align="center" valign="middle">
+                                    <input type="checkbox" name="quotationId" disabled/>
                                 </td>
                             </c:if>
                         </c:forEach>
@@ -241,15 +248,25 @@
             <c:forEach begin="${fn:length(quotationPage.dataList) / 5}" end="${fn:length(quotationPage.dataList) % 5 > 0 ? 6 : 7}" step="1" varStatus="status">
                 <tr>
                     <td height="30" align="center" valign="middle" >&nbsp;</td>
-                    <td height="30" align="center" valign="middle" >&nbsp;</td>
+                    <td height="30" align="center" valign="middle" >
+                        <input type="checkbox" name="quotationId" disabled/>
+                    </td>
                     <td height="30" align="center" valign="middle" class="high-light">&nbsp;</td>
+                    <td height="30" align="center" valign="middle" class="high-light">
+                        <input type="checkbox" name="quotationId" disabled/>
+                    </td>
+                    <td height="30" align="center" valign="middle">&nbsp;</td>
+                    <td height="30" align="center" valign="middle">
+                        <input type="checkbox" name="quotationId" disabled/>
+                    </td>
                     <td height="30" align="center" valign="middle" class="high-light">&nbsp;</td>
+                    <td height="30" align="center" valign="middle" class="high-light">
+                        <input type="checkbox" name="quotationId" disabled/>
+                    </td>
                     <td height="30" align="center" valign="middle">&nbsp;</td>
-                    <td height="30" align="center" valign="middle">&nbsp;</td>
-                    <td height="30" align="center" valign="middle" class="high-light">&nbsp;</td>
-                    <td height="30" align="center" valign="middle" class="high-light">&nbsp;</td>
-                    <td height="30" align="center" valign="middle">&nbsp;</td>
-                    <td height="30" align="center" valign="middle">&nbsp;</td>
+                    <td height="30" align="center" valign="middle">
+                        <input type="checkbox" name="quotationId" disabled/>
+                    </td>
                 </tr>
             </c:forEach>
         </table>
@@ -263,7 +280,6 @@
 </form>
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script>
     function initFavorList() {
         $.ajax({
@@ -317,6 +333,7 @@
 //                return false;
 //            }
             $("#form").attr("action", ctx + "/quotation/favor/delete").submit();
+//            window.parent.location.reload();
         })
 
         initFavorList();

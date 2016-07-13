@@ -8,6 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>工厂管理</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <link href="<c:url value="/resources/factory/css/list.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
@@ -55,8 +56,8 @@
 
 <div class="top2 top2w">
     <div class="topfl fl">
-        <form id="form-search" action="<c:url value="/factory/list" />" target="_self">
-            <input name="keywords" value="${param.keywords}" type="text" id="keywords" size="18" class="border"/>
+        <form id="form-search" action="<c:url value="/factory/list" />" target="_self" method="post">
+            <input name="keywords" value="" type="text" id="keywords" size="18" class="border"/>
             <a href="javascript:void(0)" id="search">查询</a>
         </form>
     </div>
@@ -116,7 +117,7 @@
         </table>
     </div>
     <div class="fr">
-        <a href="<c:url value="/factory/create"/>" id="create-factory" target="_blank">录入资料</a>
+        <a href="<c:url value="/factory/create"/>" id="create-factory" class="open-in-dialog" target="_blank">录入资料</a>
     </div>
 </div>
 
@@ -133,7 +134,9 @@
             <td class="td70 toptdbg">工厂资料</td>
             <td class="td100 toptdbg">录入日期</td>
             <td class="td220 toptdbg">备 注</td>
-            <td class="td40 toptdbg">全选</td>
+            <td class="td40 toptdbg">
+                <a href="javascript:void(0);" id="select-all">全选</a>
+            </td>
         </tr>
         <c:forEach items="${page.dataList}" var="f" varStatus="status">
             <tr>
@@ -155,9 +158,9 @@
                 <td class="break tdbg">${f.linkman}</td>
                 <td class="break tdbg">${f.mobileNumber}${empty f.mobileNumber || empty f.phoneNumber ? "" : "/"}${f.phoneNumber}</td>
                 <td class="break tdbg">${f.address}</td>
-                <td class="break tdbg"><a href="javascript:void(0)" data-url="<c:url value="/factory/modify/${f.id}"/>"
-                                          target="_blank" class="modify-factory">查看</a></td>
-                <td class="break tdbg"><fmt:formatDate value="${f.createdDate}" pattern="MM-dd"/></td>
+                <td class="break tdbg"><a href="<c:url value="/factory/modify/${f.id}"/>" data-url="<c:url value="/factory/modify/${f.id}"/>"
+                                          target="_blank" class="modify-factory open-in-dialog">查看</a></td>
+                <td class="break tdbg"><fmt:formatDate value="${f.addedDate}" pattern="MM-dd"/></td>
                 <td class="break tdbg">
                 <input type="text" value="${f.remark}" name="remark" />
                 </td>
@@ -192,14 +195,13 @@
             <td width="70" align="right" valign="top"><input type="image"
                                                              src="<c:url value="/resources/factory/images/save3.png" />"
                                                              class="btn"/></td>
-            <td width="70" align="right" valign="top"><input type="image"
+            <td width="70" align="right" valign="top"><input id="del" type="image"
                                                              src="<c:url value="/resources/factory/images/del3.png" />"
                                                              class="btn"/></td>
             <td width="70" align="center" valign="top">&nbsp;</td>
         </tr>
     </table>
 </form>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
 <script>
 </script>

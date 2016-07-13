@@ -50,7 +50,7 @@ function dialog(dialog, options) {
     });
     
     var top = 0;
-    if (options && options.top) {
+    if (options && (options.top || options.top == 0)) {
         top = options.top;
     } else {
         var windowHeight = $(window).height();
@@ -63,7 +63,7 @@ function dialog(dialog, options) {
     }
 
     var left = 0;
-    if (options && options.left) {
+    if (options && (options.left || options.left == 0)) {
         left = options.left;
     } else {
         var windowWidth = $(window).width();
@@ -108,16 +108,45 @@ function openCommonDialog(a, defaultModuleNotice) {
     $("#iframe-common").css("width", width);
     $("#iframe-common").css("height", height);
     setModuleNotice($(a).attr("alt"));
-    dialog("#dialog-common", {top: 80, onClose: function(){
+    
+    var dialogId = "#dialog-common";
+    dialog(dialogId, {top: 80, onClose: function(){
         beforeCloseDialog[id](a);
         setModuleNotice(defaultModuleNotice);
     }});
 }
 
-function closeCommonDialog() {
-    dialog("#dialog-common",{close: true, onClose: function () {
+function closeCommonDialog(iDialogId) {
+    var dialogId = "#dialog-common";
+    if (iDialogId) {
+        dialogId = iDialogId;
+    }
+    dialog(dialogId,{close: true, onClose: function () {
         setModuleNotice(document.title);
     }});
+}
+
+function openSimpleCommonDialog(iDialogId) {
+    var dialogId = "#dialog-common";
+    if (iDialogId) {
+        dialogId = iDialogId;
+    }
+
+    var width = $(window).width();
+    var height = $(window).height() - 80;
+    $(dialogId).css("width", width);
+    $(dialogId).css("height", height);
+    $("iframe", dialogId).css("width", width);
+    $("iframe", dialogId).css("height", height);
+    dialog(dialogId, {top: 80});
+}
+
+function closeSimpleCommonDialog(iDialogId) {
+    var dialogId = "#dialog-common";
+    if (iDialogId) {
+        dialogId = iDialogId;
+    }
+    dialog(dialogId, {close: true});
 }
 
 $(function () {
@@ -125,4 +154,8 @@ $(function () {
         e.preventDefault();
         openCommonDialog(this, document.title);
     });
+
+
+
+
 })

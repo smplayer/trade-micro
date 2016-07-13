@@ -106,3 +106,8 @@ td{table-layout:fixed;}
 .td220{width:219px;text-align:center;vertical-align: middle;}
 .td230{width:229px;text-align:center;vertical-align: middle;}
 .td250{width:249px;text-align:center;vertical-align: middle;}
+
+
+.red {
+    color: red;
+}

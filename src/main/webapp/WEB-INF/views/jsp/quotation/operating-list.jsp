@@ -18,8 +18,8 @@
 <body>
 
 请选择编号:<br/>
-<c:forEach items="${list}" var="q" varStatus="status">
-    <a href="<c:url value="/quotation/operating?id=${q.id}"/>">${q.customerName}-${q.region}-${q.serialNumber}</a>
+<c:forEach items="${list}" var="f" varStatus="status">
+    <a href="<c:url value="/quotation/operating?id=${f.id}"/>">${f.customerName}-${f.region}-${f.serialNumber}</a>
     <br/>
 </c:forEach>
 

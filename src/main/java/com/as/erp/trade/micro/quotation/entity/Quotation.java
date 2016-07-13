@@ -36,6 +36,13 @@ public class Quotation extends BaseEntity {
     private Date startedDate;
     private Date lastQuotedDate;
     private Date archivedDate;
+    private Boolean generatedOrder = false;
+
+
+    private Integer orderedCartonQuantity;
+    private Double totalVolume;
+    private Double totalAmount;
+
 
     public Integer getSerialNumber() {
         return serialNumber;
@@ -195,5 +202,37 @@ public class Quotation extends BaseEntity {
 
     public void setArchivedDate(Date archivedDate) {
         this.archivedDate = archivedDate;
+    }
+
+    public Boolean getGeneratedOrder() {
+        return generatedOrder;
+    }
+
+    public void setGeneratedOrder(Boolean generatedOrder) {
+        this.generatedOrder = generatedOrder;
+    }
+
+    public Integer getOrderedCartonQuantity() {
+        return orderedCartonQuantity;
+    }
+
+    public void setOrderedCartonQuantity(Integer orderedCartonQuantity) {
+        this.orderedCartonQuantity = orderedCartonQuantity;
+    }
+
+    public Double getTotalVolume() {
+        return totalVolume;
+    }
+
+    public void setTotalVolume(Double totalVolume) {
+        this.totalVolume = totalVolume;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

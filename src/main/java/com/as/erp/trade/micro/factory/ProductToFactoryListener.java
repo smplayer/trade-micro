@@ -36,24 +36,27 @@ public class ProductToFactoryListener implements SmartApplicationListener {
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         Map<String, Object> source = (Map<String, Object>) event.getSource();
-        Product product = (Product) source.get("product");
 
-        String oldFactoryId = null;
-        if(product.getId() != null) {
-            Product oldProduct = productService.getById(product.getId());
-            oldFactoryId = oldProduct.getFactoryId();
-        }
-        if (StringUtils.isNotBlank(oldFactoryId)) {
-            Factory oldFactory = factoryService.getById(oldFactoryId);
-            oldFactory.setProductQuantity(oldFactory.getProductQuantity() - 1);
-            factoryService.update(oldFactory);
-        }
-
+        String oldFactoryId = (String) source.get("oldFactoryId");
         String newFactoryId = (String) source.get("newFactoryId");
-        if (StringUtils.isNotBlank(newFactoryId)) {
-            Factory newFactory = factoryService.getById(newFactoryId);
-            newFactory.setProductQuantity(newFactory.getProductQuantity() + 1);
-            factoryService.update(newFactory);
+
+        if (
+                (oldFactoryId != null && newFactoryId != null && !oldFactoryId.equals(newFactoryId)) ||
+                (oldFactoryId == null && newFactoryId != null) ||
+                (oldFactoryId != null && newFactoryId == null)
+        ){
+
+            if (StringUtils.isNotBlank(oldFactoryId)) {
+                Factory oldFactory = factoryService.getById(oldFactoryId);
+                oldFactory.setProductQuantity(oldFactory.getProductQuantity() - 1);
+                factoryService.update(oldFactory);
+            }
+
+            if (StringUtils.isNotBlank(newFactoryId)) {
+                Factory newFactory = factoryService.getById(newFactoryId);
+                newFactory.setProductQuantity(newFactory.getProductQuantity() + 1);
+                factoryService.update(newFactory);
+            }
         }
     }
 

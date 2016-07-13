@@ -11,7 +11,7 @@ var planning = [];
 var synchronizing = [];
 var timerIds = [];
 
-function createNewItem(quotationId, callback) {
+function createNewItem(item, callback) {
     $.ajax({
         type: 'POST',
         // async: false,
@@ -19,7 +19,7 @@ function createNewItem(quotationId, callback) {
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify(
-            {"quotationId": quotationId}
+            item
         ),
         success: function (data) {
             callback(data.item.id);
@@ -30,7 +30,7 @@ function createNewItem(quotationId, callback) {
     });
 }
 
-function modifyItemProp(id, propName, propValue, lineNumber) {
+function modifyItemProp(id, propName, propValue) {
 
     $.ajax({
         type: 'POST',
@@ -41,14 +41,13 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
         data: JSON.stringify({
             "id": id,
             "propName": propName,
-            "propValue": propValue,
-            "lineNumber": lineNumber
+            "propValue": propValue
         }),
         success: function (data) {
-            // if(synchronizing[data['lineNumber'] + data['modifiedPropName']] === false) {
+            // if(synchronizing[data['lineNumber'] + data['propName']] === false) {
             //     var context = $("#" + data.item.id).parents('.item').first();
             //     for ( var pName in data.item) {
-            //         if(pName != data.modifiedPropName)
+            //         if(pName != data.propName)
             //             if(
             //                 // pName == "orderedProductQuantity" ||
             //                 // pName == "totalVolume" ||
@@ -80,11 +79,10 @@ function modifyItemProp(id, propName, propValue, lineNumber) {
     });
 }
 
-function syncItem(n) {
+function syncItem0(n) {
     // stopSync();
     var context = $(n).parents(".item").first();
     var lineNumber = Number($(".line-number", context).attr('data-line-number'));
-    var fieldId = lineNumber+$(n).attr("name");
     synchronizing[fieldId] = true;
     if(planning[fieldId]){
         //避免重复操作
@@ -100,10 +98,10 @@ function syncItem(n) {
         var id = $("input[name=id]", context).attr("id");
 
         if (!id || id == "") {
-            createNewItem(quotationId, function (newId) {
-                $("input[name=id]", context).attr("id", newId);
-                syncItem(n);
-            });
+            // createNewItem({"quotationId", quotationId}, function (newId) {
+            //     $("input[name=id]", context).attr("id", newId);
+            //     syncItem(n);
+            // });
             return;
         } else {
             var propName = $(n).attr("name");
@@ -111,10 +109,10 @@ function syncItem(n) {
 
             if (propName != "remark") {
                 if(propName == "cartonSize") {
-                    var reg = /^[1-9]+[0-9]*[Xx\*][1-9]+[0-9]*[Xx\*][1-9]+[0-9]*$/;
-                    if(!reg.test(propValue)) {
-                        return false;
-                    }
+                    // var reg = /^[1-9]+[0-9]*[Xx\*][1-9]+[0-9]*[Xx\*][1-9]+[0-9]*$/;
+                    // if(!reg.test(propValue)) {
+                    //     return false;
+                    // }
                 } else if (
                     propName == "packingQuantity" ||
                     propName == "orderedCartonQuantity" ||
@@ -147,7 +145,47 @@ function syncItem(n) {
     }, 200);
 }
 
-function findFactory() {
+function syncItem(n) {
+        var quotationId = $("#quotation-id").val();
+
+        var context = $(n).parents('.item').first();
+        var id = $("input[name=id]", context).attr("id");
+        var propName = $(n).attr("name");
+        var propValue = $(n).val();
+
+        if (propName != "remark") {
+            if(propName == "cartonSize") {
+                // var reg = /^[1-9]+[0-9]*[Xx\*][1-9]+[0-9]*[Xx\*][1-9]+[0-9]*$/;
+                // if(!reg.test(propValue)) {
+                //     return false;
+                // }
+            } else if (
+                propName == "packingQuantity" ||
+                propName == "orderedCartonQuantity" ||
+                propName == "orderedProductQuantity"
+            ) {
+                if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$/.test($.trim(propValue))) ) {
+                    propValue = "0";
+                }
+            } else if (
+                propName == "factoryPrice" ||
+                propName == "grossWeight" ||
+                propName == "netWeight" ||
+                propName == "quotedPrice" ||
+                propName == "totalVolume" ||
+                propName == "totalAmount"
+            ) {
+                if ( $.trim(propValue) == "" || !(/^(0|[1-9][0-9]*)$|^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($.trim(propValue))) ) {
+                    propValue = "0";
+                }
+            }
+
+            modifyItemProp(id, propName, propValue);
+        }
+}
+
+function findFactory(e) {
+    e.preventDefault();
     var checkedItems = $("#main-table input[name=id]:checked");
     if(checkedItems.length == 0){
         dialogAlert("#dialog-alert", {
@@ -160,12 +198,35 @@ function findFactory() {
     } else {
         var context = checkedItems.parents('.item').first();
         var factoryName = $("input[name=factoryName]", context).val();
-        if (factoryName != '')
-            open(ctx + "/quotation/findFactoryForDraft" + "?quotationProductItemDraftId=" + checkedItems.val() + "&keywords=" + factoryName, '_blank');
-        else
+        var linkman = $("input[name=linkman]", context).val();
+        var contactNumber = $("input[name=contactNumber]", context).val();
+        if (factoryName != '') {
+
+            // $("#iframe-common").attr("src", ctx + "/quotation/findFactoryForDraft" + "?quotationProductItemDraftId=" + checkedItems.val() + "&keywords=" + encodeURI(encodeURI(factoryName)));
+            var $form = $("<form method='post'></form>");
+            $form.attr("target", "iframe-common");
+            $form.attr("action", ctx + "/quotation/findFactoryForDraft");
+            $form.append($("<input type='hidden' name='quotationProductItemDraftId' />").val(checkedItems.val()));
+            $form.append($("<input type='hidden' name='keywords' />").val(factoryName));
+            $form.append($("<input type='hidden' name='linkman' />").val(linkman));
+            $form.append($("<input type='hidden' name='contactNumber' />").val(contactNumber));
+            $form.submit();
+
+
+            var width = $(window).width();
+            var height = $(window).height() - 80;
+            $("#dialog-common").css("width", width);
+            $("#dialog-common").css("height", height);
+            $("#iframe-common").css("width", width);
+            $("#iframe-common").css("height", height);
+            setModuleNotice($(this).attr("alt"));
+
+            dialog("#dialog-common", {top: 80,});
+        } else {
             dialogAlert("#dialog-alert", {
                 textContent: '请填写厂名之后再查新'
             });
+        }
     }
 }
 
@@ -173,6 +234,8 @@ function extractAsProduct() {
     var checkedItems = $("#main-table input[name=id]:checked");
     var ids = [];
     checkedItems.each(function () {
+        this.checked = false;
+
         var ok = true;
 
         var context = $(this).parents(".item").first();
@@ -244,6 +307,7 @@ function getAccumulativeTotal() {
             contentType: "application/json",
             data: JSON.stringify({
                 "quotationId": quotationId,
+                "pageQuantity": pageQuantity,
                 "pageIndex": pageIndex,
                 "pageSize": pageSize
             }),
@@ -333,7 +397,10 @@ function setFavorQuotationList() {
 }
 
 function setFavorQuotationListFinish() {
-    dialog("#dialog-favor-setting", {close : true});
+    // dialog("#dialog-favor-setting", {close : true});
+
+    window.location.reload();
+    
 }
 
 function quotationOperatingSetting() {
@@ -407,8 +474,46 @@ function showBigProductImage($img) {
     dialog("#dialog-big-image");
 }
 
+
+
+function copyItem() {
+    $(".first.item input[type=text]").each(function () {
+        var name = $(this).attr("name");
+        if (
+            name != "orderedCartonQuantity" &&
+            name != "quotedPrice" &&
+            name != "orderedProductQuantity" &&
+            name != "totalVolume" &&
+            name != "totalAmount"
+        ) {
+            $("#new-item input[name=" + name + "]").val($(this).val());
+            $("#new-item input[name=factoryProductName]").focus();
+        }
+    });
+}
+
+
+
+
+function disableModification() {
+    $("input[type=text]").each(function () {
+        this.readOnly = true;
+    });
+}
+
+
+
+
 $(function () {
     initPage();
+    
+    if (generatedOrder === true) {
+        disableModification();
+    }
+    
+    $("#copy-item").click(copyItem);
+
+    $("#find-factory").click(findFactory);
 
     $(".product-image").click(function (e) {
         showBigProductImage($(this));
@@ -431,10 +536,10 @@ $(function () {
     })
     
     // initEmptyLine();
-    $("#main-table input[type=text]").bind("keyup change", function (e) {
+    $("#main-table .item input[type=text]").bind("keyup change", function (e) {
         //TO-DO 考虑值为空的状况
         if (
-            e.keyCode != 9 &&
+            e.keyCode != 9  &&
             e.keyCode != 16 &&
             e.keyCode != 17 &&
             e.keyCode != 18 &&
@@ -444,7 +549,7 @@ $(function () {
             e.keyCode != 38 &&
             e.keyCode != 39 &&
             e.keyCode != 40
-        ){
+        ) {
             if(quotationId == '') {
                 dialogAlert("#dialog-alert", {
                     textContent: '请先进行设置',
@@ -459,7 +564,20 @@ $(function () {
     });
 
     $( "[name='factoryName']" ).bind("keyup", function (e) {
-        $(this).removeClass("found-factory");
+        if (
+            e.keyCode != 9  &&
+            e.keyCode != 16 &&
+            e.keyCode != 17 &&
+            e.keyCode != 18 &&
+            e.keyCode != 20 &&
+            e.keyCode != 27 &&
+            e.keyCode != 37 &&
+            e.keyCode != 38 &&
+            e.keyCode != 39 &&
+            e.keyCode != 40
+        ) {
+            $(this).removeClass("found-factory");
+        }
     });
 
     $(
@@ -473,8 +591,8 @@ $(function () {
         "[name='grossWeight']," +
         "[name='netWeight']"
     ).bind("keyup", function (e) {
-        var context = $(this).parents(".item").first();
-        $(".extracted-product", context).removeClass("extracted-product");
+        // var context = $(this).parents(".item").first();
+        // $(".extracted-product", context).removeClass("extracted-product");
     });
 
     $(".line-number").each(function (i,n) {
@@ -545,21 +663,73 @@ $(function () {
         deleteItems();
     });
 
-    $("input").keypress(function (e) {
+    $(".create-item-after-enter, #new-item").keypress(function (e) {
         if(window.event.keyCode == 13) {
             e.preventDefault();
-            document.location.reload();
+
+            if(quotationId == '') {
+                dialogAlert("#dialog-alert", {
+                    textContent: '请先进行设置'
+                });
+                return false;
+            }
+
+            var factoryProductName = $("#new-item input[name=factoryProductName]").val();
+            var factoryProductNo = $("#new-item input[name=factoryProductNo]").val();
+            var factoryPrice = $("#new-item input[name=factoryPrice]").val();
+            var contactNumber = $("#new-item input[name=contactNumber]").val();
+
+            if (factoryProductName=="" && factoryProductNo=="") {
+                dialogAlert("#dialog-alert", {
+                    textContent: '品名和货号不能同时为空',
+                    onClose: function () {
+                        $("#new-item input[name=factoryProductName]").focus();
+                    }
+                });
+                return false;
+            }
+
+            if (factoryPrice=="") {
+                dialogAlert("#dialog-alert", {
+                    textContent: '厂价不能为空',
+                    onClose: function () {
+                        $("#new-item input[name=factoryPrice]").focus();
+                    }
+                });
+                return false;
+            }
+
+            if (contactNumber=="") {
+                dialogAlert("#dialog-alert", {
+                    textContent: '手机/电话不能为空',
+                    onClose: function () {
+                        $("#new-item input[name=contactNumber]").focus();
+                    }
+                });
+                return false;
+            }
+
+            var newItem = {"quotationId": quotationId};
+            $("#new-item input[type=text]").each(function () {
+                newItem[$(this).attr("name")] = $(this).val();
+            });
+
+            createNewItem(newItem, function (draftId) {
+                document.location.reload();
+            });
+
             return false;
         }
-    })
+    });
 
     $("[name=factoryProductName]").first().focus();
 
-    // $("#extractAsProduct").click(function (e) {
-    //     e.preventDefault();
-    //
-    // });
-
     getAccumulativeTotal();
+
+    // $(document).keyup(function (e) {
+    //     if (e.keyCode == 13) {
+    //         alert("enter");
+    //     }
+    // });
 
 });

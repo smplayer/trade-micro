@@ -54,12 +54,16 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
         List<QuotationProductItemDraft> list = getList(Conditions.newInstance().in("id", quotationProductItemDraftIds));
         List<Product> productList = new ArrayList<>();
         for(QuotationProductItemDraft draft : list) {
+            Product product;
             if (StringUtils.isBlank(draft.getProductId())){
-                Product product = new Product();
+                product = new Product();
+
                 product.setName(draft.getCompanyProductName());
                 product.setImageURL(draft.getImageURL());
                 product.setFactoryProductNo(draft.getFactoryProductNo());
                 product.setCompanyProductNo(draft.getCompanyProductNo());
+                product.setFactoryProductName(draft.getFactoryProductName());
+                product.setCompanyProductName(draft.getFactoryProductName());
                 product.setFactoryPrice(draft.getFactoryPrice());
                 product.setCartonSize(draft.getCartonSize());
                 product.setPackingQuantity(draft.getPackingQuantity());
@@ -78,7 +82,16 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
                 productService.save(product);
                 draft.setProductId(product.getId());
                 draft.setCompanyProductNo(product.getCompanyProductNo());
+                draft.setSyncToProduct(true);
                 update(draft);
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+//                product = productService.getById(draft.getProductId());
             }
         }
     }
@@ -89,19 +102,22 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
         Factory factory = factoryService.getById(factoryId);
         draft.setFactoryId(factory.getId());
         draft.setFactoryName(factory.getName());
+        draft.setLinkman(factory.getLinkman());
+        draft.setContactNumber(factory.getMobileNumber());
         update(draft);
     }
 
     @Override
-    public QuotationAccumulativeTotal getQuotationAccumulativeTotal(String quotationId, Long pageIndex, Integer pageSize) {
+    public QuotationAccumulativeTotal getQuotationAccumulativeTotal(String quotationId, Long pageQuantity, Long pageIndex, Integer pageSize) {
         List<QuotationProductItemDraft> draftList = getList(
-                new Query().setPageIndex(1L)
-                .setPageSize(pageSize * pageIndex.intValue())
+                new Query().setDataIndex((pageIndex - 1) * pageSize)
+                        .setPageSize(10000)
+//                .setPageSize(pageSize * pageIndex.intValue())
                 .setConditions(
                         Conditions.newInstance()
                         .eq("quotationId", quotationId)
                 )
-                .addOrder(Order.desc("addedDate"))
+                .addOrder(Order.desc("createdTime"))
         );
 
         QuotationAccumulativeTotal accumulativeTotal = new QuotationAccumulativeTotal();
@@ -226,6 +242,38 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
         }
     }
 
+    @Override
+    public void copyItem(String targetId) {
+        QuotationProductItemDraft target = getById(targetId);
 
+        QuotationProductItemDraft newItem = new QuotationProductItemDraft();
+        newItem.setQuotationId(target.getQuotationId());
+//        newItem.setProductId(target.getProductId());
+//        newItem.setImageURL(target.getImageURL());
+        newItem.setFactoryProductName(target.getFactoryProductName());
+        newItem.setFactoryProductNo(target.getFactoryProductNo());
+        newItem.setCompanyProductName(target.getCompanyProductName());
+        newItem.setCompanyProductNo(target.getCompanyProductNo());
+        newItem.setPackageForm(target.getPackageForm());
+        newItem.setUnit(target.getUnit());
+        newItem.setFactoryPrice(target.getFactoryPrice());
+        newItem.setCartonSize(target.getCartonSize());
+        newItem.setCartonVolume(target.getCartonVolume());
+        newItem.setPackingQuantity(target.getPackingQuantity());
+        newItem.setGrossWeight(target.getGrossWeight());
+        newItem.setNetWeight(target.getNetWeight());
+        newItem.setOrderedCartonQuantity(target.getOrderedCartonQuantity());
+        newItem.setQuotedPrice(target.getQuotedPrice());
+        newItem.setOrderedProductQuantity(target.getOrderedProductQuantity());
+        newItem.setTotalVolume(target.getTotalVolume());
+        newItem.setTotalAmount(target.getTotalAmount());
+        newItem.setFactoryId(target.getFactoryId());
+        newItem.setFactoryName(target.getFactoryName());
+        newItem.setLinkman(target.getLinkman());
+        newItem.setContactNumber(target.getContactNumber());
+        newItem.setRemark(target.getRemark());
+        newItem.setAddedDate(new Date());
 
+        save(newItem);
+    }
 }

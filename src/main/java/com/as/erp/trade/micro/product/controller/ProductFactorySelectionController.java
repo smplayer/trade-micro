@@ -25,7 +25,7 @@ public class ProductFactorySelectionController {
     @Autowired
     private ProductService productService;
 
-    @RequestMapping(value = "quotation/findFactoryForProduct", method = RequestMethod.GET)
+    @RequestMapping(value = "product/findFactoryForProduct")
     public String findFactory(
             @RequestParam("factoryName") String factoryName,
             ModelMap modelMap

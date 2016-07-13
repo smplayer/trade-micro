@@ -13,5 +13,6 @@ public interface QuotationProductItemDraftService extends GenericService<Quotati
     QuotationProductItemDraft modify(String id, String propertyName, Object propertyValue);
     void generateProducts(List<String> quotationProductItemDraftIds);
     void selectFactoryForProductItemDraft(String id, String factoryId);
-    QuotationAccumulativeTotal getQuotationAccumulativeTotal(String quotationId, Long pageIndex, Integer pageSize);
+    QuotationAccumulativeTotal getQuotationAccumulativeTotal(String quotationId, Long pageQuantity, Long pageIndex, Integer pageSize);
+    void copyItem(String targetId);
 }

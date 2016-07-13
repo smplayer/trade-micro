@@ -2,6 +2,10 @@
  * Created by yrx on 2016/5/25.
  */
 
+
+
+
+
 $(function () {
     $("#btn-confirm").click(function (e) {
         e.preventDefault();
@@ -47,7 +51,7 @@ $(function () {
             data: JSON.stringify(product),
             success: function(data){
                 // alert('数据加载成功');
-                window.opener.location.reload();
+                window.parent.location.reload();
                 CloseWebPage();
             },
             error: function(xhr, type){
@@ -67,7 +71,9 @@ $(function () {
     $("#findExistingFactory").click(function (e) {
         e.preventDefault();
         var factoryName = $("#factoryName").val();
-        open(ctx + "/quotation/findFactoryForProduct?factoryName=" + factoryName + "&productId=" + productId,'_blank');
+
+        window.parent.openFactorySelectionDialogForProduct(productId, factoryName);
+        // open(ctx + "/product/findFactoryForProduct?factoryName=" + factoryName + "&productId=" + productId,'_blank');
     });
     
     $("#btn-clear").click(function (e) {

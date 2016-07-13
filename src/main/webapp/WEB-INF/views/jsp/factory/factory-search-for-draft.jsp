@@ -8,6 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>工厂查询</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link href="<c:url value="/resources/common/project/css/style.css"/>" rel="stylesheet" type="text/css"/>
     <link href="<c:url value="/resources/factory/css/list.css"/>" rel="stylesheet" type="text/css"/>
     <style type="text/css">
@@ -15,75 +16,6 @@
 </head>
 
 <body>
-<div class="top topw">
-    <div class="toptt">工厂查询</div>
-</div>
-<div class="topline toplw"></div>
-<div class="top2 top2w">
-    <div class="topfl fl">
-        <form id="form-search" action="" target="_self">
-            <input name="quotationProductItemDraftId" value="${param.quotationProductItemDraftId}" type="hidden" id="quotationProductItemDraftId" size="18" class="border"/>
-            <input name="keywords" value="${param.keywords}" type="text" id="keywords" size="18" class="border"/>
-            <a href="javascript:void(0)" id="search">查询</a>
-        </form>
-    </div>
-    <div class="fr topr2">
-        <table width="98" border="0" align="right" cellpadding="0" cellspacing="0">
-            <tr>
-                <td width="9">
-
-                    <c:if test="${page.pageIndex > 1}" var="notFirstPage">
-                        <a href="
-                            <c:url value="/factory/list">
-                                <c:param name="pageIndex" value="${page.pageIndex - 1}"/>
-                                <c:if test="${not empty param.keywords}">
-                                    <c:param name="keywords" value="${param.keywords}"/>
-                                </c:if>
-                            </c:url>
-                        ">
-                            <img src="<c:url value="/resources/factory/images/lefty.png" />" width="9" height="8"/>
-                        </a>
-                    </c:if>
-                    <c:if test="${not notFirstPage}">
-                        <img src="<c:url value="/resources/factory/images/lefty.png" />" width="9" height="8"/>
-                    </c:if>
-                </td>
-                <td width="80" align="center">
-                    <a href="
-                            <c:url value="/factory/list">
-                                <c:param name="pageIndex" value="1"/>
-                                <c:if test="${not empty param.keywords}">
-                                    <c:param name="keywords" value="${param.keywords}"/>
-                                </c:if>
-                            </c:url>
-                    ">1</a><span style="width: 10px; text-align: right; display: inline-block;">-</span><input id="newPageIndex" type="text" value="${empty page ? 0 : page.pageIndex}" style="width: 20px; text-align: center; border: 0; background-color: transparent;"
-                />/<span style="width: 20px; text-align: center; display: inline-block;">${empty page ? 0 : page.pageQuantity}</span>
-                </td>
-                <td width="9">
-                    <c:if test="${page.pageIndex < page.pageQuantity}" var="notLastPage">
-                        <a href="
-                            <c:url value="/factory/list">
-                                <c:param name="pageIndex" value="${page.pageIndex + 1}"/>
-                                <c:if test="${not empty param.keywords}">
-                                    <c:param name="keywords" value="${param.keywords}"/>
-                                </c:if>
-                            </c:url>
-                        ">
-                            <img src="<c:url value="/resources/factory/images/righty.png" />" width="9" height="8"/>
-                        </a>
-                    </c:if>
-                    <c:if test="${not notLastPage}">
-                        <img src="<c:url value="/resources/factory/images/righty.png" />" width="9" height="8"/>
-                    </c:if>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div class="fr">
-        <a href="<c:url value="/factory/create"/>" target="_blank">录入资料</a>
-    </div>
-</div>
-
 <form id="main-table" name="form1" method="post" action="">
     <table border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
         <tr>
@@ -112,7 +44,7 @@
             <td class="break tdbg">${f.address}</td>
             <td class="break tdbg"><a href="javascript:void(0)" data-url="<c:url value="/factory/modify/${f.id}"/>"
                                       target="_blank" class="modify-factory">查看</a></td>
-            <td class="break tdbg"><fmt:formatDate value="${f.createdDate}" pattern="MM-dd"/></td>
+            <td class="break tdbg"><fmt:formatDate value="${f.addedDate}" pattern="MM-dd"/></td>
             <td class="break tdbg">${f.remark}</td>
             <td class="break tdbg">
                 <input name="id" class="factory-id-checkbox" type="checkbox" value="${f.id}" id="${f.id}"/>
@@ -152,7 +84,6 @@
 </form>
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
-<c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/list.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/factory/js/factory-search-for-draft.js"/>"></script>
 <script>

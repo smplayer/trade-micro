@@ -9,6 +9,7 @@ import com.as.erp.trade.micro.quotation.entity.FavorQuotationItem;
 import com.as.erp.trade.micro.quotation.entity.Quotation;
 import com.as.erp.trade.micro.quotation.entity.QuotationProductItemDraft;
 import com.as.erp.trade.micro.quotation.service.FavorQuotationItemService;
+import com.as.erp.trade.micro.system.service.UserConfigItemService;
 import com.as.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
@@ -18,6 +19,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +30,16 @@ import java.util.Map;
 @Controller
 public class QuotationOperatingController extends BaseQuotationController {
 
+    public final static String DEFAULT_QUOTATION_ID = "default-quotation-id";
+
     @Autowired
     private FactoryService factoryService;
     @Autowired
     private ProductService productService;
     @Autowired
     private FavorQuotationItemService favorQuotationItemService;
+    @Autowired
+    private UserConfigItemService userConfigItemService;
 
     @RequestMapping("quotation/operating/list")
     public String operatingList(
@@ -52,8 +58,8 @@ public class QuotationOperatingController extends BaseQuotationController {
             @RequestParam(value = "empty", required = false, defaultValue = "false") Boolean empty,
 //            @RequestParam(value = "indexNumber", required = false) Integer indexNumber,
             @RequestParam(value = "id", required = false) String id,
-            @RequestParam(value = "pageIndex", required = false) Long pageIndex,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Long pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
             @RequestParam(value = "factoryId", required = false) String factoryId,
             HttpSession session,
             ModelMap modelMap
@@ -62,22 +68,30 @@ public class QuotationOperatingController extends BaseQuotationController {
             User user = (User) session.getAttribute("user");
 
             List<FavorQuotationItem> favorQuotationItemList = (List<FavorQuotationItem>) favorQuotationItemService.getPage(
-                    new Query().setConditions(
-                            Conditions.newInstance().eq("userId", user.getId()).eq("passwordFlag", user.getRole())
-                    ).addOrder(Order.asc("indexNumber"))
+                    new Query()
+                            .setConditions(
+                                    Conditions.newInstance()
+                                            .eq("userId", user.getId()).eq("passwordFlag", user.getRole())
+                            )
+                            .addOrder(Order.asc("indexNumber"))
             ).getDataList();
 
-            if (!favorQuotationItemList.isEmpty()) {
-                modelMap.put("favorQuotationItemList", favorQuotationItemList);
-            }
+//            if (!favorQuotationItemList.isEmpty()) {
+//                modelMap.put("favorQuotationItemList", favorQuotationItemList);
+//            }
 
             Quotation quotation = null;
+            if (StringUtils.isBlank(id)) {
+                id = userConfigItemService.getValue(user, DEFAULT_QUOTATION_ID);
+            } else {
+                userConfigItemService.setValue(user, DEFAULT_QUOTATION_ID, id);
+            }
             if (StringUtils.isNotBlank(id)) {
                 quotation = quotationService.getById(id);
-            } else {
-                if (!favorQuotationItemList.isEmpty()) {
-                    quotation = quotationService.getOperatingOrReloadFromArchive(favorQuotationItemList.get(0).getQuotationId());
-                }
+            }
+
+            if (quotation == null && !favorQuotationItemList.isEmpty()) {
+                quotation = quotationService.getOperatingOrReloadFromArchive(favorQuotationItemList.get(0).getQuotationId());
             }
 
             if (quotation != null) {
@@ -90,13 +104,13 @@ public class QuotationOperatingController extends BaseQuotationController {
                     conditions.eq("factoryId", factoryId);
                 }
 
-                page = quotationProductItemDraftService.getPage(
-                        new Query()
+                Query query = new Query()
                                 .setPageIndex(pageIndex)
                                 .setPageSize(pageSize)
                                 .setConditions(conditions)
-                                .addOrder(Order.desc("addedDate"))
-                );
+                                .addOrder(Order.desc("createdTime"));
+
+                page = quotationProductItemDraftService.getPage(query);
                 modelMap.put("page", page);
             }
         }
@@ -108,13 +122,13 @@ public class QuotationOperatingController extends BaseQuotationController {
             @RequestParam(required = false, defaultValue = "company") String productNoFrom,
             @RequestParam("id") String id,
             @RequestParam(value = "pageIndex", defaultValue = "1") Long pageIndex,
-            @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
+            @RequestParam(value = "pageSize", defaultValue = "24") Integer pageSize,
             @RequestParam(value = "lang", required = false) String lang,
             ModelMap modelMap
     ) {
         Quotation quotation = quotationService.getById(id);
         PageHandler page = quotationProductItemDraftService.getPage(
-                new Query().addOrder(Order.desc("addedDate"))
+                new Query().addOrder(Order.desc("createdTime"))
                         .setPageIndex(pageIndex)
                         .setPageSize(pageSize)
                         .setConditions(
@@ -133,64 +147,19 @@ public class QuotationOperatingController extends BaseQuotationController {
         return "quotation/confirming-order";
     }
 
-    @ResponseBody
-    @RequestMapping("quotation/accumulativeTotal")
-    public Object accumulativeTotal(
-            @RequestBody Map<String, Object> req
-    ) {
-        String quotationId = (String) req.get("quotationId");
-        Long pageIndex = Long.valueOf((String) req.get("pageIndex"));
-        Integer pageSize = Integer.valueOf((String) req.get("pageSize"));
-        return quotationProductItemDraftService.getQuotationAccumulativeTotal(quotationId, pageIndex, pageSize);
-    }
-
-    @RequestMapping("quotation/saveToArchive")
-    public String saveToArchive(
-            @RequestParam("id") String id,
-            HttpSession session
-    ) {
-//        if (StringUtils.isBlank(id)) {
-//            User user = (User) session.getAttribute("user");
-//            List<FavorQuotationItem> favorQuotationItemList = favorQuotationItemService.getList(
-//                    new Query().addOrder(Order.asc("indexNumber"))
-//                            .setPageSize(1)
-//                            .setConditions(
-//                                Conditions.newInstance()
-//                                    .eq("userId", user.getId())
-//                                    .eq("passwordFlag", user.getRole())
-//                            )
-//            );
-//            if (favorQuotationItemList.size() == 1) {
-//                id = favorQuotationItemList.get(0).getQuotationId();
-//            }
-//        }
-
-
-        if (StringUtils.isNotBlank(id)) {
-            Quotation quotation = quotationService.saveToArchive(id);
-            FavorQuotationItem f = favorQuotationItemService.get(Conditions.newInstance().eq("quotationId", quotation.getId()));
-            favorQuotationItemService.delete(f.getId());
-        }
-
-        return "redirect:/quotation/operating";
-    }
-
-    @RequestMapping("quotation/reloadFromArchive")
-    public String reloadFromArchive(
-            @RequestParam("id") String id,
-            ModelMap modelMap
-    ) {
-        Quotation operating = quotationService.reloadFromArchive(id);
-        modelMap.put("id", operating.getId());
-        return "redirect:/quotation/operating";
-    }
-
-    @RequestMapping(value = "quotation/findFactoryForDraft", method = RequestMethod.GET)
+    @RequestMapping(value = "quotation/findFactoryForDraft")
     public String findFactory(
             @RequestParam("quotationProductItemDraftId") String quotationProductItemDraftId,
             @RequestParam("keywords") String factoryName,
+            @RequestParam("linkman") String linkman,
+            @RequestParam("contactNumber") String contactNumber,
             ModelMap modelMap
-    ) {
+    ) throws UnsupportedEncodingException {
+        modelMap.put("factoryName", factoryName);
+        modelMap.put("linkman", linkman);
+        modelMap.put("contactNumber", contactNumber);
+
+
         PageHandler page = factoryService.getPage(
                 new Query().setConditions(
                         Conditions.newInstance()
@@ -202,10 +171,12 @@ public class QuotationOperatingController extends BaseQuotationController {
 
         if (page.getDataQuantity() > 0) {
             modelMap.put("page", page);
+            modelMap.put("keywords", factoryName);
             return "factory/factory-search-for-draft";
         } else {
-            modelMap.put("factoryName", factoryName);
-            return "redirect:/factory/create";
+//            byte[] factoryNameBytes = factoryName.getBytes("ISO-8859-1");
+//            factoryName = new String(factoryNameBytes, "UTF-8");
+            return "factory/create";
         }
 
     }
@@ -267,5 +238,81 @@ public class QuotationOperatingController extends BaseQuotationController {
         map.put("result", "success");
         return map;
     }
+
+    @RequestMapping("quotation/copyItem")
+    public String copyItem(
+            @RequestParam String quotationId,
+            @RequestParam String id
+    ) {
+
+        return "redirect:/quotation/operating?id=" + quotationId;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("quotation/accumulativeTotal")
+    public Object accumulativeTotal(
+            @RequestBody Map<String, Object> req
+    ) {
+        String quotationId = (String) req.get("quotationId");
+        Long pageQuantity = Long.valueOf((String) req.get("pageQuantity"));
+        Long pageIndex = Long.valueOf((String) req.get("pageIndex"));
+        Integer pageSize = Integer.valueOf((String) req.get("pageSize"));
+        return quotationProductItemDraftService.getQuotationAccumulativeTotal(quotationId, pageQuantity, pageIndex, pageSize);
+    }
+
+    @RequestMapping("quotation/saveToArchive")
+    public String saveToArchive(
+            @RequestParam("id") String id,
+            HttpSession session
+    ) {
+//        if (StringUtils.isBlank(id)) {
+//            User user = (User) session.getAttribute("user");
+//            List<FavorQuotationItem> favorQuotationItemList = favorQuotationItemService.getList(
+//                    new Query().addOrder(Order.asc("indexNumber"))
+//                            .setPageSize(1)
+//                            .setConditions(
+//                                Conditions.newInstance()
+//                                    .eq("userId", user.getId())
+//                                    .eq("passwordFlag", user.getRole())
+//                            )
+//            );
+//            if (favorQuotationItemList.size() == 1) {
+//                id = favorQuotationItemList.get(0).getQuotationId();
+//            }
+//        }
+
+
+        if (StringUtils.isNotBlank(id)) {
+            User user = (User) session.getAttribute("user");
+            Quotation archive = quotationService.saveToArchive(id);
+            if (archive != null) {
+                List<FavorQuotationItem> fs = favorQuotationItemService.getList(Conditions.newInstance().eq("quotationId", id));
+                for (FavorQuotationItem f : fs) {
+                    if (f != null) {
+                        favorQuotationItemService.delete(f.getId());
+                    }
+                }
+            }
+            userConfigItemService.setValue(user, DEFAULT_QUOTATION_ID, null);
+        }
+
+        return "redirect:/quotation/operating";
+    }
+
+    @RequestMapping("quotation/reloadFromArchive")
+    public String reloadFromArchive(
+            @RequestParam("id") String id,
+            HttpSession session,
+            ModelMap modelMap
+    ) {
+        User user = (User) session.getAttribute("user");
+        Quotation operating = quotationService.reloadFromArchive(id);
+        favorQuotationItemService.addToFront(operating.getId(), user);
+
+        modelMap.put("id", operating.getId());
+        return "redirect:/quotation/operating";
+    }
+
 
 }

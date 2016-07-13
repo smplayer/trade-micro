@@ -11,9 +11,14 @@ function selectFactory() {
     } else {
         var context = checkedItems.parents(".item").first();
         var factoryName = $(".factoryName", context).text();
-        $("#factoryId", window.opener.document).val(checkedItems.val());
-        $("#factoryName", window.opener.document).val(factoryName);
-        CloseWebPage();
+
+        console.log($("#iframe-common2", window.parent.document)[0].contentWindow);
+        console.log($("#factoryId", $($("#iframe-common", window.parent.document)[0].contentWindow.document)));
+        console.log($("#factoryId", $($("#iframe-common", window.parent.document)[0].contentWindow.document)).val());
+
+        $("#factoryId", $($("#iframe-common", window.parent.document)[0].contentWindow.document)).val(checkedItems.val());
+        $("#factoryName", $($("#iframe-common", window.parent.document)[0].contentWindow.document)).val(factoryName);
+        window.parent.closeFactorySelectionDialogForProduct();
     }
 }
 

@@ -65,3 +65,7 @@ input[name=remark] {
     height: 20px;
     line-height: 20px;
 }
+
+#main-table {
+    margin-top: 60px;
+}

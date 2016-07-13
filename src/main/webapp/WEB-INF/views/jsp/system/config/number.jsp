@@ -6,6 +6,7 @@
 <head>
     <meta charset="utf-8">
     <title>操作设置</title>
+    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <link rel="stylesheet" href="<c:url value="/resources/system/config1/css/global.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/system/config1/css/auto279.css"/>">
     <style>
@@ -53,7 +54,6 @@
     <div class="toolbar"></div>
 
 
-    <c:import url="/WEB-INF/views/jsp/common/common-script.jsp"></c:import>
     <script>
 
         $(function () {

@@ -15,6 +15,7 @@ public class Query {
     private Conditions conditions;
     private List<Order> orderList = new ArrayList<>();
     private Long pageIndex = 1L;
+    private Long dataIndex;
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
     public Conditions getConditions() {
@@ -54,7 +55,15 @@ public class Query {
         return this;
     }
 
+    public Query setDataIndex(Long dataIndex) {
+        this.dataIndex = dataIndex;
+        return this;
+    }
+
     public Long getDataIndex() {
+        if (dataIndex != null) {
+            return dataIndex;
+        }
         return (pageIndex - 1) * pageSize;
     }
 

@@ -36,7 +36,7 @@ public class UserConfigItem extends BaseEntity {
         this.passwordFlag = passwordFlag;
     }
 
-    @Column(name = "item_key", nullable = false, unique = true)
+    @Column(name = "item_key", nullable = false, unique = false)
     public String getKey() {
         return key;
     }

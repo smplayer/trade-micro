@@ -52,7 +52,7 @@ public class QuotationSettingController extends BaseQuotationController {
 
             @RequestParam(value = "FOB", required = false) String FOB,
             @RequestParam(value = "CNF", required = false) String CNF,
-            @RequestParam(value = "GIF", required = false) String GIF,
+            @RequestParam(value = "CIF", required = false) String CIF,
 //            @RequestParam(value="tradeClause", required=false) String tradeClause,
 
             @RequestParam(value = "shipmentPort", required = false) String shipmentPort,
@@ -108,9 +108,9 @@ public class QuotationSettingController extends BaseQuotationController {
         } else if (StringUtils.isNotBlank(CNF)) {
             tradeClauseType = "CNF";
             tradeClause = CNF;
-        } else if (StringUtils.isNotBlank(GIF)) {
-            tradeClauseType = "GIF";
-            tradeClause = GIF;
+        } else if (StringUtils.isNotBlank(CIF)) {
+            tradeClauseType = "CIF";
+            tradeClause = CIF;
         }
         quotation.setTradeClauseType(tradeClauseType);
         quotation.setTradeClause(tradeClause);
@@ -119,12 +119,36 @@ public class QuotationSettingController extends BaseQuotationController {
 
 //        favorQuotationItemService.addToFront(quotation.getId(), (User) session.getAttribute("user"));
         if(indexNumber != null) {
-            favorQuotationItemService.addToSpecifiedPosition(quotation.getId(), indexNumber, (User) session.getAttribute("user"));
+            favorQuotationItemService.addToSpecifiedPosition(quotation.getId(), indexNumber, (User) session.getAttribute("user"), true);
+        }
+
+        if (StringUtils.isNotBlank(id)) {
+
+            User curUser = (User) session.getAttribute("user");
+            if (curUser.getRole().equals(User.ROLE_ADMIN)) {
+                User standardUser = new User();
+                standardUser.setUsername(curUser.getUsername());
+                standardUser.setRole(User.ROLE_STANDARD);
+                favorQuotationItemService.addToFront(quotation.getId(), standardUser);
+            }
         }
 
         modelMap.put("id", quotation.getId());
         return "quotation/operating-setting-finish";
     }
 
+    @RequestMapping("quotation/copyFromArchive")
+    public String copyFromArchive(
+            @RequestParam("id") String id,
+            HttpSession session,
+            ModelMap modelMap
+    ) {
+        User user = (User) session.getAttribute("user");
+        Quotation operating = quotationService.copyFromArchive(id);
+        favorQuotationItemService.addToFront(operating.getId(), user);
+
+        modelMap.put("id", operating.getId());
+        return "redirect:/quotation/operating";
+    }
 
 }

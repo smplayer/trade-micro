@@ -20,7 +20,7 @@ public class SystemConfigItem extends BaseEntity {
     private String key;
     private String value;
 
-    @Column(name = "item_key", nullable = false, unique = true)
+    @Column(name = "item_key", nullable = false, unique = false)
     public String getKey() {
         return key;
     }

@@ -4,6 +4,7 @@ import com.as.common.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * Created by Administrator on 16-4-25.
@@ -11,8 +12,27 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "as_tb_order_product_item")
 public class OrderProductItem extends BaseEntity {
+    private String orderId;
     private String productId;
-    private Integer cartonQuantity;
+    private String factoryId;
+
+    private String factoryName;
+    private String linkman;
+    private String contactNumber;
+
+    private String imageURL;
+    private String companyProductName;
+    private String companyProductNo;
+    private String functionDescription;
+    private String packageForm;
+    private String unit;
+    private Double factoryPrice;
+    private String cartonSize;
+    private Integer packingQuantity;
+    private Double grossWeight;
+    private Double netWeight;
+
+    private Integer orderedCartonQuantity;
     private Double volume;
     private Double payment;
     private Integer deliveredCartonQuantity;
@@ -22,6 +42,16 @@ public class OrderProductItem extends BaseEntity {
     private Double scheduledDeliverablePayment;
     private String remark;
 
+    private Date addedDate;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
     public String getProductId() {
         return productId;
     }
@@ -30,12 +60,132 @@ public class OrderProductItem extends BaseEntity {
         this.productId = productId;
     }
 
-    public Integer getCartonQuantity() {
-        return cartonQuantity;
+    public String getFactoryId() {
+        return factoryId;
     }
 
-    public void setCartonQuantity(Integer cartonQuantity) {
-        this.cartonQuantity = cartonQuantity;
+    public void setFactoryId(String factoryId) {
+        this.factoryId = factoryId;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public String getLinkman() {
+        return linkman;
+    }
+
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String getCompanyProductName() {
+        return companyProductName;
+    }
+
+    public void setCompanyProductName(String companyProductName) {
+        this.companyProductName = companyProductName;
+    }
+
+    public String getCompanyProductNo() {
+        return companyProductNo;
+    }
+
+    public void setCompanyProductNo(String companyProductNo) {
+        this.companyProductNo = companyProductNo;
+    }
+
+    public String getFunctionDescription() {
+        return functionDescription;
+    }
+
+    public void setFunctionDescription(String functionDescription) {
+        this.functionDescription = functionDescription;
+    }
+
+    public String getPackageForm() {
+        return packageForm;
+    }
+
+    public void setPackageForm(String packageForm) {
+        this.packageForm = packageForm;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public Double getFactoryPrice() {
+        return factoryPrice;
+    }
+
+    public void setFactoryPrice(Double factoryPrice) {
+        this.factoryPrice = factoryPrice;
+    }
+
+    public String getCartonSize() {
+        return cartonSize;
+    }
+
+    public void setCartonSize(String cartonSize) {
+        this.cartonSize = cartonSize;
+    }
+
+    public Integer getPackingQuantity() {
+        return packingQuantity;
+    }
+
+    public void setPackingQuantity(Integer packingQuantity) {
+        this.packingQuantity = packingQuantity;
+    }
+
+    public Double getGrossWeight() {
+        return grossWeight;
+    }
+
+    public void setGrossWeight(Double grossWeight) {
+        this.grossWeight = grossWeight;
+    }
+
+    public Double getNetWeight() {
+        return netWeight;
+    }
+
+    public void setNetWeight(Double netWeight) {
+        this.netWeight = netWeight;
+    }
+
+    public Integer getOrderedCartonQuantity() {
+        return orderedCartonQuantity;
+    }
+
+    public void setOrderedCartonQuantity(Integer orderedCartonQuantity) {
+        this.orderedCartonQuantity = orderedCartonQuantity;
     }
 
     public Double getVolume() {
@@ -100,5 +250,13 @@ public class OrderProductItem extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Date getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Date addedDate) {
+        this.addedDate = addedDate;
     }
 }

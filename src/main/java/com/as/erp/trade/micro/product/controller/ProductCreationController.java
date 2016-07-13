@@ -40,6 +40,7 @@ public class ProductCreationController {
             @RequestParam(value = "packing-quantity", required = false) Integer packingQuantity,
             @RequestParam(value = "gross-weight", required = false) Double grossWeight,
             @RequestParam(value = "net-weight", required = false) Double netWeight,
+            @RequestParam(value = "unit", required = false) String unit,
             @RequestParam(value = "remark", required = false) String remark,
             @RequestParam(value = "factory-id", required = false) String factoryId,
             @RequestParam(value = "package-form", required = false) String packageForm,
@@ -56,6 +57,7 @@ public class ProductCreationController {
         p.setPackingQuantity(packingQuantity);
         p.setGrossWeight(grossWeight);
         p.setNetWeight(netWeight);
+        p.setUnit(unit);
         p.setRemark(remark);
         p.setFactoryId(factoryId);
         p.setPackageForm(packageForm);
@@ -63,6 +65,7 @@ public class ProductCreationController {
         p.setCategory(category);
         p.setSubCategory(subCategory);
         p.setAddedDate(new Date());
+        p.setLastFactoryQuotedDate(new Date());
         productService.save(p);
 
         return "redirect:/product/create";
@@ -82,6 +85,8 @@ public class ProductCreationController {
             p = new Product();
         }
 
+        Double oldPrice = p.getFactoryPrice();
+
         p.setFactoryName((String) req.get("factoryName"));
         p.setCompanyProductName((String) req.get("companyProductName"));
         p.setFactoryProductName((String) req.get("factoryProductName"));
@@ -92,12 +97,19 @@ public class ProductCreationController {
         p.setPackingQuantity(StringUtils.isNotBlank((CharSequence) req.get("packingQuantity")) ? Integer.valueOf((String) req.get("packingQuantity")) : null);
         p.setGrossWeight(StringUtils.isNotBlank((CharSequence) req.get("grossWeight")) ? Double.valueOf((String) req.get("grossWeight")) : null);
         p.setNetWeight(StringUtils.isNotBlank((CharSequence) req.get("netWeight")) ? Double.valueOf((String) req.get("netWeight")) : null);
+        p.setUnit((String) req.get("unit"));
         p.setRemark((String) req.get("remark"));
         p.setFactoryId((String) req.get("factoryId"));
         p.setPackageForm((String) req.get("packageForm"));
         p.setFunctionDescription((String) req.get("functionDescription"));
         p.setCategory((String) req.get("category"));
         p.setSubCategory((String) req.get("subCategory"));
+
+
+        if (oldPrice != p.getFactoryPrice()) {
+            p.setLastFactoryQuotedDate(new Date());
+        }
+
 
         if (p.getId() != null)
             productService.update(p);
@@ -107,6 +119,16 @@ public class ProductCreationController {
         Map<String, Object> result = new HashMap<>();
         result.put("success", true);
         return result;
+    }
+
+    @RequestMapping("product/copy")
+    public String copyProduct(
+            @RequestParam String targetId,
+            @RequestParam int count,
+            @RequestParam(defaultValue = "1") int pageIndex
+    ) {
+        productService.copyProducts(targetId, count);
+        return "redirect:/product/list?pageIndex=" + pageIndex;
     }
 
 

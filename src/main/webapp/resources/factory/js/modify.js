@@ -23,7 +23,7 @@ $(function () {
             data: JSON.stringify(factory),
             success: function(data){
                 // alert('数据加载成功');
-                window.opener.location.reload();
+                window.parent.location.reload();
                 CloseWebPage();
             },
             error: function(xhr, type){

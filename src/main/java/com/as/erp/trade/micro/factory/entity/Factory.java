@@ -23,7 +23,7 @@ public class Factory extends BaseEntity {
     private String summary;
     private String remark;
     private Integer productQuantity;
-    private Date createdDate;
+    private Date addedDate;
 
     public String getName() {
         return name;
@@ -115,11 +115,19 @@ public class Factory extends BaseEntity {
         this.productQuantity = productQuantity;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getAddedDate() {
+        return addedDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setAddedDate(Date addedDate) {
+        this.addedDate = addedDate;
     }
+
+    //    public Date getCreatedDate() {
+//        return createdDate;
+//    }
+//
+//    public void setCreatedDate(Date createdDate) {
+//        this.createdDate = createdDate;
+//    }
 }

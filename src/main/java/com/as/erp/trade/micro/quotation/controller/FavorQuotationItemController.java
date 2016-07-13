@@ -56,7 +56,7 @@ public class FavorQuotationItemController {
                         .setConditions(
                         Conditions.newInstance()
                                 .eq("operationFlag", Quotation.FLAG_OPERATING)
-                ).addOrder(Order.desc("startedDate"))
+                ).addOrder(Order.asc("createdTime"))
         );
 
         modelMap.put("list", list);
@@ -72,31 +72,14 @@ public class FavorQuotationItemController {
             HttpSession session,
             ModelMap modelMap
     ) {
-
+        User user = (User) session.getAttribute("user");
         if (indexNumber != null && StringUtils.isNotBlank(quotationId)) {
+            favorQuotationItemService.addToSpecifiedPosition(quotationId, indexNumber, user, false);
 
-            FavorQuotationItem existsItem = favorQuotationItemService.get(Conditions.newInstance().eq("quotationId", quotationId));
-            if (existsItem != null)
-                favorQuotationItemService.delete(existsItem.getId());
-
-            FavorQuotationItem item = favorQuotationItemService.get(
-                    Conditions.newInstance()
-                            .eq("indexNumber",indexNumber)
-            );
-            Quotation quotation = quotationService.getById(quotationId);
-            if (item == null) {
-                User user = (User) session.getAttribute("user");
-                String role = user.getRole();
-
-                item = new FavorQuotationItem();
-                item.setIndexNumber(indexNumber);
-                item.setUserId(user.getId());
-                item.setPasswordFlag(role);
-            }
-
-            item.setCustomerName(quotation.getCustomerName());
-            item.setQuotationId(quotationId);
-            favorQuotationItemService.saveOrUpdate(item);
+//            User standard = new User();
+//            standard.setUsername(user.getUsername());
+//            standard.setRole(User.ROLE_STANDARD);
+//            favorQuotationItemService.addToSpecifiedPosition(quotationId, indexNumber, standard, true);
         }
 
         return "quotation/favor-quotation-setting-success";
@@ -142,7 +125,7 @@ public class FavorQuotationItemController {
 
         }
 
-        return "redirect:/quotation/favor/setting";
+        return "quotation/favor-quotation-setting-success";
     }
 
     private void deleteFavorByIndexNumber(Integer i) {
