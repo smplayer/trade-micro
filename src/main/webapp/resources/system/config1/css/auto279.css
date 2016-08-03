@@ -25,13 +25,12 @@
 }
 
 .x-auto4 {
-    width: 762px;
-    height: 600px;
+    width: 692px;
+    height: 534px;
     margin: 0px auto;
     left: 0px;
     right: 0px;
     position: absolute;
     top: 0px;
-    background-image: url(../imgs/bjt_321.jpg);
-    background-color: rgb(255, 255, 255);
+    background: rgb(255, 255, 255) url(../imgs/number-setting.jpg);
 }

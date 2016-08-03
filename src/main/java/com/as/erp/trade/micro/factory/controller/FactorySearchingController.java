@@ -33,4 +33,12 @@ public class FactorySearchingController {
         return factoryList;
     }
 
+    @RequestMapping("factory/createFactoryForProduct")
+    public String createFactoryForProduct(
+
+    ) {
+
+        return "factory/createFactoryForProduct";
+    }
+
 }

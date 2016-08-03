@@ -12,14 +12,16 @@ import java.util.Date;
 @Entity
 @Table(name = "as_tb_container")
 public class Container extends BaseEntity {
+    //容量
+    private Double containerVolume;
     //装运港
     private String shipmentPort;
     //目的港
     private String destinationPort;
     //装运日期
-    private Date deliveryDate;
+    private String deliveryDate;
     //柜型
-    private String type;
+    private String containerType;
     //柜号
     private String containerNo;
     //订舱号
@@ -28,6 +30,19 @@ public class Container extends BaseEntity {
     private String sealNo;
     //承运人
     private String carrier;
+
+    //favor index
+    private Integer indexNumber;
+
+    private String sheetId;
+
+    public Double getContainerVolume() {
+        return containerVolume != null ? containerVolume : 0D;
+    }
+
+    public void setContainerVolume(Double containerVolume) {
+        this.containerVolume = containerVolume;
+    }
 
     public String getShipmentPort() {
         return shipmentPort;
@@ -45,20 +60,20 @@ public class Container extends BaseEntity {
         this.destinationPort = destinationPort;
     }
 
-    public Date getDeliveryDate() {
+    public String getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
-    public String getType() {
-        return type;
+    public String getContainerType() {
+        return containerType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setContainerType(String containerType) {
+        this.containerType = containerType;
     }
 
     public String getContainerNo() {
@@ -91,5 +106,21 @@ public class Container extends BaseEntity {
 
     public void setCarrier(String carrier) {
         this.carrier = carrier;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public String getSheetId() {
+        return sheetId;
+    }
+
+    public void setSheetId(String sheetId) {
+        this.sheetId = sheetId;
     }
 }

@@ -85,11 +85,11 @@ input.extracted-product[type=text] {
 
 
 #cus-list {
-    margin-top: 25px;
+    margin-top: 35px;
     overflow: hidden;
 }
 #cus-list .text{
-    width: 60px;
+    width: 75px;
 }
 #cus-list .text.key-cus-name {
 }
@@ -98,14 +98,14 @@ input.extracted-product[type=text] {
     margin: 0 auto;
     padding: 0;
     overflow: hidden;
-    width: 1120px;
+    width: 1154px;
 }
 #cus-list li {
     background-color: #fff;
     list-style: none;
     float: left;
-    width: 80px;
-    margin-left: 5px;
+    width: 85px;
+    margin-left: 10px;
     border: 1px solid #B47BFE;
     height: 18px;
 }
@@ -115,7 +115,7 @@ input.extracted-product[type=text] {
 }
 
 .top2 {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 

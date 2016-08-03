@@ -127,4 +127,21 @@ public class ProductModificationController {
         return map;
     }
 
+
+    @ResponseBody
+    @RequestMapping(value = "ajax/product/generateProductNo", method = RequestMethod.POST)
+    public Object generateProductNo(
+            @RequestBody List<String> ids
+    ) {
+        Map<String, Object> result = productService.generateCompanyProductNo(ids);
+        Map<String, String> idAndNoMap = (Map<String, String>) result.get("idAndNoMap");
+
+        List<String> incompleteList = (List<String>) result.get("incompleteList");
+
+        Map map = new HashMap();
+        map.put("idAndNoMap", idAndNoMap);
+        map.put("allSuccess", incompleteList.isEmpty() ? true : false);
+        return map;
+    }
+
 }

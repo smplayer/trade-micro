@@ -62,9 +62,6 @@ function selectAll() {
 
 
 
-
-
-
 function openFactorySelectionDialogForProduct(productId, factoryName) {
 
     var $form = $("<form method='post' target='iframe-common2'></form>");
@@ -87,10 +84,28 @@ function openFactorySelectionDialogForProduct(productId, factoryName) {
 
 }
 
+function openFactoryCreationDialogForProduct(productId, factoryName) {
+
+    var $form = $("<form method='post'></form>");
+    $form.attr("target", "iframe-common3");
+    $form.attr("action", ctx + "/factory/createFactoryForProduct");
+    $form.append($("<input type='hidden' name='productId' />").val(productId));
+    $form.append($("<input type='hidden' name='factoryName' />").val(factoryName));
+    $form.submit();
+
+    openSimpleCommonDialog("#dialog-common3");
+
+}
+
 
 
 function closeFactorySelectionDialogForProduct() {
     dialog("#dialog-common2", {close: true});
+}
+
+
+function closeFactoryCreationDialogForProduct() {
+    dialog("#dialog-common3", {close: true});
 }
 
 
@@ -126,7 +141,7 @@ function search() {
 }
 
 
-function showFactoryDetails(factoryId) {
+function showFactoryDetails(factoryId, nodeId) {
     if (factoryId && factoryId != '') {
         $.ajax({
             type: 'POST',
@@ -141,7 +156,7 @@ function showFactoryDetails(factoryId) {
                 $("#factoryDetails .factoryName").text(data.linkman);
                 $("#factoryDetails .contactNumber").text(data.mobileNumber);
 
-                var factoryNameNode = $("#" + data.id);
+                var factoryNameNode = $("#" + nodeId);
                 var offset = factoryNameNode.offset();
                 detailsDialog.css("top", offset.top - (detailsDialog.height() - factoryNameNode.height()) / 2);
                 detailsDialog.css("left", offset.left + (factoryNameNode.width() / 2) + 35);
@@ -153,17 +168,55 @@ function showFactoryDetails(factoryId) {
         });
     }
 }
-function removeFactoryDetails(factoryId) {
+
+
+function removeFactoryDetails() {
     $("#factoryDetails").hide();
 }
 
 
+
+function generateProductNo() {
+    var $checked = $("[name=id]:checked");
+    if ($checked.length > 0) {
+        var ids = [];
+
+        $checked.each(function () {
+            ids.push($(this).val());
+            this.checked = false;
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: ctx + "/ajax/product/generateProductNo",
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(ids),
+            success: function(data){
+                for(var key in data.idAndNoMap)
+                    $("#companyProductNo-" + key).val(data.idAndNoMap[key]);
+
+                if (data.allSuccess === false) {
+                    dialogAlert("#dialog-alert", {
+                        textContent: '抱歉，资料不全不能生成货号'
+                    });
+                }
+
+            },
+            error: function(xhr, type){
+            }
+        });
+    }
+}
+
 $(function () {
     $("#product-list .factoryName").mouseover(function (e) {
-        showFactoryDetails($(this).attr("id"));
+        var context = $(this).parents('.item').first();
+        var id = $(".factoryId", context).val();
+        showFactoryDetails(id, $(this).attr("id"));
     });
     $("#product-list .factoryName").mouseout(function (e) {
-        removeFactoryDetails($(this).attr("id"));
+        removeFactoryDetails();
     });
 
     $("#select-all").click(selectAll);
@@ -239,6 +292,8 @@ $(function () {
 
 
     $("#copy-product").click(copyProduct);
+
+    $("#generate-product-no").click(generateProductNo);
     
     
 });

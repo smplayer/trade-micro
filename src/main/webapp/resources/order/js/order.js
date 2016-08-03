@@ -1,5 +1,3 @@
-
-
 function loadFavorOrderCustomerList() {
     $.ajax({
         type: 'POST',
@@ -46,6 +44,102 @@ function selectAll() {
     }
 }
 
+
+
+function getAccumulativeTotal() {
+    if(favorId != "") {
+        var accumulativeTotal = $.ajax({
+            type: 'POST',
+            url: ctx + "/order/accumulativeTotal",
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify({
+                "favorId": favorId,
+                "pageIndex": pageIndex,
+                "pageSize": pageSize
+            }),
+            success: function (data) {
+
+                $("#accumulativeLine .orderedCartonQuantity").text(data.cartonQuantity);
+                $("#accumulativeLine .volume").text(data.volume.toFixed(1));
+                $("#accumulativeLine .payment").text(data.payment.toFixed(0));
+                $("#accumulativeLine .deliveredCartonQuantity").text(data.deliveredCartonQuantity);
+                $("#accumulativeLine .remainingCartonQuantity").text(data.remainingCartonQuantity);
+                $("#accumulativeLine .scheduledDeliverableCartonQuantity").text(data.scheduledDeliverableCartonQuantity);
+                $("#accumulativeLine .scheduledDeliverableVolume").text(data.scheduledDeliverableVolume.toFixed(1));
+                $("#accumulativeLine .scheduledDeliverablePayment").text(data.scheduledDeliverablePayment.toFixed(0));
+                // $("#accumulativeTotal-orderedProductQuantity").text(data.productQuantity);
+                // $("#accumulativeTotal-totalVolume").text(data.volume.toFixed(1));
+                // $("#accumulativeTotal-totalAmount").text(data.amount.toFixed(0));
+            },
+            error: function (xhr, type) {
+                //alert('数据加载失败' + type);
+            }
+        });
+    }
+}
+
+function syncProp(n) {
+
+    var context = $(n).parents(".item").first();
+    var id = $("input[name=id]", context).val();
+    var propName = $(n).attr("name");
+    var propValue = $(n).val();
+
+    $.ajax({
+        type: 'POST',
+        // async: false,
+        url: ctx + "/order/modifyItemProp",
+        dataType: 'json',
+        contentType: "application/json",
+        data: JSON.stringify({
+            "id": id,
+            "propName": propName,
+            "propValue": propValue
+        }),
+        success: function (data) {
+            var context = $("#" + data.item.id).parents('.item').first();
+
+            if (data.item["scheduledDeliverableCartonQuantity"] > data.item["remainingCartonQuantity"]) {
+                $(".scheduledDeliverableCartonQuantity", context).val('');
+                syncProp(n);
+            } else {
+                var fieldsToRefresh = [
+                    'factoryPrice',
+                    'volume',
+                    'payment',
+                    'remainingCartonQuantity',
+                    'scheduledDeliverableVolume',
+                    'scheduledDeliverablePayment'
+                ];
+
+                for (var i = 0; i < fieldsToRefresh.length; i++) {
+                    if (fieldsToRefresh[i] != $(n).attr('name') && data.item[fieldsToRefresh[i]] != 0) {
+                        var value = data.item[fieldsToRefresh[i]];
+                        if (value) {
+                            if (
+                                fieldsToRefresh[i] == "volume" ||
+                                fieldsToRefresh[i] == "scheduledDeliverableVolume"
+                            ){
+                                value = value.toFixed(1);
+                            }
+                            $("." + fieldsToRefresh[i], context).text(value);
+                        }
+                    } else {
+
+                        $("." + fieldsToRefresh[i], context).text('');
+                    }
+                }
+
+                getAccumulativeTotal();
+            }
+        },
+        error: function (xhr, type) {
+            //alert('数据加载失败' + type);
+        }
+    });
+}
+
 function initInput() {
     $("#main-table .item input[type=text]").bind("keyup change", function (e) {
         //TO-DO 考虑值为空的状况
@@ -61,59 +155,7 @@ function initInput() {
             e.keyCode != 39 &&
             e.keyCode != 40
         ) {
-            var context = $(n).parents(".item").first();
-            var id = $("input[name=id]", context).val();
-            var propName = $(this).attr("name");
-            var propValue = $(this).val();
-
-            $.ajax({
-                type: 'POST',
-                // async: false,
-                url: ctx + "/ajax/order/productItem/modifyProp",
-                dataType: 'json',
-                contentType: "application/json",
-                data: JSON.stringify({
-                    "id": id,
-                    "propName": propName,
-                    "propValue": propValue
-                }),
-                success: function (data) {
-
-                    var context = $("#" + data.item.id).parents('.item').first();
-                    
-                    if (propName == "cartonSize" ) {
-                        
-                    } else if (propName == "packingQuantity") {
-                        
-                    } else if (propName == "grossWeight") {
-
-                    } else if (propName == "netWeight") {
-
-                    } else if (propName == "orderedCartonQuantity") {
-
-                    } else if (propName == "scheduledDeliverableCartonQuantity") {
-
-                    }
-                    
-                    
-                    $("input[name=orderedProductQuantity]", context).val(data.item["orderedProductQuantity"] != 0 ? data.item["orderedProductQuantity"] : "");
-                    $("input[name=totalVolume]", context).val(data.item["totalVolume"] != 0 ? data.item["totalVolume"] : "");
-                    $("input[name=totalAmount]", context).val(data.item["totalAmount"] != 0 ? data.item["totalAmount"] : "");
-                    $("input[name=quotedPrice]", context).val(data.item["quotedPrice"] != 0 ? data.item["quotedPrice"] : "");
-
-
-                    getAccumulativeTotal();
-                },
-                error: function (xhr, type) {
-                    //alert('数据加载失败' + type);
-                }
-            });
-            
-            
-            
-            
-            
-            
+            syncProp(this);
         }
     });
 }
@@ -129,7 +171,7 @@ function search() {
 
 
 
-function showFactoryDetails(factoryId) {
+function showFactoryDetails(factoryId, nodeId) {
     if (factoryId && factoryId != '') {
         $.ajax({
             type: 'POST',
@@ -144,7 +186,7 @@ function showFactoryDetails(factoryId) {
                 $("#factoryDetails .factoryName").text(data.linkman);
                 $("#factoryDetails .contactNumber").text(data.mobileNumber);
 
-                var factoryNameNode = $("#" + data.id);
+                var factoryNameNode = $("#" + nodeId);
                 var offset = factoryNameNode.offset();
                 detailsDialog.css("top", offset.top - (detailsDialog.height() - factoryNameNode.height()) / 2);
                 detailsDialog.css("left", offset.left + (factoryNameNode.width() / 2) + 35);
@@ -156,17 +198,95 @@ function showFactoryDetails(factoryId) {
         });
     }
 }
-function removeFactoryDetails(factoryId) {
+
+function removeFactoryDetails() {
     $("#factoryDetails").hide();
 }
 
+function initOpenProductionSheetAction() {
+    var date = $(".addedDate").first().text;
+    var factoryId = "";
+
+    var n = 1;
+    $(".open-production-sheet").each(function (i, a) {
+        var context = $(this).parents('.item').first();
+        var curDate = $(".addedDate", context).text();
+        var curFactoryId = $(".factoryId", context).val();
+        $(this).attr("data-group-id", curFactoryId + "_" + ((n-1) / 6).toFixed(0));
+
+        if (date != curDate) {
+            date = curDate;
+            factoryId = "";
+            n = 1;
+        }
+
+        if (curFactoryId != factoryId || n % 6 == 1){
+            $(this).show();
+            factoryId = curFactoryId;
+        }
+
+        n++;
+
+    });
+}
+
+function startInputProductNo() {
+    $("#iframe-common").attr("src", ctx + "/order/inputProductNo?id=" + favorId);
+    dialog("#dialog-common", {
+        top: 80,
+        onClose : function () {
+        }
+    });
+}
+
+function openProductionSheetClick(e) {
+    e.preventDefault();
+    // var context = $(this).parents('.item').first();
+    var groupId = $(this).attr("data-group-id");
+    var itemIds = [];
+    $("[data-group-id=" + groupId + "]").each(function () {
+        itemIds.push($(this).attr("data-item-id"));
+    });
+
+    if (itemIds.length > 0) {
+        for (var i = 0; i < itemIds.length; i++) {
+            $("#form1").append($("<input type='hidden' name='itemIds' />").val(itemIds[i]));
+        }
+        $("#form1").submit();
+    }
+
+}
+
+function toContainer(e) {
+    var volume = $("#containerVolume").val();
+    if (!(/^[1-9]\d*$/.test(volume))) {
+        $("#containerVolume").val('');
+    } else {
+        var $form = $("<form method='post'></form>");
+        $form.attr("target", "_self");
+        $form.attr("action", ctx + "/container/generateFromOrder");
+        $form.append($("<input type='hidden' name='favorId' />").val(favorId));
+        $form.append($("<input type='hidden' name='containerVolume' />").val(
+            $("#containerVolume").val()
+        ));
+        $form.submit();
+    }
+}
+
 $(function () {
+    $("#toContainer").click(function (e) {
+        toContainer(e);
+    });
+
+    $(".open-production-sheet").click(openProductionSheetClick);
     
     $("#main-table .factoryName").mouseover(function (e) {
-        showFactoryDetails($(this).attr("id"));
+        var context = $(this).parents('.item').first();
+        var id = $(".factoryId", context).val();
+        showFactoryDetails(id, $(this).attr("id"));
     });
     $("#main-table .factoryName").mouseout(function (e) {
-        removeFactoryDetails($(this).attr("id"));
+        removeFactoryDetails();
     });
 
     $("#select-all").click(selectAll);
@@ -176,5 +296,17 @@ $(function () {
         }
     });
     $("#search").click(search);
+
+    $("#inputProductNo").click(function (e) {
+        startInputProductNo();
+    });
+
+
+    initInput();
+
     loadFavorOrderCustomerList();
+
+    getAccumulativeTotal();
+
+    initOpenProductionSheetAction();
 })

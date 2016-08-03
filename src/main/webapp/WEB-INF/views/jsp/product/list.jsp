@@ -87,7 +87,7 @@
             <td class="td70 toptdbg">毛/净重</td>
         </tr>
         <c:forEach items="${productPage.dataList}" var="p" varStatus="status">
-            <tr>
+            <tr class="item">
                 <td height="24" class="break tdbg">
                         ${(productPage.dataQuantity - (productPage.pageIndex - 1) * productPage.pageSize) - status.index}
                 </td>
@@ -117,7 +117,7 @@
                     <input name="factoryProductName" type="text" value="${p.factoryProductName}"/>
                 </td>
                 <td class="break tdbg">
-                    <input name="companyProductNo" type="text" value="${p.companyProductNo}"/>
+                    <input id="companyProductNo-${p.id}" name="companyProductNo" type="text" value="${p.companyProductNo}"/>
                 </td>
                 <td class="break tdbg">
                     <input name="factoryProductNo" type="text" value="${p.factoryProductNo}"/>
@@ -159,7 +159,8 @@
                     <input name="subCategory" type="text" value="${p.subCategory}"/>
                 </td>
                 <td class="break tdbg">
-                        <a href="javascript:void(0);" class="factoryName" id="${p.factoryId}">${p.factoryName}</a>
+                    <input class="factoryId" type="hidden" value="${p.factoryId}" name="factoryId" />
+                    <a href="javascript:void(0);" class="factoryName" id="${p.factoryId}-${status.index}">${p.factoryName}</a>
                 </td>
                 <td class="break tdbg">
                     <fmt:formatDate value="${p.addedDate}" pattern="MM-dd" />
@@ -168,7 +169,7 @@
                     <input name="remark" type="text" value="${p.remark}"/>
                 </td>
                 <td class="break tdbg">
-                        <input name="id" class="product-checkbox ${status.index == 0 ? 'first-item' : ''}" type="checkbox" value="${p.id}" />
+                    <input name="id" class="product-checkbox ${status.index == 0 ? 'first-item' : ''}" type="checkbox" value="${p.id}" />
                 </td>
             </tr>
         </c:forEach>
@@ -205,6 +206,7 @@
         </tr>
         <tr>
             <td height="20" align="right" valign="top" class="padtop3" style="padding-right: 50px">
+                <a href="javascript:void(0);" id="generate-product-no">生成货号</a>
                 <%--<a href="javascript:void(0);" id="copy-product">复制下行</a>--%>
                 <%--<input id="copy-count" style="width: 30px; border: 1px solid black"/>&nbsp;行--%>
             </td>
@@ -243,6 +245,13 @@
 
 <div id="dialog-common2" style="display: none; width: 100%; top: 0px; bottom: 0; border: 0px solid #000000; z-index: 999">
     <iframe name="iframe-common2" id="iframe-common2" style="border: 0; width: 800px; margin:0 auto">
+    </iframe>
+</div>
+
+
+
+<div id="dialog-common3" style="display: none; width: 100%; top: 0px; bottom: 0; border: 0px solid #000000; z-index: 999">
+    <iframe name="iframe-common3" id="iframe-common3" style="border: 0; width: 800px; margin:0 auto">
     </iframe>
 </div>
 

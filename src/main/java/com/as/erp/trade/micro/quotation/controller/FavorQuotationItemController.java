@@ -100,12 +100,14 @@ public class FavorQuotationItemController {
             quotationId = new String[]{};
         }
         for (Integer i = 0 ; i < indexNumber.length ; i++) {
-            FavorQuotationItem item = favorQuotationItemService.get(
+            List<FavorQuotationItem> items = favorQuotationItemService.getList(
                     Conditions.newInstance()
                             .eq("indexNumber", indexNumber[i])
             );
-            if (item != null) {
-                favorQuotationItemService.delete(item.getId());
+            for (FavorQuotationItem item : items) {
+                if (item != null) {
+                    favorQuotationItemService.delete(item.getId());
+                }
             }
 
         }

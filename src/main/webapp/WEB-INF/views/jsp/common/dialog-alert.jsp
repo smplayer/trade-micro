@@ -6,7 +6,7 @@
 <style type="text/css">
     #dialog-alert {
         display: none;
-        background: #fff url("<c:url value="/resources/common/project/images/dialog-alert-bg.jpg"/>") no-repeat;
+        background: url("<c:url value="/resources/common/project/images/dialog-alert-bg.png"/>") no-repeat;
         width: 250px;
         /*height: 220px;*/
         /*border: 3px solid #006DB8;*/

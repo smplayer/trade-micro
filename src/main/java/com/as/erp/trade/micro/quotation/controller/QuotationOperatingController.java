@@ -3,12 +3,16 @@ package com.as.erp.trade.micro.quotation.controller;
 import com.as.common.query.PageHandler;
 import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.hibernate.Query;
+import com.as.erp.trade.micro.factory.entity.Factory;
 import com.as.erp.trade.micro.factory.service.FactoryService;
+import com.as.erp.trade.micro.product.entity.Product;
 import com.as.erp.trade.micro.product.service.ProductService;
+import com.as.erp.trade.micro.quotation.QuotationProductItemDraftPropModifiedEvent;
 import com.as.erp.trade.micro.quotation.entity.FavorQuotationItem;
 import com.as.erp.trade.micro.quotation.entity.Quotation;
 import com.as.erp.trade.micro.quotation.entity.QuotationProductItemDraft;
 import com.as.erp.trade.micro.quotation.service.FavorQuotationItemService;
+import com.as.erp.trade.micro.quotation.vo.QuotationProductItemDraftPropModifiedVO;
 import com.as.erp.trade.micro.system.service.UserConfigItemService;
 import com.as.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
@@ -153,11 +157,13 @@ public class QuotationOperatingController extends BaseQuotationController {
             @RequestParam("keywords") String factoryName,
             @RequestParam("linkman") String linkman,
             @RequestParam("contactNumber") String contactNumber,
+            @RequestParam("factoryProductNo") String factoryProductNo,
             ModelMap modelMap
     ) throws UnsupportedEncodingException {
         modelMap.put("factoryName", factoryName);
         modelMap.put("linkman", linkman);
         modelMap.put("contactNumber", contactNumber);
+        modelMap.put("factoryProductNo", factoryProductNo);
 
 
         PageHandler page = factoryService.getPage(
@@ -186,10 +192,47 @@ public class QuotationOperatingController extends BaseQuotationController {
     public Object selectFactoryForProductItemDraft(
             @RequestBody Map<String, Object> req
     ) {
+        Map<String, Object> map = new HashMap<>();
+
         String id = (String) req.get("id");
         String factoryId = (String) req.get("factoryId");
-        quotationProductItemDraftService.selectFactoryForProductItemDraft(id, factoryId);
-        Map<String, Object> map = new HashMap<>();
+        String factoryProductNo = (String) req.get("factoryProductNo");
+        Factory factory = quotationProductItemDraftService.selectFactoryForProductItemDraft(id, factoryId);
+        if (factory != null) {
+            List<Product> existsProducts = productService.getList(Conditions.newInstance().eq("factoryId", factory.getId()).eq("factoryProductNo", factoryProductNo));
+            if (existsProducts != null && !existsProducts.isEmpty()) {
+                Product existsProduct = existsProducts.get(0);
+                QuotationProductItemDraft item = quotationProductItemDraftService.getById(id);
+
+                item.setProductId(existsProduct.getId());
+                item.setImageURL(existsProduct.getImageURL());
+                item.setFunctionDescription(existsProduct.getFunctionDescription());
+                item.setPackageForm(existsProduct.getPackageForm());
+                item.setUnit(existsProduct.getUnit());
+                item.setCartonSize(existsProduct.getCartonSize());
+                item.setPackingQuantity(existsProduct.getPackingQuantity());
+                item.setGrossWeight(existsProduct.getGrossWeight());
+                item.setNetWeight(existsProduct.getNetWeight());
+
+                item.setFactoryProductName(existsProduct.getFactoryProductName());
+                item.setCompanyProductName(existsProduct.getCompanyProductName());
+                item.setCompanyProductNo(existsProduct.getCompanyProductNo());
+
+                quotationProductItemDraftService.update(item);
+
+                QuotationProductItemDraftPropModifiedVO modified = new QuotationProductItemDraftPropModifiedVO();
+                modified.setId(id);
+                modified.setPropertyName("cartonSize");
+                modified.setPropertyValue(item.getCartonSize());
+                applicationContext.publishEvent(new QuotationProductItemDraftPropModifiedEvent(modified));
+
+                modified = new QuotationProductItemDraftPropModifiedVO();
+                modified.setId(id);
+                modified.setPropertyName("packingQuantity");
+                modified.setPropertyValue(item.getPackingQuantity());
+                applicationContext.publishEvent(new QuotationProductItemDraftPropModifiedEvent(modified));
+            }
+        }
         map.put("result", "success");
         return map;
     }
@@ -313,6 +356,48 @@ public class QuotationOperatingController extends BaseQuotationController {
         modelMap.put("id", operating.getId());
         return "redirect:/quotation/operating";
     }
+
+
+
+
+
+
+    @RequestMapping(value = "quotation/inputProductNo", method = RequestMethod.GET)
+    public Object inputProductNo(
+            @RequestParam String id,
+            ModelMap modelMap
+    ) {
+        modelMap.put("id", id);
+        return "quotation/input-product-no";
+    }
+
+    @RequestMapping(value = "quotation/inputProductNo", method = RequestMethod.POST)
+    public Object inputProductNo(
+            @RequestParam String id,
+            @RequestParam String productNoString
+    ) {
+        String[] productNos = productNoString.trim().split("[,，]");
+        quotationProductItemDraftService.createFromProductNos(id, productNos);
+        return "redirect:/quotation/operating?id=" + id;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "ajax/quotation/inputProductNo", method = RequestMethod.POST)
+    public Object inputProductNo(
+            @RequestBody Map<String, Object> req
+    ) {
+        String favorId = (String) req.get("id");
+        String productNoString = (String) req.get("productNoString");
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", true);
+
+        return map;
+    }
+
+
+
+
 
 
 }

@@ -1,24 +1,18 @@
 package com.as.erp.trade.micro.quotation.controller;
 
-import com.as.common.Base;
-import com.as.erp.trade.micro.quotation.service.QuotationModuleConfigService;
 import com.as.erp.trade.micro.quotation.service.QuotationProductItemDraftService;
-import com.as.erp.trade.micro.quotation.service.QuotationProductItemService;
 import com.as.erp.trade.micro.quotation.service.QuotationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
- * Created by yrx on 2016/5/4.
+ * Created by yrx on 2016/7/15.
  */
-public abstract class BaseQuotationController extends Base {
-
+public class BaseQuotationController {
     @Autowired
     protected QuotationService quotationService;
     @Autowired
-    protected QuotationProductItemService quotationProductItemService;
-    @Autowired
     protected QuotationProductItemDraftService quotationProductItemDraftService;
     @Autowired
-    protected QuotationModuleConfigService quotationModuleConfigService;
-
+    protected ApplicationContext applicationContext;
 }

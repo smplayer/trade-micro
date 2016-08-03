@@ -4,6 +4,7 @@ import com.as.common.query.PageHandler;
 import com.as.common.query.hibernate.Conditions;
 import com.as.common.query.hibernate.Query;
 import com.as.erp.trade.micro.order.entity.FavorCustomer;
+import com.as.erp.trade.micro.order.entity.OrderProductItem;
 import com.as.erp.trade.micro.order.service.FavorCustomerService;
 import com.as.erp.trade.micro.order.service.OrderProductItemService;
 import com.as.erp.trade.micro.order.service.OrderService;
@@ -14,10 +15,7 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -56,8 +54,10 @@ public class OrderController {
             availableFavorId = userConfigItemService.getValue(user, DEFAULT_FAVOR_CUSTOMER_ID);
             if (availableFavorId == null) {
                 FavorCustomer front = favorCustomerService.getFront(user);
-                availableFavorId = front.getId();
-                userConfigItemService.setValue(user, DEFAULT_FAVOR_CUSTOMER_ID, availableFavorId);
+                if (front != null) {
+                    availableFavorId = front.getId();
+                    userConfigItemService.setValue(user, DEFAULT_FAVOR_CUSTOMER_ID, availableFavorId);
+                }
             }
         } else {
             userConfigItemService.setValue(user, DEFAULT_FAVOR_CUSTOMER_ID, availableFavorId);
@@ -66,46 +66,48 @@ public class OrderController {
 
         if (StringUtils.isNotBlank(availableFavorId)) {
             FavorCustomer favor = favorCustomerService.getById(availableFavorId);
-            String customerName = favor.getCustomerName();
+            if (favor != null) {
+                String customerName = favor.getCustomerName();
 
-            List<com.as.erp.trade.micro.order.entity.Order> orderList = orderService.getList(
-                    Conditions.newInstance().eq("customerName", customerName)
-            );
-
-            List<String> orderIdList = new ArrayList<>();
-            for (com.as.erp.trade.micro.order.entity.Order order : orderList) {
-                orderIdList.add(order.getId());
-            }
-
-            Query query = new Query()
-                    .setPageIndex(pageIndex)
-                    .setPageSize(pageSize);
-
-            if (orderByFactory) {
-                query.addOrder(Order.asc("factoryId"));
-            }
-
-            query.addOrder(Order.desc("createdTime"));
-
-            Conditions conditions = Conditions.newInstance().in("orderId", orderIdList);
-            if (StringUtils.isNotBlank(favorId) && StringUtils.isNotBlank(keywords)) {
-                conditions.or(
-                        Conditions.newInstance()
-                                .like("factoryName", "%" + keywords + "%")
-                                .like("linkman", "%" + keywords + "%")
-                                .like("contactNumber", "%" + keywords + "%")
-                                .like("companyProductName", "%" + keywords + "%")
-                                .like("companyProductNo", "%" + keywords + "%")
-                                .like("packageForm", "%" + keywords + "%")
-                                .like("functionDescription", "%" + keywords + "%")
+                List<com.as.erp.trade.micro.order.entity.Order> orderList = orderService.getList(
+                        Conditions.newInstance().eq("customerName", customerName)
                 );
+
+                List<String> orderIdList = new ArrayList<>();
+                for (com.as.erp.trade.micro.order.entity.Order order : orderList) {
+                    orderIdList.add(order.getId());
+                }
+
+                Query query = new Query()
+                        .setPageIndex(pageIndex)
+                        .setPageSize(pageSize);
+
+                if (orderByFactory) {
+                    query.addOrder(Order.asc("factoryId"));
+                }
+
+                query.addOrder(Order.desc("createdTime"));
+
+                Conditions conditions = Conditions.newInstance().in("orderId", orderIdList);
+                if (StringUtils.isNotBlank(favorId) && StringUtils.isNotBlank(keywords)) {
+                    conditions.or(
+                            Conditions.newInstance()
+                                    .like("factoryName", "%" + keywords + "%")
+                                    .like("linkman", "%" + keywords + "%")
+                                    .like("contactNumber", "%" + keywords + "%")
+                                    .like("companyProductName", "%" + keywords + "%")
+                                    .like("companyProductNo", "%" + keywords + "%")
+                                    .like("packageForm", "%" + keywords + "%")
+                                    .like("functionDescription", "%" + keywords + "%")
+                    );
+                }
+                query.setConditions(conditions);
+
+                PageHandler page = orderProductItemService.getPage(query);
+
+                modelMap.put("page", page);
+                modelMap.put("favor", favor);
             }
-            query.setConditions(conditions);
-
-            PageHandler page = orderProductItemService.getPage(query);
-
-            modelMap.put("page", page);
-            modelMap.put("favor", favor);
         }
         return "order/order";
     }
@@ -229,12 +231,69 @@ public class OrderController {
         return "order/favor-customer-setting-success";
     }
 
-    @RequestMapping("order/addProductByProductNos")
-    public String addProductByProductNos(
-            @RequestParam String productNoString
+    @ResponseBody
+    @RequestMapping("order/modifyItemProp")
+    public Object modifyItemProp(
+            @RequestBody Map<String, Object> req
+    ){
+        String id = (String) req.get("id");
+        String propName = (String) req.get("propName");
+        Object propValue = req.get("propValue");
+
+        Map<String, Object> map = new HashMap<>();
+        OrderProductItem item = orderProductItemService.modifyProp(id, propName, propValue);
+        map.put("item", item);
+        return map;
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping("order/accumulativeTotal")
+    public Object accumulativeTotal(
+            @RequestBody Map<String, Object> req
     ) {
-        String[] productNos = productNoString.trim().split("[,，]");
-        return "redirect:/order";
+        String favorId = (String) req.get("favorId");
+        Long pageIndex = Long.valueOf((String) req.get("pageIndex"));
+        Integer pageSize = Integer.valueOf((String) req.get("pageSize"));
+        return orderProductItemService.getAccumulativeTotal(favorId, pageIndex, pageSize);
+    }
+
+
+    @RequestMapping("order/orderForm")
+    public String orderForm(
+            @RequestParam List<String> itemIds,
+            ModelMap modelMap
+    ) {
+        PageHandler page = orderProductItemService.getPage(
+                new Query().addOrder(Order.desc("createdTime"))
+                .setPageSize(6)
+                .setConditions(
+                        Conditions.newInstance()
+                                .in("id", itemIds)
+                )
+        );
+
+        Map<String, Object> sum = new HashMap<>();
+        sum.put("cartonQuantity", 0);
+        sum.put("productQuantity", 0);
+        sum.put("payment", 0D);
+        sum.put("netWeight", 0D);
+        sum.put("grossWeight", 0D);
+
+        for (Object oItem : page.getDataList()) {
+            OrderProductItem item = (OrderProductItem) oItem;
+            sum.put("cartonQuantity", (Integer) sum.get("cartonQuantity") + (item.getOrderedCartonQuantity() != null ? item.getOrderedCartonQuantity() : 0));
+            sum.put("productQuantity", (Integer) sum.get("productQuantity") + (item.getOrderedProductQuantity() != null ? item.getOrderedProductQuantity() : 0));
+            sum.put("payment", (Double) sum.get("payment") + (item.getPayment() != null ? item.getPayment() : 0D));
+            sum.put("netWeight", (Double) sum.get("netWeight") + (item.getNetWeight() != null ? item.getNetWeight() : 0D));
+            sum.put("grossWeight", (Double) sum.get("grossWeight") + (item.getGrossWeight() != null ? item.getGrossWeight() : 0D));
+        }
+
+        modelMap.put("today", new Date());
+        modelMap.put("page", page);
+        modelMap.put("sum", sum);
+        return "order/orderForm";
     }
 
 }

@@ -39,7 +39,8 @@ function selectFactory() {
             contentType: "application/json",
             data: JSON.stringify({
                 "id": quotationProductItemDraftId,
-                "factoryId": checkedItems.val()
+                "factoryId": checkedItems.val(),
+                "factoryProductNo": factoryProductNo
             }),
             success: function(data){
                 // alert('数据加载成功');

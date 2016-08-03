@@ -191,12 +191,10 @@ function findFactory(e) {
         dialogAlert("#dialog-alert", {
             textContent: '请选择要查新的厂名打勾'
         });
-    } else if (checkedItems.length > 1) {
-        dialogAlert("#dialog-alert", {
-            textContent: '查新只能选择一项'
-        });
+    } else if (checkedItems.length > 1) {s
     } else {
         var context = checkedItems.parents('.item').first();
+        var factoryProductNo = $("input[name=factoryProductNo]", context).val();
         var factoryName = $("input[name=factoryName]", context).val();
         var linkman = $("input[name=linkman]", context).val();
         var contactNumber = $("input[name=contactNumber]", context).val();
@@ -207,6 +205,7 @@ function findFactory(e) {
             $form.attr("target", "iframe-common");
             $form.attr("action", ctx + "/quotation/findFactoryForDraft");
             $form.append($("<input type='hidden' name='quotationProductItemDraftId' />").val(checkedItems.val()));
+            $form.append($("<input type='hidden' name='factoryProductNo' />").val(factoryProductNo));
             $form.append($("<input type='hidden' name='keywords' />").val(factoryName));
             $form.append($("<input type='hidden' name='linkman' />").val(linkman));
             $form.append($("<input type='hidden' name='contactNumber' />").val(contactNumber));
@@ -367,6 +366,10 @@ function initPage() {
     //     var context = $(this).parents(".item").first();
     //     $("input[value='0']", context).val("");
     // });
+    if (quotationId == '') {
+        // document.href = ctx + "/quotation/operating?empty=true&indexNumber=" + (i + 1);
+    }
+
     if (empty === true) {
         // quotationOperatingSetting();
         openCommonDialog($("#quotation-operating-setting"));
@@ -511,9 +514,21 @@ $(function () {
         disableModification();
     }
     
-    $("#copy-item").click(copyItem);
+    $("#copy-item").click(
+        function () {
+            if (generatedOrder == true) {
+                return false;
+            }
+            copyItem();
+        }
+    );
 
-    $("#find-factory").click(findFactory);
+    $("#find-factory").click(function(e) {
+        if (generatedOrder == true) {
+            return false;
+        }
+        findFactory(e);
+    });
 
     $(".product-image").click(function (e) {
         showBigProductImage($(this));
@@ -526,6 +541,9 @@ $(function () {
     });
     
     $(".upload-image").click(function () {
+        if (generatedOrder == true) {
+            return false;
+        }
         var id = $(this).attr("data-product-id");
         uploadImage(id);
     });
@@ -601,6 +619,10 @@ $(function () {
     
     $("#btn-save").click(function (e) {
         e.preventDefault();
+
+        if (generatedOrder == true) {
+            return false;
+        }
         
         // var factoryProductName = $("#new-item [name=factoryProductName]").val();
         // var factoryProductNo = $("#new-item [name=factoryProductNo]").val();
@@ -660,12 +682,20 @@ $(function () {
 
     $("#btn-delete").click(function (e) {
         e.preventDefault();
+
+        if (generatedOrder == true) {
+            return false;
+        }
+
         deleteItems();
     });
 
     $(".create-item-after-enter, #new-item").keypress(function (e) {
         if(window.event.keyCode == 13) {
             e.preventDefault();
+            if (generatedOrder == true) {
+                return false;
+            }
 
             if(quotationId == '') {
                 dialogAlert("#dialog-alert", {

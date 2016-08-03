@@ -56,6 +56,14 @@ function initTotal() {
 }
 
 function generateOrderFromQuotation() {
+    if ($(".notSyncToProduct").length > 0) {
+        dialogAlert("#dialog-alert", {
+            textContent: '很抱歉，请先获取公司货号再转'
+        });
+        return;
+    }
+
+
     $.ajax({
         type: 'POST',
         url: ctx + "/order/generateOrderFromQuotation",
@@ -66,7 +74,8 @@ function generateOrderFromQuotation() {
         }),
         success: function (data) {
             // alert("成功");
-            document.location.reload();
+            window.opener.document.location.href = ctx + "/quotation/operating";
+            CloseWebPage();
         },
         error: function (xhr, type) {
             // alert("失败");

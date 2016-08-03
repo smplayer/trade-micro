@@ -12,8 +12,13 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/project/css/style.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/quotation/css/quotation.css"/>"/>
     <style type="text/css">
+        body {
+            background: url(<c:url value="/resources/quotation/images/bgjk.png" />) #EFE9C7;
+        }
+
         .top2w {
-            width: 1100px;
+            width: 1180px;
+            margin: 5px auto;
         }
 
         .topr2 {
@@ -25,17 +30,17 @@
         }
 
         .toptdbg {
-            background: #D9D9D9;
+            background: #f0e0c9;
             text-align: center;
         }
 
         .main {
-            width: 1262px;
+            /*width: 1420px;*/
+            /*height: 800px;*/
             /*height: 765px;*/
-            border: 1px solid #000;
-            margin: 0 auto;
-            background: #EBEAE8;
-            margin-top: 65px;
+            /*border: 1px solid #000;*/
+            /*margin: 0 auto;*/
+            margin-top: 45px;
         }
 
         .btn {
@@ -48,12 +53,26 @@
 
 <body>
 <form id="form1" name="form1" method="post" action="">
+
+
+
+    <c:import url="/WEB-INF/views/jsp/common/top-bar.jsp">
+        <c:param name="backgroundColor" value="#B47BFE"/>
+        <c:param name="currentModule" value="quotation"/>
+        <c:param name="currentSubModule" value="archive"/>
+        <c:param name="title" value="档案"/>
+    </c:import>
+
+
+
+
+
     <div class="main">
         <div class="top2 top2w" style="overflow: hidden">
-            <div class="fr topr2" style="margin-right: 50px;">
+            <div class="fr topr2" style="margin-right: 70px;">
                 <c:import url="/WEB-INF/views/jsp/common/paging.jsp">
-                    <c:param name="prePageImage" value="/resources/common/project/images/leftg.png"  />
-                    <c:param name="nextPageImage" value="/resources/common/project/images/rightg.png"  />
+                    <c:param name="prePageImage" value="/resources/quotation/images/left-arc.png"  />
+                    <c:param name="nextPageImage" value="/resources/quotation/images/right-arc.png"  />
                     <c:param name="pageIndex" value="${page.pageIndex}"  />
                     <c:param name="pageQuantity" value="${page.pageQuantity}"  />
                     <c:param name="url" value="/quotation/archiveList"/>
@@ -74,6 +93,7 @@
                 <td class="td90 toptdbg">总体积</td>
                 <td class="td90 toptdbg">总金额</td>
                 <td class="td80 toptdbg">档案</td>
+                <td class="td80 toptdbg">历史档案</td>
                 <td class="td40 toptdbg">
                     <a href="javascript: void(0);" id="select-all">全选</a>
                 </td>
@@ -111,15 +131,18 @@
                         <fmt:formatNumber value="${totalValueMap[a.id].amount}" maxFractionDigits="0" pattern="#" />
                     </td>
                     <td class="break tdbg">
-                        <a class="reload-from-archive" id="${a.id}" href="javascript:void(0);">调阅</a>
+                        <a class="" id="${a.id}" href="<c:url value="/quotation/reloadFromArchive?id=${a.id}" />">调阅</a>
                     </td>
                     <td class="break tdbg">
-                        <input type="checkbox" id="${a.id}" name="id" value="${a.id}" />
+                        ${a.generatedOrder == true ? '是' : ''}
+                    </td>
+                    <td class="break tdbg">
+                        <input type="checkbox" id="${a.id}" name="id" value="${a.id}" class="${a.generatedOrder ? 'generatedOrder' : ''}" />
                     </td>
                 </tr>
             </c:forEach>
 
-            <c:forEach begin="${fn:length(page.dataList)}" end="12" step="1">
+            <c:forEach begin="${fn:length(page.dataList)}" end="14" step="1">
                 <tr>
                     <td height="26" class="break tdbg">&nbsp;</td>
                     <td class="break tdbg">&nbsp;</td>
@@ -134,6 +157,7 @@
                     <td class="break tdbg">&nbsp;</td>
                     <td class="break tdbg">&nbsp;</td>
                     <td class="break tdbg">&nbsp;</td>
+                    <td class="break tdbg">&nbsp;</td>
                 </tr>
             </c:forEach>
 
@@ -142,23 +166,19 @@
 
 
         </table>
-        <table width="1100" border="0" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-                <td height="30" colspan="3" align="left" valign="middle">&nbsp;</td>
-            </tr>
-            <tr>
-                <td width="950" height="20" align="right" valign="top">
-                    <a href="javascript:void(0);" id="copyFromArchive" >复制</a>
-                </td>
-                <td width="70" align="right" valign="top"><input type="image" src="<c:url value="/resources/quotation/images/delg.png" />" class="btn" id="del"/></td>
-                <td width="80" align="right" valign="top">&nbsp;</td>
-            </tr>
-        </table>
+        <div style="width: 1180px; overflow: hidden; margin: 35px auto 0 auto;">
+            <div style="float: right; margin-right: 70px">
+                <input type="image" src="<c:url value="/resources/quotation/images/delg.png" />" class="btn" id="del"/>
+            </div>
+            <div style="float: right;">
+                <a href="javascript:void(0);" id="copyFromArchive" style="line-height: 25px; margin-right: 60px;" >复制</a>
+            </div>
+        </div>
     </div>
 </form>
 
 
-
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
 
 <script>
 
@@ -193,8 +213,14 @@ $(function () {
         e.preventDefault();
         var checked = $("#data-table input[name=id]:checked");
         if (checked.length == 1) {
-            var id = checked.val();
-            window.parent.location.href = ctx + '/quotation/copyFromArchive?id=' + id;
+            if (!checked.hasClass('generatedOrder')) {
+                dialogAlert("#dialog-alert", {
+                    textContent: '很抱歉，只有历史档案才能复制'
+                });
+            } else {
+                var id = checked.val();
+                window.location.href = ctx + '/quotation/copyFromArchive?id=' + id;
+            }
         }
     })
 

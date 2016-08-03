@@ -134,7 +134,8 @@ public class QuotationServiceImpl extends GenericServiceImpl<Quotation, String> 
             if (quotationOperating2Archive != null) {
                 archive = getById(quotationOperating2Archive.getArchiveId());
                 copyQuotationProps(operating, archive);
-                archive.setArchivedDate(new Date());
+                if (!archive.getGeneratedOrder())
+                    archive.setArchivedDate(new Date());
                 update(archive);
 
                 List<QuotationProductItemDraft> archivedDraftList = quotationProductItemDraftService.getList(
@@ -169,6 +170,7 @@ public class QuotationServiceImpl extends GenericServiceImpl<Quotation, String> 
                 quotationOperating2ArchiveService.delete(quotationOperating2Archive.getId());
             } else {
                 operating.setOperationFlag(Quotation.FLAG_ARCHIVED);
+
                 operating.setArchivedDate(new Date());
                 update(operating);
                 archive = operating;
@@ -213,7 +215,9 @@ public class QuotationServiceImpl extends GenericServiceImpl<Quotation, String> 
         }
 
         List<QuotationProductItemDraft> draftList = quotationProductItemDraftService.getList(
-                new Query().setConditions(
+                new Query()
+                        .setPageSize(Integer.MAX_VALUE)
+                        .setConditions(
                         Conditions.newInstance()
                                 .eq("quotationId", archive.getId())
                 ).addOrder(Order.asc("createdTime"))

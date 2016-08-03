@@ -13,6 +13,7 @@ import javax.persistence.Table;
 public class FavorCustomer extends BaseEntity {
     private String userId;
     private String customerName;
+    private String currency;
     private Integer indexNumber;
     private String passwordFlag;
 
@@ -30,6 +31,14 @@ public class FavorCustomer extends BaseEntity {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public Integer getIndexNumber() {

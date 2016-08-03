@@ -198,6 +198,7 @@
             </tr>
         </table>
         <div class="bottom">
+
             <div class="fr btmbtn"><input id="btn-confirm" type="image" src="<c:url value="/resources/common/project/images/bluetj.png" />" class="btn"/></div>
             <div class="fr"><input id="btn-clear" type="image" src="<c:url value="/resources/common/project/images/blueqk.png" />" class="btn"/></div>
         </div>

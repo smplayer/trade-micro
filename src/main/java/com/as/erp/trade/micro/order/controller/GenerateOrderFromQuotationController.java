@@ -7,10 +7,13 @@ import com.as.erp.trade.micro.order.entity.OrderProductItem;
 import com.as.erp.trade.micro.order.service.FavorCustomerService;
 import com.as.erp.trade.micro.order.service.OrderProductItemService;
 import com.as.erp.trade.micro.order.service.OrderService;
+import com.as.erp.trade.micro.quotation.entity.FavorQuotationItem;
 import com.as.erp.trade.micro.quotation.entity.Quotation;
 import com.as.erp.trade.micro.quotation.entity.QuotationProductItemDraft;
+import com.as.erp.trade.micro.quotation.service.FavorQuotationItemService;
 import com.as.erp.trade.micro.quotation.service.QuotationProductItemDraftService;
 import com.as.erp.trade.micro.quotation.service.QuotationService;
+import com.as.erp.trade.micro.system.service.UserConfigItemService;
 import com.as.user.entity.User;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +24,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by yrx on 2016/6/25.
  */
 @Controller
 public class GenerateOrderFromQuotationController {
+
+    public final static String DEFAULT_QUOTATION_ID = "default-quotation-id";
 
     @Autowired
     private QuotationService quotationService;
@@ -44,6 +46,10 @@ public class GenerateOrderFromQuotationController {
 
     @Autowired
     private FavorCustomerService favorCustomerService;
+    @Autowired
+    private FavorQuotationItemService favorQuotationItemService;
+    @Autowired
+    private UserConfigItemService userConfigItemService;
 
     @ResponseBody
     @RequestMapping("order/generateOrderFromQuotation")
@@ -61,6 +67,21 @@ public class GenerateOrderFromQuotationController {
                 ).addOrder(Order.asc("createdTime"))
         );
 
+        List<String> orderedFactoryIdList = new ArrayList<>();
+        Map<String, List<QuotationProductItemDraft>> mappedList = new HashMap<>();
+        for (QuotationProductItemDraft item : draftList) {
+            List<QuotationProductItemDraft> groupedList = mappedList.get(item.getFactoryId());
+            if (groupedList == null) {
+                groupedList = new ArrayList<>();
+                mappedList.put(item.getFactoryId(), groupedList);
+            }
+            groupedList.add(item);
+            if (!orderedFactoryIdList.contains(item.getFactoryId())) {
+                orderedFactoryIdList.add(item.getFactoryId());
+            }
+        }
+
+
         com.as.erp.trade.micro.order.entity.Order order = orderService.get(Conditions.newInstance().eq("quotationId", quotationId));
 
         if (order == null) {
@@ -76,43 +97,51 @@ public class GenerateOrderFromQuotationController {
         order.setCustomerName(quotation.getCustomerName());
         orderService.saveOrUpdate(order);
 
-        for (QuotationProductItemDraft draft : draftList) {
-            OrderProductItem opi = new OrderProductItem();
-            opi.setOrderId(order.getId());
-            opi.setProductId(draft.getProductId());
-            opi.setFactoryId(draft.getFactoryId());
-            opi.setFactoryName(draft.getFactoryName());
-            opi.setLinkman(draft.getLinkman());
-            opi.setContactNumber(draft.getContactNumber());
-            opi.setImageURL(draft.getImageURL());
-            opi.setCompanyProductName(draft.getCompanyProductName());
-            opi.setCompanyProductNo(draft.getCompanyProductNo());
-            opi.setFunctionDescription(draft.getFunctionDescription());
-            opi.setPackageForm(draft.getPackageForm());
-            opi.setUnit(draft.getUnit());
-            opi.setFactoryPrice(draft.getFactoryPrice());
-            opi.setCartonSize(draft.getCartonSize());
-            opi.setPackingQuantity(draft.getPackingQuantity());
-            opi.setGrossWeight(draft.getGrossWeight());
-            opi.setNetWeight(draft.getNetWeight());
-            opi.setOrderedCartonQuantity(draft.getOrderedCartonQuantity());
-            opi.setVolume(draft.getTotalVolume());
-            opi.setPayment(draft.getTotalAmount());
-            opi.setDeliveredCartonQuantity(null);
-            opi.setRemainingCartonQuantity(null);
-            opi.setScheduledDeliverableCartonQuantity(null);
-            opi.setScheduledDeliverableVolume(null);
-            opi.setScheduledDeliverablePayment(null);
-            opi.setAddedDate(new Date());
+        for (String factoryId : orderedFactoryIdList) {
+            List<QuotationProductItemDraft> groupedlist = mappedList.get(factoryId);
 
-            opi.setRemainingCartonQuantity(opi.getOrderedCartonQuantity());
+            for (QuotationProductItemDraft draft : groupedlist) {
 
-            orderProductItemService.save(opi);
+                OrderProductItem opi = new OrderProductItem();
+                opi.setOrderId(order.getId());
+                opi.setProductId(draft.getProductId());
+                opi.setFactoryId(draft.getFactoryId());
+                opi.setFactoryName(draft.getFactoryName());
+                opi.setLinkman(draft.getLinkman());
+                opi.setContactNumber(draft.getContactNumber());
+                opi.setImageURL(draft.getImageURL());
+                opi.setCompanyProductName(draft.getCompanyProductName());
+                opi.setCompanyProductNo(draft.getCompanyProductNo());
+                opi.setFactoryProductNo(draft.getFactoryProductNo());
+                opi.setFunctionDescription(draft.getFunctionDescription());
+                opi.setPackageForm(draft.getPackageForm());
+                opi.setUnit(draft.getUnit());
+                opi.setFactoryPrice(draft.getFactoryPrice());
+                opi.setQuotedPrice(draft.getQuotedPrice());
+                opi.setCartonSize(draft.getCartonSize());
+                opi.setPackingQuantity(draft.getPackingQuantity());
+                opi.setGrossWeight(draft.getGrossWeight());
+                opi.setNetWeight(draft.getNetWeight());
+                opi.setOrderedCartonQuantity(draft.getOrderedCartonQuantity());
+                opi.setOrderedProductQuantity(draft.getOrderedProductQuantity());
+                opi.setVolume(draft.getTotalVolume());
+                opi.setPayment(draft.getTotalAmount());
+                opi.setDeliveredCartonQuantity(null);
+                opi.setRemainingCartonQuantity(null);
+                opi.setScheduledDeliverableCartonQuantity(null);
+                opi.setScheduledDeliverableVolume(null);
+                opi.setScheduledDeliverablePayment(null);
+                opi.setAddedDate(new Date());
 
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                opi.setRemainingCartonQuantity(opi.getOrderedCartonQuantity());
+
+                orderProductItemService.save(opi);
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -147,6 +176,7 @@ public class GenerateOrderFromQuotationController {
                 favorCustomer.setIndexNumber(availableIndexNumber);
             }
             favorCustomer.setCustomerName(order.getCustomerName());
+            favorCustomer.setCurrency(quotation.getCurrency());
             favorCustomer.setUserId(user.getId());
             favorCustomer.setPasswordFlag(user.getRole());
             favorCustomerService.save(favorCustomer);
@@ -155,6 +185,21 @@ public class GenerateOrderFromQuotationController {
 
         quotation.setGeneratedOrder(true);
         quotationService.update(quotation);
+
+
+
+        Quotation archive = quotationService.saveToArchive(quotation.getId());
+        if (archive != null) {
+            List<FavorQuotationItem> fs = favorQuotationItemService.getList(Conditions.newInstance().eq("quotationId", quotation.getId()));
+            for (FavorQuotationItem f : fs) {
+                if (f != null) {
+                    favorQuotationItemService.delete(f.getId());
+                }
+            }
+        }
+        userConfigItemService.setValue(user, DEFAULT_QUOTATION_ID, null);
+
+
 
         Map<String, Object> map = new HashMap<>();
         map.put("success", true);

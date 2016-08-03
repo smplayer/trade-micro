@@ -62,4 +62,19 @@ public class Conditions {
         return this;
     }
 
+    public Conditions lt(String propertyName, Object value) {
+        criterionList.add(Restrictions.lt(propertyName, value));
+        return this;
+    }
+
+    public Conditions le(String propertyName, Object value) {
+        criterionList.add(Restrictions.le(propertyName, value));
+        return this;
+    }
+
+    public Conditions between(String propertyName, Object lo, Object hi) {
+        criterionList.add(Restrictions.between(propertyName, lo, hi));
+        return this;
+    }
+
 }

@@ -29,11 +29,15 @@ public class FavorCustomerServiceImpl extends GenericServiceImpl<FavorCustomer, 
     @Override
     public FavorCustomer getFront(User user) {
         Integer minIndexNumber = get(Projections.min("indexNumber"), Integer.class);
-        FavorCustomer favorCustomer = get(
-                Conditions.newInstance()
+        if (minIndexNumber != null) {
+            FavorCustomer favorCustomer = get(
+                    Conditions.newInstance()
 //                        .eq("userId", user.getId())
 //                        .eq("passwordFlag", user.getRole())
-                        .eq("indexNumber", minIndexNumber));
-        return favorCustomer;
+                            .eq("indexNumber", minIndexNumber));
+            return favorCustomer;
+        } else {
+            return null;
+        }
     }
 }

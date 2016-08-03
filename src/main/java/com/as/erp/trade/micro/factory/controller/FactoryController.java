@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,21 @@ public class FactoryController {
 
         Map<String, Object> result = new HashMap<>();
         result.put("success", true);
+        result.put("factory", factory);
         return result;
+    }
+
+
+    @RequestMapping(value = "factory/createFactoryForDraft")
+    public String findFactory(
+            @RequestParam("productId") String productId,
+            @RequestParam("factoryName") String factoryName,
+            ModelMap modelMap
+    ) throws UnsupportedEncodingException {
+        modelMap.put("productId", productId);
+        modelMap.put("factoryName", factoryName);
+
+        return "factory/create";
     }
 
     @RequestMapping(value = "factory/delete/{id}")

@@ -88,6 +88,7 @@
 <script type="text/javascript" src="<c:url value="/resources/factory/js/factory-search-for-draft.js"/>"></script>
 <script>
     var quotationProductItemDraftId = '${quotationProductItemDraftId}';
+    var factoryProductNo = '${factoryProductNo}';
     var selectFactoryForProductItemDraftUrl = '<c:url value="/quotation/selectFactoryForProductItemDraft" />';
 </script>
 

@@ -1,0 +1,84 @@
+
+body {
+    background: url(../images/zgzdbg.png) #eae3e3;
+}
+
+.toptt {
+    letter-spacing: 38px;
+}
+
+.top div {
+    margin-left: 38px;
+}
+
+.toplw {
+    width: 320px;
+}
+
+.topw {
+    width: 620px;
+    padding-top: 26px;
+}
+
+.top2w {
+    width: 1330px;
+    margin-bottom: 1px;
+}
+
+.topfl {
+    margin-left: 70px;
+    width: 130px;
+    text-align: left;
+}
+
+.topf2 {
+    width: 100px;
+    text-align: left;
+}
+
+.topf3 {
+    width: 245px;
+    text-align: left;
+}
+
+.topr2 {
+    width: 130px;
+    text-align: right;
+    margin-right: 70px;
+}
+
+.topr3 {
+    width: 100px;
+    text-align: right;
+}
+
+.tdbg {
+    background: #F5F5E9;
+}
+
+.toptdbg {
+    background: #e2e2e2;
+    text-align: center;
+}
+
+.menutop {
+    margin-bottom: 34px;
+}
+
+.w80 {
+    width: 80px;
+    height: 16px;
+    border: 1px solid #000;
+    background: #fff;
+    line-height: 18px;
+}
+
+.w60 {
+    width: 60px;
+    height: 16px;
+    border: 1px solid #000;
+    background: #fff;
+    line-height: 18px;
+}
+
+

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_system_config_item")
 public class SystemConfigItem extends BaseEntity {
+    public final static String ORDER_NO = "order_no";
     public final static String PRODUCT_N0_PREFIX = "product_no_prefix";
     public final static String PRODUCT_NO_BEGIN = "product_no_begin";
 //    public final static String START_QUOTATION_SERIAL_NUMBER = "start_quotation_serial_number";

@@ -1,0 +1,38 @@
+
+.header {
+    margin-top: 30px;
+}
+
+.title {
+    letter-spacing: 18px;
+    padding-left: 24px;
+    padding-right: 6px;
+    font-size: 22px;
+    border-bottom: 1px solid red;
+    margin: 30px auto 10px auto;
+}
+
+.pre-table-info,
+.after-table-info {
+    width: 651px;
+    margin: 10px auto 0 auto;
+    text-align: left;
+    overflow: hidden;
+}
+
+.pre-table-info .info-item,
+.after-table-info .info-item {
+    float: left;
+}
+
+#main-table {
+    width: 651px;
+    background-color: #000;
+    margin: 10px auto 0 auto;
+}
+
+#main-table td {
+    background-color: #ffffff;
+    overflow: hidden;
+    word-break: break-all;
+}

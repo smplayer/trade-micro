@@ -51,5 +51,6 @@ public interface GenericDao<E extends BaseEntity, PK extends Serializable> {
     public List<E> getList(Query query);
     public PageHandler getPage(Query query);
     public <T> T get(Projection projection, Class<T> type);
+    public <T> T get(Projection projection, Class<T> type, Conditions conditions);
 
 }

@@ -169,6 +169,21 @@ public class HibernateGenericDaoImpl<E extends BaseEntity, PK extends Serializab
         return (T) value;
     }
 
+    @Override
+    public <T> T get(Projection projection, Class<T> type, Conditions conditions) {
+         Criteria criteria = getSession().createCriteria(getEntityClass())
+                .setProjection(projection);
+
+        if(conditions != null)
+            for (Criterion criterion : conditions.getCriterionList()) {
+                criteria.add(criterion);
+            }
+
+        Object value = criteria.uniqueResult();
+
+        return (T) value;
+    }
+
     protected Session getSession() {
         return sessionFactory.getCurrentSession();
     }

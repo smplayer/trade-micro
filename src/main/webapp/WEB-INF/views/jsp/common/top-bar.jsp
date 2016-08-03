@@ -143,7 +143,7 @@
                 <li><input name="favor-module" type="radio" value="product"/></li>
                 <li><input name="favor-module" type="radio" value="factory"/></li>
                 <li><input name="favor-module" type="radio" value="order"/></li>
-                <li><input name="favor-module" type="radio" value="packing"/></li>
+                <li><input name="favor-module" type="radio" value="container"/></li>
                 <li><input name="favor-module" type="radio" value="payable"/></li>
             </ul>
             <ul>
@@ -166,8 +166,8 @@
                     <a id="action-factory" href="<c:url value="/factory/list"/>" class="${param.currentModule == 'factory' ? 'current' : ''}">工厂管理</a></li>
                 <li class="menu-item order">
                     <a id="action-order" href="<c:url value="/order"/>" class="${param.currentModule == 'order' ? 'current' : ''}">订单管理</a></li>
-                <li class="menu-item packing">
-                    <a id="action-packing" href="#" class="${param.currentModule == 'packing' ? 'current' : ''}">装柜制单</a></li>
+                <li class="menu-item container">
+                    <a id="action-container" href="<c:url value="/container/containerSheet"/>" class="${param.currentModule == 'container' ? 'current' : ''}">装柜制单</a></li>
                 <li class="menu-item payable">
                     <a id="action-payable" href="#" class="${param.currentModule == 'payable' ? 'current' : ''}">应付货款</a></li>
             </ul>
@@ -182,7 +182,7 @@
         <table width="210" border="0" cellspacing="0" cellpadding="0">
             <tr>
                 <td align="center" valign="middle" style="width: 114px"><a href="<c:url value="/system/setPassword"/>" id="_modify-password" class="open-in-dialog" style="width: 96px">修改密码</a></td>
-                <td align="right" valign="middle"><a href="<c:url value="/system/config/number"/>" id="_set-start-number" class="open-in-dialog">货号设置</a></td>
+                <td align="right" valign="middle"><a href="<c:url value="/system/config/number"/>" id="_set-start-number" class="open-in-dialog">号码设置</a></td>
             </tr>
             <tr>
                 <td align="center" valign="middle"><a class="set-favor-module not-setting" href="javascript: void (0);">设置当前页</a><a class="set-favor-module setting" href="javascript: void (0);" id="set-favor-module-confirm">确认</a></td>
@@ -199,8 +199,8 @@
         display: none;
         color: red;
         width: 98px;
-        height: 15px;
-        line-height: 15px;
+        height: 19px;
+        line-height: 19px;
         border: 1px solid #000;
         border-top: 0px;
         background-color: #fff;
@@ -215,7 +215,7 @@
 <style type="text/css">
     .drop-down-menu{
         position: absolute;
-        padding: 22px 0 5px 0;
+        padding: 27px 0 5px 0;
         display: none;
         z-index: 1000;
         line-height: 2em;
@@ -260,11 +260,11 @@
                 <span class="disabled">存档</span>
             </c:if>
             <c:if test="${not notOperating}">
-                <a href="<c:url value="/quotation/saveToArchive"/>" id="quotation-saveToArchive">存档</a>
+                <a href="<c:url value="/quotation/saveToArchive"/>" id="quotation-saveToArchive" class="">存档</a>
             </c:if>
         </div>
         <div>
-            <a href="<c:url value="/quotation/archiveList"/>" class="open-in-dialog" alt="档案">档案</a>
+            <a href="<c:url value="/quotation/archiveList"/>" class="" alt="档案">档案</a>
         </div>
     </div>
 </div>
@@ -295,28 +295,28 @@
         </div>
     </div>
 </div>
-<div class="drop-down-menu packing">
+<div class="drop-down-menu container">
     <div class="wrap">
         <div>
-            <a href="<c:url value="/packing"/>">操作版</a>
+            <a href="<c:url value="/container/containerSheet"/>" target="_blank">操作版</a>
         </div>
         <div>
-            <a href="<c:url value="/packing"/>">预装清单</a>
+            <a href="<c:url value="/container/preloaded"/>" target="_blank">预装清单</a>
         </div>
         <div>
-            <a href="<c:url value="/packing"/>">装箱单</a>
+            <a href="<c:url value="/container/packingList"/>" target="_blank">装箱单</a>
         </div>
         <div>
-            <a href="<c:url value="/packing"/>">商业发票</a>
+            <a href="<c:url value="/containerSheet"/>">商业发票</a>
         </div>
         <div>
-            <a href="<c:url value="/packing"/>">补料单</a>
+            <a href="<c:url value="/containerSheet"/>">补料单</a>
         </div>
         <div>
-            <a href="<c:url value="/packing"/>">存档</a>
+            <a href="<c:url value="/containerSheet"/>">存档</a>
         </div>
         <div>
-            <a href="<c:url value="/packing"/>">档案</a>
+            <a href="<c:url value="/containerSheet"/>">档案</a>
         </div>
     </div>
 </div>

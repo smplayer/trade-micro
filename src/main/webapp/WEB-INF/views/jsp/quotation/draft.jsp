@@ -69,6 +69,14 @@
             </div>
             <div class="fr"><a href="javascript:void(0);" id="find-factory" class="" alt="厂名查新">厂名查新</a></div>
             <div class="fr" style="margin-right: 30px;"><a href="javascript:void(0);" id="copy-item" class="create-item-after-enter" alt="复制下行">复制下行</a></div>
+            <div class="fr" style="margin-right: 30px;">
+                <c:if test="${quotation.generatedOrder}" var="generatedOrder" >
+                    <a href="javascript:void (0);" id="inputProductNo" class="" alt="订单录入">订单录入</a>
+                </c:if>
+                <c:if test="${not generatedOrder}">
+                    <a href="${ctx}/quotation/inputProductNo?id=${quotation.id}" id="inputProductNo" class="open-in-dialog" alt="订单录入">订单录入</a>
+                </c:if>
+            </div>
         </div>
         <table id="main-table" style="width: 1330px;" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333">
             <tr>
@@ -131,7 +139,8 @@
             <c:forEach items="${page.dataList}" var="p" varStatus="status">
                 <tr class="item ${status.index == 0 ? 'first' : ''}">
                     <td height="24" class="break tdbg line-number">
-                            ${fn:length(page.dataList)  - status.index}
+                            <%--${fn:length(page.dataList)  - status.index}--%>
+                            ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
                     </td>
                     <td class="break tdbg">
                         <c:if test="${not empty p.imageURL}" var="hasImage">

@@ -42,7 +42,8 @@ public class SystemConfigController {
 
     @RequestMapping(value = "system/config/number", method = RequestMethod.POST)
     public String config1(
-            @RequestParam String startProductNumber
+            @RequestParam String startProductNumber,
+            @RequestParam String orderNumber
     ) {
 //        String prefix = startProductNumber.substring(0, startProductNumber.lastIndexOf("A") + 1);
         Pattern pattern = Pattern.compile("[A-Za-z]{1,2}[1-9][0-9]{4}");

@@ -75,6 +75,9 @@ public class UserController extends Base {
         mapping.put("quotation", "/quotation/operating");
         mapping.put("product", "/product/list");
         mapping.put("factory", "/factory/list");
+        mapping.put("order", "/order");
+        mapping.put("container", "/container/containerSheet");
+        mapping.put("payable", "/payable");
 
         String favorModule = userConfigItemService.getValue(user, UserConfigItem.USER_FAVOR_MODULE);
         if(favorModule != null) {

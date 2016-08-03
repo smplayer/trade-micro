@@ -12,6 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "as_tb_order_product_item")
 public class OrderProductItem extends BaseEntity {
+    private String favorId;
     private String orderId;
     private String productId;
     private String factoryId;
@@ -23,26 +24,37 @@ public class OrderProductItem extends BaseEntity {
     private String imageURL;
     private String companyProductName;
     private String companyProductNo;
+    private String factoryProductNo;
     private String functionDescription;
     private String packageForm;
     private String unit;
-    private Double factoryPrice;
+    private Double factoryPrice = 0D;
+    private Double quotedPrice = 0D;
     private String cartonSize;
-    private Integer packingQuantity;
-    private Double grossWeight;
-    private Double netWeight;
+    private Integer packingQuantity = 0;
+    private Double grossWeight = 0D;
+    private Double netWeight = 0D;
 
-    private Integer orderedCartonQuantity;
-    private Double volume;
-    private Double payment;
-    private Integer deliveredCartonQuantity;
-    private Integer remainingCartonQuantity;
-    private Integer scheduledDeliverableCartonQuantity;
-    private Double scheduledDeliverableVolume;
-    private Double scheduledDeliverablePayment;
+    private Integer orderedCartonQuantity = 0;
+    private Integer orderedProductQuantity = 0;
+    private Double volume = 0D;
+    private Double payment = 0D;
+    private Integer deliveredCartonQuantity = 0;
+    private Integer remainingCartonQuantity = 0;
+    private Integer scheduledDeliverableCartonQuantity = 0;
+    private Double scheduledDeliverableVolume = 0D;
+    private Double scheduledDeliverablePayment = 0D;
     private String remark;
 
     private Date addedDate;
+
+    public String getFavorId() {
+        return favorId;
+    }
+
+    public void setFavorId(String favorId) {
+        this.favorId = favorId;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -116,6 +128,14 @@ public class OrderProductItem extends BaseEntity {
         this.companyProductNo = companyProductNo;
     }
 
+    public String getFactoryProductNo() {
+        return factoryProductNo;
+    }
+
+    public void setFactoryProductNo(String factoryProductNo) {
+        this.factoryProductNo = factoryProductNo;
+    }
+
     public String getFunctionDescription() {
         return functionDescription;
     }
@@ -146,6 +166,14 @@ public class OrderProductItem extends BaseEntity {
 
     public void setFactoryPrice(Double factoryPrice) {
         this.factoryPrice = factoryPrice;
+    }
+
+    public Double getQuotedPrice() {
+        return quotedPrice;
+    }
+
+    public void setQuotedPrice(Double quotedPrice) {
+        this.quotedPrice = quotedPrice;
     }
 
     public String getCartonSize() {
@@ -186,6 +214,14 @@ public class OrderProductItem extends BaseEntity {
 
     public void setOrderedCartonQuantity(Integer orderedCartonQuantity) {
         this.orderedCartonQuantity = orderedCartonQuantity;
+    }
+
+    public Integer getOrderedProductQuantity() {
+        return orderedProductQuantity;
+    }
+
+    public void setOrderedProductQuantity(Integer orderedProductQuantity) {
+        this.orderedProductQuantity = orderedProductQuantity;
     }
 
     public Double getVolume() {

@@ -43,9 +43,10 @@
     <div class="bgimg" style="">
         <div class="v-bgimg t-er-cont x-auto4" style="top: 0px;">
             <form id="form" action="<c:url value="/system/config/number"/>" method="post">
-                <input type="text" name="startProductNumber" class="" style="position: absolute; top: 433px; left: 345px; width: 175px; border: 0px solid red;" />
+                <input type="text" name="startProductNumber" class="" style="position: absolute; top: 376px; left: 305px; width: 178px; height: 20px; border: 0px solid red;" />
+                <input type="text" name="orderNumber" class="" style="position: absolute; top: 418px; left: 305px; width: 178px; height: 20px; border: 0px solid red;" />
                 <%--<input type="text" name="startQuotationSerialNumber" class="" style="position: absolute; top: 459px; left: 265px; width: 175px; border: 0px solid red;" />--%>
-                <a href="javascript:void(0);" id="confirm" style="position: absolute; display: block; width: 50px; height: 30px; top: 508px; left: 528px; border: 0px solid red;">
+                <a href="javascript:void(0);" id="confirm" style="position: absolute; display: block; width: 50px; height: 30px; top: 460px; left: 542px; border: 0px solid red;">
                     &nbsp;
                 </a>
             </form>

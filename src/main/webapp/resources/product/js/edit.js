@@ -3,16 +3,18 @@
  */
 
 
-
+function setFactoryId(id) {
+    $("#factoryId").val(id);
+}
 
 
 $(function () {
     $("#btn-confirm").click(function (e) {
         e.preventDefault();
 
-        if ($.trim($("#factoryName").val()) == '') {
+        if ($.trim($("#factoryId").val()) == '') {
             dialogAlert("#dialog-alert", {
-                textContent: '厂名不能为空'
+                textContent: '很抱歉，请先进行工厂查新'
             });
             return false;
         }
@@ -71,8 +73,12 @@ $(function () {
     $("#findExistingFactory").click(function (e) {
         e.preventDefault();
         var factoryName = $("#factoryName").val();
+        if ($.trim(factoryName) != "") {
+            window.parent.openFactorySelectionDialogForProduct(productId, factoryName);
+        } else {
+            window.parent.openFactoryCreationDialogForProduct(productId, factoryName);
+        }
 
-        window.parent.openFactorySelectionDialogForProduct(productId, factoryName);
         // open(ctx + "/product/findFactoryForProduct?factoryName=" + factoryName + "&productId=" + productId,'_blank');
     });
     

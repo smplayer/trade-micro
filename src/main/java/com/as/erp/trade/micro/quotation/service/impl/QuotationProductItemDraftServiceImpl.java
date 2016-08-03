@@ -53,58 +53,64 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
     public void generateProducts(List<String> quotationProductItemDraftIds) {
         List<QuotationProductItemDraft> list = getList(Conditions.newInstance().in("id", quotationProductItemDraftIds));
         List<Product> productList = new ArrayList<>();
-        for(QuotationProductItemDraft draft : list) {
-            Product product;
-            if (StringUtils.isBlank(draft.getProductId())){
-                product = new Product();
-
-                product.setName(draft.getCompanyProductName());
-                product.setImageURL(draft.getImageURL());
-                product.setFactoryProductNo(draft.getFactoryProductNo());
-                product.setCompanyProductNo(draft.getCompanyProductNo());
-                product.setFactoryProductName(draft.getFactoryProductName());
-                product.setCompanyProductName(draft.getFactoryProductName());
-                product.setFactoryPrice(draft.getFactoryPrice());
-                product.setCartonSize(draft.getCartonSize());
-                product.setPackingQuantity(draft.getPackingQuantity());
-                product.setGrossWeight(draft.getGrossWeight());
-                product.setNetWeight(draft.getNetWeight());
-                product.setUnit(draft.getUnit());
-                product.setRemark(draft.getRemark());
-                product.setPackageForm(draft.getPackageForm());
-
-                //工厂信息
-                product.setFactoryId(draft.getFactoryId());
-                product.setFactoryName(draft.getFactoryName());
-                product.setLinkman(draft.getLinkman());
-                product.setFactoryContactNumber(draft.getContactNumber());
-
-                productService.save(product);
-                draft.setProductId(product.getId());
-                draft.setCompanyProductNo(product.getCompanyProductNo());
+        for (QuotationProductItemDraft draft : list) {
+            if (!draft.getSyncToProduct()) {
                 draft.setSyncToProduct(true);
-                update(draft);
-
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                Product product = null;
+                if (StringUtils.isBlank(draft.getProductId())) {
+                    product = new Product();
+                } else {
+                    product = productService.getById(draft.getProductId());
                 }
-            } else {
-//                product = productService.getById(draft.getProductId());
+
+                if (product != null) {
+                    product.setName(draft.getCompanyProductName());
+                    product.setImageURL(draft.getImageURL());
+                    product.setFactoryProductNo(draft.getFactoryProductNo());
+                    product.setCompanyProductNo(draft.getCompanyProductNo());
+                    product.setFactoryProductName(draft.getFactoryProductName());
+                    product.setCompanyProductName(draft.getFactoryProductName());
+                    product.setFactoryPrice(draft.getFactoryPrice());
+                    product.setCartonSize(draft.getCartonSize());
+                    product.setPackingQuantity(draft.getPackingQuantity());
+                    product.setGrossWeight(draft.getGrossWeight());
+                    product.setNetWeight(draft.getNetWeight());
+                    product.setUnit(draft.getUnit());
+                    product.setRemark(draft.getRemark());
+                    product.setPackageForm(draft.getPackageForm());
+
+                    //工厂信息
+                    product.setFactoryId(draft.getFactoryId());
+                    product.setFactoryName(draft.getFactoryName());
+                    product.setLinkman(draft.getLinkman());
+                    product.setFactoryContactNumber(draft.getContactNumber());
+
+                    productService.save(product);
+                    draft.setProductId(product.getId());
+                    draft.setCompanyProductNo(product.getCompanyProductNo());
+                    draft.setSyncToProduct(true);
+                    update(draft);
+
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
 
     @Override
-    public void selectFactoryForProductItemDraft(String id, String factoryId) {
+    public Factory selectFactoryForProductItemDraft(String id, String factoryId) {
         QuotationProductItemDraft draft = getById(id);
         Factory factory = factoryService.getById(factoryId);
         draft.setFactoryId(factory.getId());
         draft.setFactoryName(factory.getName());
         draft.setLinkman(factory.getLinkman());
-        draft.setContactNumber(factory.getMobileNumber());
+//        draft.setContactNumber(factory.getMobileNumber());
         update(draft);
+        return factory;
     }
 
     @Override
@@ -113,11 +119,11 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
                 new Query().setDataIndex((pageIndex - 1) * pageSize)
                         .setPageSize(10000)
 //                .setPageSize(pageSize * pageIndex.intValue())
-                .setConditions(
-                        Conditions.newInstance()
-                        .eq("quotationId", quotationId)
-                )
-                .addOrder(Order.desc("createdTime"))
+                        .setConditions(
+                                Conditions.newInstance()
+                                        .eq("quotationId", quotationId)
+                        )
+                        .addOrder(Order.desc("createdTime"))
         );
 
         QuotationAccumulativeTotal accumulativeTotal = new QuotationAccumulativeTotal();
@@ -192,22 +198,22 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
         modifyProp(id, propertyName, intValue);
     }
 
-    private void modifyGrossWeight(String id, String propertyName, Object propertyValue){
+    private void modifyGrossWeight(String id, String propertyName, Object propertyValue) {
         Double doubleValue = Double.valueOf((String) propertyValue);
         modifyProp(id, propertyName, doubleValue);
     }
 
-    private void modifyNetWeight(String id, String propertyName, Object propertyValue){
+    private void modifyNetWeight(String id, String propertyName, Object propertyValue) {
         Double doubleValue = Double.valueOf((String) propertyValue);
         modifyProp(id, propertyName, doubleValue);
     }
 
-    private void modifyOrderedCartonQuantity(String id, String propertyName, Object propertyValue){
+    private void modifyOrderedCartonQuantity(String id, String propertyName, Object propertyValue) {
         Integer intValue = Integer.valueOf((String) propertyValue);
         modifyProp(id, propertyName, intValue);
     }
 
-    private void modifyOrderedProductQuantity(String id, String propertyName, Object propertyValue){
+    private void modifyOrderedProductQuantity(String id, String propertyName, Object propertyValue) {
         Integer intValue = Integer.valueOf((String) propertyValue);
         modifyProp(id, propertyName, intValue);
     }
@@ -275,5 +281,67 @@ public class QuotationProductItemDraftServiceImpl extends GenericServiceImpl<Quo
         newItem.setAddedDate(new Date());
 
         save(newItem);
+    }
+
+    @Override
+    public void createFromProductNos(String quotationId, String[] productNos) {
+        for (String no : productNos) {
+            if (StringUtils.isNotBlank(no)) {
+                Product product = productService.get(Conditions.newInstance().like("companyProductNo", "%" + no + "%"));
+                if (product != null) {
+                    QuotationProductItemDraft item = new QuotationProductItemDraft();
+                    item.setQuotationId(quotationId);
+                    copyPropsFromProduct(item, product);
+                    save(item);
+
+                    QuotationProductItemDraftPropModifiedVO modified = new QuotationProductItemDraftPropModifiedVO();
+                    modified.setId(item.getId());
+                    modified.setPropertyName("cartonSize");
+                    modified.setPropertyValue(item.getCartonSize());
+                    applicationContext.publishEvent(new QuotationProductItemDraftPropModifiedEvent(modified));
+
+                    modified = new QuotationProductItemDraftPropModifiedVO();
+                    modified.setId(item.getId());
+                    modified.setPropertyName("packingQuantity");
+                    modified.setPropertyValue(item.getPackingQuantity());
+                    applicationContext.publishEvent(new QuotationProductItemDraftPropModifiedEvent(modified));
+
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+    }
+
+
+
+    public void copyPropsFromProduct(QuotationProductItemDraft item, Product product) {
+
+        item.setProductId(product.getId());
+        item.setImageURL(product.getImageURL());
+        item.setFactoryProductName(product.getFactoryProductName());
+        item.setFactoryProductNo(product.getFactoryProductNo());
+        item.setCompanyProductName(product.getCompanyProductName());
+        item.setCompanyProductNo(product.getCompanyProductNo());
+        item.setFactoryPrice(product.getFactoryPrice());
+        item.setCartonSize(product.getCartonSize());
+        item.setPackingQuantity(product.getPackingQuantity());
+        item.setGrossWeight(product.getGrossWeight());
+        item.setNetWeight(product.getNetWeight());
+        item.setUnit(product.getUnit());
+
+        item.setFactoryId(product.getFactoryId());
+        item.setFactoryName(product.getFactoryName());
+        item.setLinkman(product.getLinkman());
+        item.setContactNumber(product.getFactoryContactNumber());
+
+
+        item.setPackageForm(product.getPackageForm());
+        item.setFunctionDescription(product.getFunctionDescription());
     }
 }

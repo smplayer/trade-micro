@@ -1,6 +1,8 @@
 package com.as.erp.trade.micro.product.service.impl;
 
 import com.as.common.dao.GenericDao;
+import com.as.common.query.hibernate.Conditions;
+import com.as.common.query.hibernate.Query;
 import com.as.common.service.impl.GenericServiceImpl;
 import com.as.erp.trade.micro.factory.ProductToFactoryEvent;
 import com.as.erp.trade.micro.factory.entity.Factory;
@@ -13,14 +15,13 @@ import com.as.erp.trade.micro.product.service.ProductService;
 import com.as.erp.trade.micro.system.entity.SystemConfigItem;
 import com.as.erp.trade.micro.system.service.SystemConfigItemService;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by yrx on 2016/4/29.
@@ -45,36 +46,77 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
         return productDao;
     }
 
+    private String getNewCompanyProductNo() {
+        String companyProductNo = productDao.get(Projections.max("companyProductNo"), String.class);
+        if (companyProductNo == null) {
+
+            companyProductNo = systemConfigItemService.getValue(SystemConfigItem.PRODUCT_N0_PREFIX);
+            if (companyProductNo == null) {
+                companyProductNo = "A";
+            }
+
+            String begin = systemConfigItemService.getValue(SystemConfigItem.PRODUCT_NO_BEGIN);
+            if (begin != null)
+                companyProductNo += (Integer.valueOf(begin) + 1);
+            else
+                companyProductNo += "10000";
+        } else {
+            //TO-DO
+            String prefix = systemConfigItemService.getValue(SystemConfigItem.PRODUCT_N0_PREFIX);
+            if (prefix == null) {
+                prefix = "A";
+            }
+
+            String [] noElems = companyProductNo.split("[a-zA-Z]+");
+            Integer nextNumber = Integer.valueOf(noElems[1]) + 1;
+            companyProductNo = prefix + nextNumber;
+        }
+        return companyProductNo;
+    }
+
+    @Override
+    public Map<String, Object> generateCompanyProductNo(Collection<String> productIds) {
+        List<Product> productList = getList(
+                new Query().addOrder(Order.asc("createdTime"))
+                .setConditions(Conditions.newInstance().in("id", productIds))
+        );
+
+        Map<String, Object> result = new HashMap<>();
+        Map<String, String> idAndNoMap = new HashMap<>();
+        List<String> incompleteList = new ArrayList<>();
+
+        for (Product product : productList) {
+            if (StringUtils.isBlank(product.getCompanyProductNo())) {
+                if (
+                        StringUtils.isNotBlank(product.getImageURL()) &&
+                        StringUtils.isNotBlank(product.getCompanyProductName()) &&
+                        StringUtils.isNotBlank(product.getPackageForm()) &&
+                        StringUtils.isNotBlank(product.getUnit()) &&
+                        product.getFactoryPrice() != null && product.getFactoryPrice() != 0D &&
+                        StringUtils.isNotBlank(product.getFunctionDescription()) &&
+                        StringUtils.isNotBlank(product.getCartonSize()) &&
+
+                        product.getPackingQuantity() != null && product.getPackingQuantity() != 0D &&
+                        product.getGrossWeight() != null && product.getGrossWeight() != 0D &&
+                        product.getNetWeight() != null && product.getNetWeight() != 0D
+                ) {
+                    product.setCompanyProductNo(getNewCompanyProductNo());
+                    update(product);
+                    idAndNoMap.put(product.getId(), product.getCompanyProductNo());
+                } else {
+                    incompleteList.add(product.getId());
+                }
+            }
+        }
+
+        result.put("idAndNoMap", idAndNoMap);
+        result.put("incompleteList", incompleteList);
+        return result;
+    }
+
     private void refreshProduct(Product product) {
 
         if(product.getId() == null) {
-
-            String companyProductNo = productDao.get(Projections.max("companyProductNo"), String.class);
-            if (companyProductNo == null) {
-
-                companyProductNo = systemConfigItemService.getValue(SystemConfigItem.PRODUCT_N0_PREFIX);
-                if (companyProductNo == null) {
-                    companyProductNo = "A";
-                }
-
-                String begin = systemConfigItemService.getValue(SystemConfigItem.PRODUCT_NO_BEGIN);
-                if (begin != null)
-                    companyProductNo += (Integer.valueOf(begin) + 1);
-                else
-                    companyProductNo += "10000";
-            } else {
-                //TO-DO
-                String prefix = systemConfigItemService.getValue(SystemConfigItem.PRODUCT_N0_PREFIX);
-                if (prefix == null) {
-                    prefix = "A";
-                }
-
-                String [] noElems = companyProductNo.split("[a-zA-Z]+");
-                Integer nextNumber = Integer.valueOf(noElems[1]) + 1;
-                companyProductNo = prefix + nextNumber;
-            }
-            product.setCompanyProductNo(companyProductNo);
-
             if (StringUtils.isNotBlank(product.getFactoryId())) {
                 Factory factory = factoryService.getById(product.getFactoryId());
                 if (factory != null)

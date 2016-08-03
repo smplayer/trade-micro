@@ -59,13 +59,15 @@
         <c:forEach items="${page.dataList}" var="p" varStatus="status">
             <tr class="item" id="${p.id}">
                 <td height="28" class="ddtd tdbg">
-                    <input type="text" name="factoryProductName" value="${p.factoryProductName}" />
+                    ${p.factoryProductName}
+                    <%--<input type="text" name="factoryProductName" value="${p.factoryProductName}" />--%>
                 </td>
-                <td class="ddtd tdbg">
+                <td class="ddtd tdbg ${p.syncToProduct ? "" : "notSyncToProduct"}">
                     ${productNoFrom=='factory' ? p.factoryProductNo : p.companyProductNo}
                 </td>
                 <td class="ddtd tdbg">
-                    <input type="text" name="packageForm" value="${p.packageForm}" />
+                    ${p.packageForm}
+                    <%--<input type="text" name="packageForm" value="${p.packageForm}" />--%>
                 </td>
                 <%--<td class="ddtd tdbg">--%>
                     <%--<input type="text" name="unit" value="${p.unit}" />--%>
@@ -224,6 +226,7 @@
     </table>
 </div>
 
+<c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
 <script type="text/javascript" src="<c:url value="/resources/quotation/js/confirming-order.js"/>"></script>
 <script>
     var pageIndex = '${page.pageIndex}';

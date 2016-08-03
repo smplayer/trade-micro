@@ -95,7 +95,7 @@ public abstract class GenericServiceImpl<E extends BaseEntity, PK extends Serial
 
     @Override
     public void update(Collection<E> entities) {
-        for (E e : entities){
+        for (E e : entities) {
             update(e);
         }
     }
@@ -133,5 +133,10 @@ public abstract class GenericServiceImpl<E extends BaseEntity, PK extends Serial
     @Override
     public <T> T get(Projection projection, Class<T> type) {
         return getDao().get(projection, type);
+    }
+
+    @Override
+    public <T> T get(Projection projection, Class<T> type, Conditions conditions) {
+        return getDao().get(projection, type, conditions);
     }
 }

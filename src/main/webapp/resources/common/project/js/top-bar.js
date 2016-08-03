@@ -9,7 +9,7 @@ function initMenu() {
         var module = aid.substring(aid.indexOf("-") + 1);
         var $dropDown = $(".drop-down-menu." + module);
         if ($dropDown) {
-            $dropDown.css("top", $(this).offset().top + 5);
+            $dropDown.css("top", $(this).offset().top);
             $dropDown.css("left", $(this).offset().left - (($dropDown.width() - $(this).width()) / 2));
             $dropDown.show();
         }

@@ -29,4 +29,5 @@ public interface GenericService<E, PK extends Serializable> {
     List<E> getList(Query query);
     PageHandler getPage(Query query);
     public <T> T get(Projection projection, Class<T> type);
+    public <T> T get(Projection projection, Class<T> type, Conditions conditions);
 }

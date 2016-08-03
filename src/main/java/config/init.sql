@@ -1,1 +1,1 @@
-insert into as_tb_user values(uuid(), now(),null,null,'123456','123','admin')
+insert into as_tb_user values(uuid(), now(),null,null,'asb12345','asb123','admin')

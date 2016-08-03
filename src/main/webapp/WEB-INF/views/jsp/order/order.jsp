@@ -18,11 +18,11 @@
     <style type="text/css">
 
         #customer-list {
-            margin-top: 25px;
+            margin-top: 35px;
             overflow: hidden;
         }
         #customer-list .text{
-            width: 60px;
+            width: 75px;
         }
         #customer-list .text.key-cus-name {
         }
@@ -31,14 +31,14 @@
             margin: 0 auto;
             padding: 0;
             overflow: hidden;
-            width: 1120px;
+            width: 1154px;
         }
         #customer-list li {
             background-color: #fff;
             list-style: none;
             float: left;
-            width: 80px;
-            margin-left: 5px;
+            width: 85px;
+            margin-left: 10px;
             border: 1px solid #B47BFE;
             height: 18px;
         }
@@ -53,6 +53,7 @@
         #main-table input[type=text] {
             width: 100%;
             text-align: center;
+            background: transparent;
         }
 
     </style>
@@ -102,14 +103,14 @@
             </c:import>
         </div>
         <div class="fr">
-            <a href="#">录入货号</a>
+            <%--<a href="javascript:void(0);" id="inputProductNo">录入货号</a>--%>
         </div>
     </div>
     <table id="main-table" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#333333" style="width: 1332px;">
         <tr>
             <td height="40" rowspan="2" class="td39 toptdbg">序号</td>
             <td rowspan="2" class="td65 toptdbg">添加日期</td>
-            <td rowspan="2" class="td50 toptdbg">布产</td>
+            <td rowspan="2" class="td50 toptdbg">佈产</td>
             <td rowspan="2" class="td80 toptdbg">厂名</td>
             <td rowspan="2" class="td50 toptdbg">图片</td>
             <td rowspan="2" class="td80 toptdbg">品名</td>
@@ -141,17 +142,20 @@
             <td class="td50 toptdbg">货款</td>
         </tr>
 
-        <c:forEach items="${page.dataList}" var="p" varStatus="status">
+    <c:forEach items="${page.dataList}" var="p" varStatus="status">
         <tr class="item">
             <td height="24" class="break tdbg">
                 ${(page.dataQuantity - (page.pageIndex - 1) * page.pageSize) - status.index}
             </td>
-            <td class="break tdbg">
+            <td class="break tdbg addedDate">
                 <fmt:formatDate value="${p.addedDate}" pattern="MM-dd" />
             </td>
-            <td class="break tdbg">布产</td>
             <td class="break tdbg">
-                <a href="javascript:void(0);" class="factoryName" id="${p.factoryId}">${p.factoryName}</a>
+                <a class="open-production-sheet production-sheet-${p.factoryId} hidden" href="javascript:void(0);" data-item-id="${p.id}">打开</a>
+            </td>
+            <td class="break tdbg factory" >
+                <input class="factoryId" type="hidden" value="${p.factoryId}" name="factoryId" />
+                <a href="javascript:void(0);" class="factoryName" id="${p.factoryId}-${status.index}">${p.factoryName}</a>
             </td>
             <td class="break tdbg">
                 <c:if test="${not empty p.imageURL}">
@@ -160,10 +164,18 @@
             </td>
             <td class="break tdbg">${p.companyProductName}</td>
             <td class="break tdbg">${p.companyProductNo}</td>
-            <td class="break tdbg">${p.packageForm}</td>
-            <td class="break tdbg">${p.unit}</td>
-            <td class="break tdbg"><fmt:formatNumber value="${p.factoryPrice}" maxFractionDigits="1" pattern="#.#" /></td>
-            <td class="break tdbg">${p.functionDescription}</td>
+            <td class="break tdbg">
+                <input type="text" value="${p.packageForm}" name="packageForm" />
+            </td>
+            <td class="break tdbg">
+                <input type="text" value="${p.unit}" name="unit" />
+            </td>
+            <td class="break tdbg factoryPrice">
+                <fmt:formatNumber value="${p.factoryPrice}" maxFractionDigits="1" pattern="#.#" />
+            </td>
+            <td class="break tdbg">
+                <input type="text" value="${p.functionDescription}" name="functionDescription" />
+            </td>
             <td class="break tdbg">
                 <input type="text" value="${p.cartonSize}" name="cartonSize" />
             </td>
@@ -176,14 +188,14 @@
                     type="text" value="<fmt:formatNumber value="${p.netWeight}" maxFractionDigits="1" pattern="#.#" />"
                     name="netWeight" style="width: 25px;" />
             </td>
-            <td class="break tdbg"><input type="text" value="${p.orderedCartonQuantity}" name="orderedCartonQuantity" /></td>
-            <td class="break tdbg"><fmt:formatNumber value="${p.volume}" maxFractionDigits="1" pattern="#.#" /></td>
-            <td class="break tdbg"><fmt:formatNumber value="${p.payment}" maxFractionDigits="0" pattern="#.#" /></td>
-            <td class="break tdbg">${p.deliveredCartonQuantity}</td>
-            <td class="break tdbg">${p.remainingCartonQuantity}</td>
-            <td class="break tdbg"><input type="text" value="${p.scheduledDeliverableCartonQuantity}" name="scheduledDeliverableCartonQuantity" /></td>
-            <td class="break tdbg">${p.scheduledDeliverableVolume}</td>
-            <td class="break tdbg">${p.scheduledDeliverablePayment}</td>
+            <td class="break tdbg"><input type="text" value="${p.orderedCartonQuantity == 0 ? '' : p.orderedCartonQuantity}" name="orderedCartonQuantity" /></td>
+            <td class="break tdbg volume"><fmt:formatNumber value="${p.volume == 0 ? '' : p.volume}" maxFractionDigits="1" pattern="#.#" /></td>
+            <td class="break tdbg payment"><fmt:formatNumber value="${p.payment == 0 ? '' : p.payment}" maxFractionDigits="0" pattern="#.#" /></td>
+            <td class="break tdbg">${p.deliveredCartonQuantity == 0 ? '' : p.deliveredCartonQuantity}</td>
+            <td class="break tdbg remainingCartonQuantity">${p.remainingCartonQuantity == 0 ? '' : p.remainingCartonQuantity}</td>
+            <td class="break tdbg"><input type="text" value="${p.scheduledDeliverableCartonQuantity == 0 ? '' : p.scheduledDeliverableCartonQuantity}" name="scheduledDeliverableCartonQuantity" class="scheduledDeliverableCartonQuantity" /></td>
+            <td class="break tdbg scheduledDeliverableVolume"><fmt:formatNumber value="${p.scheduledDeliverableVolume == 0 ? '' : p.scheduledDeliverableVolume}" maxFractionDigits="1" pattern="#.#" /></td>
+            <td class="break tdbg scheduledDeliverablePayment"><fmt:formatNumber value="${p.scheduledDeliverablePayment == 0 ? '' : p.scheduledDeliverablePayment}" maxFractionDigits="0" pattern="#.#" /></td>
             <td class="break tdbg"><input type="text" value="${p.remark}" name="remark" /></td>
             <td class="break tdbg">
                 <input type="checkbox" class="" name="id" value="${p.id}" id="${p.id}" />
@@ -219,14 +231,41 @@
             <td class="break tdbg">&nbsp;</td>
         </tr>
     </c:forEach>
+        <tr id="accumulativeLine">
+            <td height="24" class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">累计</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg orderedCartonQuantity"></td>
+            <td class="break tdbg volume">&nbsp;</td>
+            <td class="break tdbg payment">&nbsp;</td>
+            <td class="break tdbg deliveredCartonQuantity">&nbsp;</td>
+            <td class="break tdbg remainingCartonQuantity">&nbsp;</td>
+            <td class="break tdbg scheduledDeliverableCartonQuantity">&nbsp;</td>
+            <td class="break tdbg scheduledDeliverableVolume">&nbsp;</td>
+            <td class="break tdbg scheduledDeliverablePayment">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+            <td class="break tdbg">&nbsp;</td>
+        </tr>
     </table>
     <table width="1330" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
             <td height="21" colspan="4" align="left" valign="middle">&nbsp;</td>
         </tr>
         <tr>
-            <td height="20" width="1060" align="right" valign="top">转装柜操作
-                <input name="textfield2" type="text" id="textfield2" size="5" class="border"/>
+            <td height="20" width="1060" align="right" valign="top">
+                <a href="javascript: void (0);" id="toContainer">转装柜制单</a>
+                <input name="containerVolume" type="text" id="containerVolume" size="5" class="border"/>
                 立方米
             </td>
             <td width="130" align="right" valign="top"><input type="image" src="${ctx}/resources/order/images/save4.png" class="btn"/></td>
@@ -246,7 +285,15 @@
         </div>
     </div>
 
+    <div id="dialog-inputProductNo" class="hidden">
+        <div class="dialog-main">
+            <textarea rows="5" cols="5" id="productNoString" >
 
+            </textarea>
+        </div>
+    </div>
+
+    <form id="form1" action="<c:url value="/order/orderForm"/>" method="post" target="_blank"></form>
 
 
 <c:import url="/WEB-INF/views/jsp/common/dialog-alert.jsp"></c:import>
